@@ -6048,6 +6048,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2792723910760903307, guid: 64c96ea42bbeba041bb76955d4bc95ed, type: 3}
+      propertyPath: ImpulseDefinition.ImpulseType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2792723910760903307, guid: 64c96ea42bbeba041bb76955d4bc95ed, type: 3}
+      propertyPath: ImpulseDefinition.ImpulseDuration
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3268388747327829925, guid: 64c96ea42bbeba041bb76955d4bc95ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 38.25
@@ -6087,6 +6095,10 @@ PrefabInstance:
     - target: {fileID: 3268388747327829925, guid: 64c96ea42bbeba041bb76955d4bc95ed, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4477781776137278441, guid: 64c96ea42bbeba041bb76955d4bc95ed, type: 3}
+      propertyPath: ShakeDelay
+      value: 1.97
       objectReference: {fileID: 0}
     - target: {fileID: 4477781776137278441, guid: 64c96ea42bbeba041bb76955d4bc95ed, type: 3}
       propertyPath: CameraController
