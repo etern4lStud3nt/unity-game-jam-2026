@@ -12,6 +12,12 @@ public class CameraRoom : MonoBehaviour
     [SerializeField] private CinemachineCamera RoomCamera;
     [SerializeField] private string PlayerTag = "Player";
 
+    [Header("Shake on enter (e.g. boss arena)")]
+    // The room's own impulse: shape, duration and strength are tuned per room on that component. Leave empty for no shake.
+    [SerializeField] private CinemachineImpulseSource EnterShake;
+    // Waiting for the camera blend to finish makes the shake read as a hit on the new view.
+    [SerializeField] private float ShakeDelay = 0.75f;
+
     public CinemachineCamera Camera => RoomCamera;
 
     private void Reset()
@@ -28,8 +34,17 @@ public class CameraRoom : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (IsPlayer(other))
-            CameraController.EnterRoom(this);
+        if (!IsPlayer(other))
+            return;
+
+        CameraController.EnterRoom(this);
+        if (EnterShake != null)
+            Invoke(nameof(Shake), ShakeDelay);
+    }
+
+    private void Shake()
+    {
+        EnterShake.GenerateImpulse();
     }
 
     private void OnTriggerExit(Collider other)
