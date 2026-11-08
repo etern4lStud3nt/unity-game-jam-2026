@@ -11,10 +11,12 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform PlayerTransform;
     [SerializeField] private CinemachineImpulseSource ShakeSource;
 
-    [Header("Zoom (PositionComposer camera distance)")]
-    [SerializeField] private float ZoomStep = 2f;
-    [SerializeField] private float MinZoomOffset = -6f;
-    [SerializeField] private float MaxZoomOffset = 10f;
+    // Zoom scales the live follow camera's view: orthographic size for an orthographic camera,
+    // PositionComposer distance for a perspective one. 1 = the size set in the inspector, 0.5 = twice as close.
+    [Header("Zoom")]
+    [SerializeField] private float ZoomStepFactor = 0.2f;
+    [SerializeField] private float MinZoom = 0.5f;
+    [SerializeField] private float MaxZoom = 2f;
     [SerializeField] private float ZoomSpeed = 5f;
 
     [Header("Shake")]
@@ -24,9 +26,9 @@ public class CameraController : MonoBehaviour
     private CinemachineCamera liveCamera;
     // Rooms the player is inside, most recent last. Doorways can overlap two rooms; the latest one wins.
     private readonly List<CameraRoom> occupiedRooms = new();
-    // Each camera's own distance from the inspector; zoom is applied as a shared offset on top of it.
-    private readonly Dictionary<CinemachinePositionComposer, float> baseDistances = new();
-    private float zoomOffset;
+    // Each camera's own view size from the inspector; zoom is a shared multiplier on top of it.
+    private readonly Dictionary<CinemachineCamera, float> baseViewSizes = new();
+    private float zoom = 1f;
 
     private void Awake()
     {
@@ -40,22 +42,35 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        // Only follow cameras zoom; locked rooms keep the framing they were placed with.
         if (liveCamera == null || !liveCamera.TryGetComponent(out CinemachinePositionComposer composer))
             return;
 
-        if (!baseDistances.TryGetValue(composer, out float baseDistance))
+        bool orthographic = IsOrthographic(liveCamera);
+        float current = orthographic ? liveCamera.Lens.OrthographicSize : composer.CameraDistance;
+        if (!baseViewSizes.TryGetValue(liveCamera, out float baseSize))
         {
-            baseDistance = composer.CameraDistance;
-            baseDistances[composer] = baseDistance;
+            baseSize = current;
+            baseViewSizes[liveCamera] = baseSize;
         }
 
-        float targetDistance = baseDistance + zoomOffset;
-        if (Mathf.Abs(composer.CameraDistance - targetDistance) < 0.001f)
+        float target = baseSize * zoom;
+        if (Mathf.Abs(current - target) < 0.001f)
             return;
 
-        composer.CameraDistance = Mathf.Lerp(composer.CameraDistance, targetDistance, ZoomSpeed * Time.deltaTime);
+        float next = Mathf.Lerp(current, target, ZoomSpeed * Time.deltaTime);
+        if (orthographic)
+        {
+            LensSettings lens = liveCamera.Lens;
+            lens.OrthographicSize = next;
+            liveCamera.Lens = lens;
+        }
+        else
+        {
+            composer.CameraDistance = next;
+        }
 
-        // The confiner caches the view size, so it has to be told when the distance changes.
+        // The confiner caches the view size, so it has to be told when it changes.
         if (liveCamera.TryGetComponent(out CinemachineConfiner2D confiner))
             confiner.InvalidateLensCache();
     }
@@ -72,7 +87,7 @@ public class CameraController : MonoBehaviour
     {
         occupiedRooms.Remove(room);
         occupiedRooms.Add(room);
-        Activate(room.Camera);
+        ActivateRoom(room);
     }
 
     public void ExitRoom(CameraRoom room)
@@ -80,7 +95,7 @@ public class CameraController : MonoBehaviour
         occupiedRooms.Remove(room);
 
         if (occupiedRooms.Count > 0)
-            Activate(occupiedRooms[^1].Camera);
+            ActivateRoom(occupiedRooms[^1]);
         else
             Activate(followCamera);
     }
@@ -88,13 +103,13 @@ public class CameraController : MonoBehaviour
     [ContextMenu("Zoom In")]
     public void ZoomIn()
     {
-        zoomOffset = Mathf.Clamp(zoomOffset - ZoomStep, MinZoomOffset, MaxZoomOffset);
+        zoom = Mathf.Clamp(zoom - ZoomStepFactor, MinZoom, MaxZoom);
     }
 
     [ContextMenu("Zoom Out")]
     public void ZoomOut()
     {
-        zoomOffset = Mathf.Clamp(zoomOffset + ZoomStep, MinZoomOffset, MaxZoomOffset);
+        zoom = Mathf.Clamp(zoom + ZoomStepFactor, MinZoom, MaxZoom);
     }
 
     [ContextMenu("Shake")]
@@ -102,6 +117,48 @@ public class CameraController : MonoBehaviour
     {
         // Every CinemachineCamera with a CinemachineImpulseListener picks this up, room cameras included.
         ShakeSource.GenerateImpulseWithForce(ShakeForce);
+    }
+
+    private void ActivateRoom(CameraRoom room)
+    {
+        CinemachineCamera roomCamera = room.Camera;
+        if (!room.UsesOwnViewSize && roomCamera.TryGetComponent(out CinemachinePositionComposer roomComposer))
+            CopyFollowViewSize(roomCamera, roomComposer);
+
+        Activate(roomCamera);
+    }
+
+    // Gives a follow room the default follow camera's view size (before zoom), so it only has to be set in one place.
+    private void CopyFollowViewSize(CinemachineCamera roomCamera, CinemachinePositionComposer roomComposer)
+    {
+        if (!followCamera.TryGetComponent(out CinemachinePositionComposer followComposer))
+            return;
+
+        bool orthographic = IsOrthographic(followCamera);
+        if (!baseViewSizes.TryGetValue(followCamera, out float followSize))
+            followSize = orthographic ? followCamera.Lens.OrthographicSize : followComposer.CameraDistance;
+
+        LensSettings lens = roomCamera.Lens;
+        lens.FieldOfView = followCamera.Lens.FieldOfView;
+        if (orthographic)
+            lens.OrthographicSize = followSize;
+        roomCamera.Lens = lens;
+        roomComposer.CameraDistance = orthographic ? followComposer.CameraDistance : followSize;
+
+        baseViewSizes[roomCamera] = followSize;
+        if (roomCamera.TryGetComponent(out CinemachineConfiner2D confiner))
+            confiner.InvalidateLensCache();
+    }
+
+    // A CinemachineCamera's lens inherits orthographic/perspective from the Unity Camera it renders to,
+    // and Lens.Orthographic doesn't report that inherited mode, so ask the output camera.
+    private static bool IsOrthographic(CinemachineCamera camera)
+    {
+        if (camera.Lens.ModeOverride != LensSettings.OverrideModes.None)
+            return camera.Lens.Orthographic;
+
+        CinemachineBrain brain = CinemachineCore.FindPotentialTargetBrain(camera);
+        return brain != null && brain.OutputCamera != null && brain.OutputCamera.orthographic;
     }
 
     // Room cameras outrank the follow camera, so enabling one makes it live and disabling it hands control back.

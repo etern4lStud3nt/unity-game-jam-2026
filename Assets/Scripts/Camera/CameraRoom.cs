@@ -11,6 +11,9 @@ public class CameraRoom : MonoBehaviour
     [SerializeField] private CameraController CameraController;
     [SerializeField] private CinemachineCamera RoomCamera;
     [SerializeField] private string PlayerTag = "Player";
+    [Tooltip("Follow rooms use the default follow camera's view size, so it is set in one place. " +
+             "Tick this to keep this room camera's own size instead (a big hall that needs a wider view).")]
+    [SerializeField] private bool OwnViewSize;
 
     [Header("Shake on enter (e.g. boss arena)")]
     // The room's own impulse: shape, duration and strength are tuned per room on that component. Leave empty for no shake.
@@ -19,6 +22,7 @@ public class CameraRoom : MonoBehaviour
     [SerializeField] private float ShakeDelay = 0.75f;
 
     public CinemachineCamera Camera => RoomCamera;
+    public bool UsesOwnViewSize => OwnViewSize;
 
     private void Reset()
     {
