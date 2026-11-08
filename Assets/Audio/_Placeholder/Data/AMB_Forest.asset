@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822cbd087cc238544ae85ae22548dff0, type: 3}
+  m_Name: AMB_Forest
+  m_EditorClassIdentifier: Assembly-CSharp::SoundData
+  clips:
+  - {fileID: 8300000, guid: fd81995878581154dab10c3cd45153e0, type: 3}
+  volume: 0.5
+  pitchRange: {x: 1, y: 1}
+  cooldown: 0
+  mixerGroup: {fileID: 2360459928107775593, guid: 7b620d850e07b734b9fe946e388552a4, type: 2}
+  hearingRange: 0
+  priority: 50
