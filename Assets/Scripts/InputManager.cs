@@ -49,7 +49,6 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     {
         if (context.started)
         {
-            Debug.Log("Jump Input");
             Jump?.Invoke();
         }
     }
