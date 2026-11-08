@@ -14,12 +14,20 @@ public class SoundData : ScriptableObject
     [SerializeField, Min(0f)] private float cooldown;
     [Tooltip("Leave empty to use AudioManager's default group for this kind of sound.")]
     [SerializeField] private AudioMixerGroup mixerGroup;
+    [Tooltip("World distance from the camera at which a positioned sound fades to silence. 0 = heard everywhere at full volume " +
+             "(player and UI sounds).")]
+    [SerializeField, Min(0f)] private float hearingRange;
+    [Tooltip("When every voice is busy, a new sound replaces the oldest playing sound with a lower priority. " +
+             "Give the player's hurt/death and boss sounds a high value, footsteps a low one.")]
+    [SerializeField, Range(0, 100)] private int priority = 50;
 
     private int lastClipIndex = -1;
 
     public float Volume => volume;
     public float Cooldown => cooldown;
     public AudioMixerGroup MixerGroup => mixerGroup;
+    public float HearingRange => hearingRange;
+    public int Priority => priority;
     public float RandomPitch => Random.Range(pitchRange.x, pitchRange.y);
 
     // Picks a random clip, avoiding the one played last time when there is a choice.

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 // Plays everything audio through the MainMixer:
 // - SFX from SoundData assets, on pooled sources so each play can have its own pitch and stereo pan.
@@ -16,6 +17,7 @@ public class AudioManager : Singleton<AudioManager>
     public const string AmbienceVolume = "AmbienceVolume";
     public const string SfxVolume = "SFXVolume";
     public const string UIVolume = "UIVolume";
+    private static readonly string[] VolumeParameters = { MasterVolume, MusicVolume, AmbienceVolume, SfxVolume, UIVolume };
 
     [Header("Mixer")]
     [SerializeField] private AudioMixer mixer;
@@ -30,14 +32,15 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField, Min(0f)] private float defaultFadeDuration = 1.5f;
 
     [Header("SFX")]
-    [Tooltip("Most sound effects that can play at once. Extra plays are dropped.")]
+    [Tooltip("Most sound effects that can play at once. When full, a new sound replaces the oldest lower-priority one, " +
+             "or is dropped if none is lower.")]
     [SerializeField, Min(1)] private int maxSfxVoices = 24;
     [Tooltip("World distance from the camera centre at which a positioned sound is fully in one ear.")]
     [SerializeField, Min(0.01f)] private float stereoPanWidth = 12f;
 
     private ObjectPool<AudioSource> sfxPool;
-    private readonly List<AudioSource> playingSfx = new();
-    private readonly Dictionary<SoundData, AudioSource> loopedSfx = new();
+    private readonly List<PlayingSound> playingSfx = new(); // oldest first
+    private readonly Dictionary<SoundData, LoopedSound> loopedSfx = new();
     private readonly Dictionary<SoundData, float> lastPlayTimes = new();
 
     private readonly MusicDeck[] musicDecks = new MusicDeck[2];
@@ -75,20 +78,49 @@ public class AudioManager : Singleton<AudioManager>
         ambienceSources[0] = CreateSource("Ambience A", ambienceGroup);
         ambienceSources[1] = CreateSource("Ambience B", ambienceGroup);
         ambienceSources[0].loop = ambienceSources[1].loop = true;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // Volumes are applied here rather than in Awake: the mixer ignores SetFloat until it has initialised.
+    private void Start()
+    {
+        if (Instance != this)
+            return;
+
+        foreach (string parameter in VolumeParameters)
+            ApplyVolume(parameter, GetVolume(parameter));
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Update()
     {
+        // A duplicate from a newly loaded scene runs one Update before it is destroyed, and was never set up.
+        if (Instance != this)
+            return;
+
         float deltaTime = Time.unscaledDeltaTime;
 
         // Hand finished one-shots back to the pool.
         for (int i = playingSfx.Count - 1; i >= 0; i--)
         {
-            if (playingSfx[i].isPlaying)
+            if (playingSfx[i].Source.isPlaying)
                 continue;
 
-            sfxPool.Release(playingSfx[i]);
+            sfxPool.Release(playingSfx[i].Source);
             playingSfx.RemoveAt(i);
+        }
+
+        // Positioned loops follow the camera: louder as the player gets close, silent out of range.
+        foreach (KeyValuePair<SoundData, LoopedSound> loop in loopedSfx)
+        {
+            if (loop.Value.Position.HasValue)
+                ApplyPosition(loop.Value.Source, loop.Key, loop.Value.Position);
         }
 
         foreach (MusicDeck deck in musicDecks)
@@ -118,35 +150,79 @@ public class AudioManager : Singleton<AudioManager>
 
     public void StopLoopedSFX(SoundData sound)
     {
-        if (sound == null || !loopedSfx.Remove(sound, out AudioSource source))
+        if (sound == null || !loopedSfx.Remove(sound, out LoopedSound loop))
             return;
 
-        sfxPool.Release(source);
+        sfxPool.Release(loop.Source);
+    }
+
+    // Stops every one-shot and loop. Runs automatically when a new scene replaces the current one; music keeps going.
+    public void StopAllSFX()
+    {
+        foreach (PlayingSound playing in playingSfx)
+            sfxPool.Release(playing.Source);
+        playingSfx.Clear();
+
+        foreach (LoopedSound loop in loopedSfx.Values)
+            sfxPool.Release(loop.Source);
+        loopedSfx.Clear();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (mode == LoadSceneMode.Single)
+            StopAllSFX();
     }
 
     private void PlaySfxInternal(SoundData sound, Vector3? position)
     {
-        if (sound == null || playingSfx.Count + loopedSfx.Count >= maxSfxVoices || IsCoolingDown(sound))
+        if (sound == null || !IsAudible(sound, position) || IsCoolingDown(sound))
             return;
-        if (!sound.TryGetClip(out AudioClip clip))
+        if (!sound.TryGetClip(out AudioClip clip) || !TryGetVoice(sound.Priority, out AudioSource source))
             return;
 
-        AudioSource source = sfxPool.Get();
-        Configure(source, sound, clip, position);
+        Configure(source, sound, clip);
+        ApplyPosition(source, sound, position);
         source.Play();
-        playingSfx.Add(source);
+        playingSfx.Add(new PlayingSound { Source = source, Priority = sound.Priority });
     }
 
     private void StartLoopedSfxInternal(SoundData sound, Vector3? position)
     {
         if (sound == null || loopedSfx.ContainsKey(sound) || !sound.TryGetClip(out AudioClip clip))
             return;
+        if (!TryGetVoice(sound.Priority, out AudioSource source))
+            return;
 
-        AudioSource source = sfxPool.Get();
-        Configure(source, sound, clip, position);
+        Configure(source, sound, clip);
+        ApplyPosition(source, sound, position);
         source.loop = true;
         source.Play();
-        loopedSfx[sound] = source;
+        loopedSfx[sound] = new LoopedSound { Source = source, Position = position };
+    }
+
+    // A free source, or the oldest one-shot with a lower priority (which gets cut off). False if neither exists.
+    private bool TryGetVoice(int priority, out AudioSource source)
+    {
+        if (playingSfx.Count + loopedSfx.Count < maxSfxVoices)
+        {
+            source = sfxPool.Get();
+            return true;
+        }
+
+        for (int i = 0; i < playingSfx.Count; i++)
+        {
+            if (playingSfx[i].Priority >= priority)
+                continue;
+
+            source = playingSfx[i].Source;
+            source.Stop();
+            playingSfx.RemoveAt(i);
+            return true;
+        }
+
+        source = null;
+        return false;
     }
 
     private bool IsCoolingDown(SoundData sound)
@@ -159,17 +235,40 @@ public class AudioManager : Singleton<AudioManager>
         return false;
     }
 
-    private void Configure(AudioSource source, SoundData sound, AudioClip clip, Vector3? position)
+    private void Configure(AudioSource source, SoundData sound, AudioClip clip)
     {
         source.clip = clip;
         source.outputAudioMixerGroup = sound.MixerGroup != null ? sound.MixerGroup : defaultSfxGroup;
-        source.volume = sound.Volume;
         source.pitch = sound.RandomPitch;
+    }
+
+    // Volume falls off with distance from the camera (within the sound's hearing range) and the sound is panned
+    // towards the side it happens on.
+    private void ApplyPosition(AudioSource source, SoundData sound, Vector3? position)
+    {
+        source.volume = sound.Volume;
         source.panStereo = 0f;
 
         Camera listenerCamera = Camera.main;
-        if (position.HasValue && listenerCamera != null)
-            source.panStereo = Mathf.Clamp((position.Value.x - listenerCamera.transform.position.x) / stereoPanWidth, -1f, 1f);
+        if (!position.HasValue || listenerCamera == null)
+            return;
+
+        Vector3 offset = position.Value - listenerCamera.transform.position;
+        source.panStereo = Mathf.Clamp(offset.x / stereoPanWidth, -1f, 1f);
+        if (sound.HearingRange > 0f)
+        {
+            float distance = ((Vector2)offset).magnitude / sound.HearingRange;
+            source.volume = sound.Volume * Mathf.Clamp01(1f - distance * distance);
+        }
+    }
+
+    private static bool IsAudible(SoundData sound, Vector3? position)
+    {
+        Camera listenerCamera = Camera.main;
+        if (!position.HasValue || sound.HearingRange <= 0f || listenerCamera == null)
+            return true;
+
+        return Vector2.Distance(position.Value, listenerCamera.transform.position) < sound.HearingRange;
     }
 
     // ---------- Music ----------
@@ -243,11 +342,24 @@ public class AudioManager : Singleton<AudioManager>
 
     // ---------- Mixer ----------
 
-    // volume is 0..1 (a settings slider); the mixer works in decibels.
+    // volume is 0..1 (a settings slider); it is saved and restored on the next launch.
     public void SetVolume(string exposedParameter, float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        PlayerPrefs.SetFloat(VolumePrefsKey(exposedParameter), volume);
+        ApplyVolume(exposedParameter, volume);
+    }
+
+    // The saved 0..1 volume, for setting a slider's starting value.
+    public float GetVolume(string exposedParameter) => PlayerPrefs.GetFloat(VolumePrefsKey(exposedParameter), 1f);
+
+    // The mixer works in decibels.
+    private void ApplyVolume(string exposedParameter, float volume)
     {
         mixer.SetFloat(exposedParameter, volume > 0.0001f ? Mathf.Log10(volume) * 20f : -80f);
     }
+
+    private static string VolumePrefsKey(string exposedParameter) => "Audio." + exposedParameter;
 
     // Muffles music and ambience (lowpass) while a pause menu is open. The Paused snapshot only changes the filters:
     // group volumes are exposed for SetVolume, and an exposed parameter always overrides snapshot values.
@@ -273,6 +385,18 @@ public class AudioManager : Singleton<AudioManager>
         source.outputAudioMixerGroup = group;
         source.playOnAwake = false;
         return source;
+    }
+
+    private struct PlayingSound
+    {
+        public AudioSource Source;
+        public int Priority;
+    }
+
+    private struct LoopedSound
+    {
+        public AudioSource Source;
+        public Vector3? Position;
     }
 
     // A volume that moves toward a target over a set time.
