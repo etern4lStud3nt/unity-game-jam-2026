@@ -18,11 +18,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.91
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.z
@@ -59,5 +59,42 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3128312004037685325}
   m_SourcePrefab: {fileID: 100100000, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+--- !u!1 &3570890493642793211 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+  m_PrefabInstance: {fileID: 4130202475785675377}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3128312004037685325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570890493642793211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3d6552649bbe48b9662119a90c5be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAudio
+  characterController: {fileID: 5697780646105803072}
+  footstep: {fileID: 11400000, guid: d70ec3651e5e49f448e68d32e93e72ef, type: 2}
+  jump: {fileID: 11400000, guid: e97e45c77db8d8d44b23232a02c83ef3, type: 2}
+  stepInterval: 0.3
+  minWalkSpeed: 0.1
+  jumpSpeedChange: 3
+--- !u!114 &5697780646105803072 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+  m_PrefabInstance: {fileID: 4130202475785675377}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570890493642793211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae8c07075240c4409198b2406df08b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterController
