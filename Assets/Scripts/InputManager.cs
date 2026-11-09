@@ -10,6 +10,7 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     public event Action Jump;
     public event Action Attack;
     public event Action Interact;
+    public event Action Dash;
     public Vector2 MoveInput { get; private set; }
 
 
@@ -50,6 +51,14 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
         if (context.started)
         {
             Jump?.Invoke();
+        }
+    }
+
+    void InputSystem_Actions.IPlayerActions.OnDash(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Dash?.Invoke();
         }
     }
 
