@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822cbd087cc238544ae85ae22548dff0, type: 3}
+  m_Name: VO_Lose
+  m_EditorClassIdentifier: Assembly-CSharp::SoundData
+  clips:
+  - {fileID: 8300000, guid: a79ce80755218d745b78f5835245a36e, type: 3}
+  - {fileID: 8300000, guid: 5e407a03655d4a941b7d3e8d172f8809, type: 3}
+  - {fileID: 8300000, guid: decf3d8d57f36b64d963f722e42ba409, type: 3}
+  volume: 1
+  pitchRange: {x: 1, y: 1}
+  cooldown: 0.5
+  mixerGroup: {fileID: 0}
+  hearingRange: 0
+  priority: 85

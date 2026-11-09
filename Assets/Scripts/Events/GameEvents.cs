@@ -37,3 +37,16 @@ public struct CheckpointReached : IEvent
 {
     public Vector3 Position;
 }
+
+// An enemy died (published by EnemyBrain when its death starts).
+public struct EnemyKilled : IEvent
+{
+    public GameObject Enemy;
+    public Vector3 Position;
+}
+
+// The player picked up an ability (published by AbilityPickup).
+public struct AbilityUnlocked : IEvent
+{
+    public PlayerAbility Ability;
+}

@@ -10,6 +10,8 @@ public class CharacterAudio : MonoBehaviour
     [SerializeField] private CharacterController characterController;
     [SerializeField] private SoundData footstep;
     [SerializeField] private SoundData jump;
+    [Tooltip("Played instead of Jump when the push happens in the air. Empty = Jump.")]
+    [SerializeField] private SoundData airJump;
 
     [Header("Footsteps")]
     [SerializeField, Min(0.05f)] private float stepInterval = 0.3f;
@@ -39,7 +41,11 @@ public class CharacterAudio : MonoBehaviour
         // Moving up fast after a sudden push is a jump; landing also raises the speed (from falling to 0) but doesn't go up.
         float verticalSpeed = body.linearVelocityY;
         if (verticalSpeed > jumpSpeedChange && verticalSpeed - lastVerticalSpeed > jumpSpeedChange)
-            AudioManager.Instance.PlaySFX(jump, transform.position);
+        {
+            // On the ground the body was still just before the push; in the air it was already rising or falling.
+            bool inAir = airJump != null && Mathf.Abs(lastVerticalSpeed) > 0.5f;
+            AudioManager.Instance.PlaySFX(inAir ? airJump : jump, transform.position);
+        }
         lastVerticalSpeed = verticalSpeed;
 
         bool walking = Mathf.Abs(body.linearVelocityX) > minWalkSpeed && characterController.IsGrounded();
