@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
         inputManager.Jump += HandleJump;
         inputManager.Attack += HandleAttack;
         inputManager.Interact += HandleInteract;
+        inputManager.Dash += HandleDash;
     }
 
     private void FixedUpdate()
@@ -25,6 +26,11 @@ public class Player : MonoBehaviour
             return;
 
         characterController.Jump();
+    }
+
+    private void HandleDash()
+    {
+        characterController.Dash(inputManager.MoveInput.x);
     }
 
     private void HandleAttack()
@@ -42,5 +48,6 @@ public class Player : MonoBehaviour
         inputManager.Jump -= HandleJump;
         inputManager.Attack -= HandleAttack;
         inputManager.Interact -= HandleInteract;
+        inputManager.Dash -= HandleDash;
     }
 }

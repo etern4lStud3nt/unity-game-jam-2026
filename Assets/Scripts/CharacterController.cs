@@ -14,13 +14,36 @@ namespace Assets.Scripts
         [Header("Abilities (metroidvania unlocks)")]
         [SerializeField] private bool doubleJumpUnlocked = true;
         [SerializeField] private bool wallJumpUnlocked = true;
+        [SerializeField] private bool dashUnlocked = true;
+
+        [Header("Dash")]
+        [SerializeField] private float dashSpeed = 28f;
+        [SerializeField] private float dashTime = 0.25f;
+        [SerializeField] private float dashCooldown = 0.4f;
+        [Tooltip("Short hold in the air before the burst, so the dash reads as a snap instead of a slide.")]
+        [SerializeField] private float dashFreezeTime = 0.04f;
+        [Tooltip("Speed multiplier over the dash (0 = start, 1 = end). Starts hard, then eases out.")]
+        [SerializeField] private AnimationCurve dashSpeedCurve = new AnimationCurve(
+            new Keyframe(0f, 1.9f, 0f, -1.5f),
+            new Keyframe(0.55f, 0.95f, -2.2f, -2.2f),
+            new Keyframe(1f, 0.3f, -0.6f, 0f));
+
+        // Direction (+1 right / -1 left). Visual effects such as afterimages listen to these.
+        public event System.Action<float> DashStarted;
+        public event System.Action DashEnded;
 
         public bool DoubleJumpUnlocked { get => doubleJumpUnlocked; set => doubleJumpUnlocked = value; }
         public bool WallJumpUnlocked { get => wallJumpUnlocked; set => wallJumpUnlocked = value; }
+        public bool DashUnlocked { get => dashUnlocked; set => dashUnlocked = value; }
+        public bool IsDashing { get; private set; }
 
         private Rigidbody2D rigidbody;
         private Collider2D bodyCollider;
         private bool canAirJump = false;
+        private bool canDash = true;
+        private float nextDashTime;
+        private float facing = 1f;
+        private float savedGravity;
 
         public void Awake()
         {
@@ -49,8 +72,70 @@ namespace Assets.Scripts
 
         public void Walk(Vector2 direction)
         {
+            if (IsDashing)
+                return;
+
             direction.Normalize();
+            if (Mathf.Abs(direction.x) > 0.1f)
+                facing = Mathf.Sign(direction.x);
             rigidbody.linearVelocityX = direction.x * moveSpeed;
+        }
+
+        // Horizontal dash in the input direction (or the facing direction when there is no input).
+        // One dash in the air; it comes back on touching the ground or a wall.
+        public bool Dash(float inputX)
+        {
+            if (!dashUnlocked || IsDashing || !canDash || Time.time < nextDashTime)
+                return false;
+
+            float direction = Mathf.Abs(inputX) > 0.1f ? Mathf.Sign(inputX) : facing;
+            facing = direction;
+            StartCoroutine(DashRoutine(direction));
+            return true;
+        }
+
+        private IEnumerator DashRoutine(float direction)
+        {
+            IsDashing = true;
+            canDash = false;
+            savedGravity = rigidbody.gravityScale;
+            rigidbody.gravityScale = 0f;
+
+            // Freeze for a moment, then burst.
+            float freezeEnd = Time.time + dashFreezeTime;
+            while (Time.time < freezeEnd)
+            {
+                rigidbody.linearVelocity = Vector2.zero;
+                yield return new WaitForFixedUpdate();
+            }
+
+            DashStarted?.Invoke(direction);
+            float start = Time.time;
+            while (Time.time - start < dashTime)
+            {
+                float t = (Time.time - start) / dashTime;
+                rigidbody.linearVelocity = new Vector2(direction * dashSpeed * dashSpeedCurve.Evaluate(t), 0f);
+                yield return new WaitForFixedUpdate();
+            }
+
+            EndDash();
+            rigidbody.linearVelocityX = direction * moveSpeed;
+        }
+
+        private void EndDash()
+        {
+            if (!IsDashing)
+                return;
+            rigidbody.gravityScale = savedGravity;
+            IsDashing = false;
+            nextDashTime = Time.time + dashCooldown;
+            DashEnded?.Invoke();
+        }
+
+        private void OnDisable()
+        {
+            StopAllCoroutines();
+            EndDash();
         }
 
         public void Jump()
@@ -75,6 +160,9 @@ namespace Assets.Scripts
 
         private void FixedUpdate()
         {
+            if (!canDash && !IsDashing && (IsGrounded() || (wallJumpUnlocked && IsTouchingWall())))
+                canDash = true;
+
             if (!canAirJump)
             {
                 if (IsGrounded() || (wallJumpUnlocked && IsTouchingWall()))
