@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f98a3e81b745ec429915bd803b9101e, type: 3}
+  m_Name: Guard_Basic
+  m_EditorClassIdentifier: Assembly-CSharp::Enemies.GuardStats
+  <PatrolSpeed>k__BackingField: 3
+  <ChaseSpeed>k__BackingField: 5
+  <TurnPause>k__BackingField: 0.3
+  <PatrolDistance>k__BackingField: 0
+  <SightRange>k__BackingField: 10
+  <BackSightRange>k__BackingField: 10
+  <VerticalSight>k__BackingField: 2.5
+  <LoseSightTime>k__BackingField: 1
+  <LeashDistance>k__BackingField: 10
+  <AttackType>k__BackingField: 2
+  <AttackHeight>k__BackingField: 1.5
+  <AttackCooldown>k__BackingField: 1.2
+  <WindupTime>k__BackingField: 0.4
+  <LungeSpeed>k__BackingField: 15
+  <LungeTime>k__BackingField: 0.2
+  <SwingActiveTime>k__BackingField: 0.3
+  <SwingStep>k__BackingField: 3
+  <BurstCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0021163342
+      value: 0.19332059
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.45274654
+      value: 1.6776124
+      inSlope: -3.6877558
+      outSlope: -3.6877558
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09254164
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <RecoverTime>k__BackingField: 0.6
+  <KnockbackForce>k__BackingField: 1
+  <KnockbackTime>k__BackingField: 0.1
+  <StunDuration>k__BackingField: 0
+  <DeathTime>k__BackingField: 0.4
+  <LookBackInterval>k__BackingField: 3
+  <LookBackTime>k__BackingField: 1
