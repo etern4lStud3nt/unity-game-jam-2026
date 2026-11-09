@@ -32,7 +32,8 @@ namespace Enemies
 
         // The calm state: where the enemy starts and what it goes back to after losing the player.
         public IState Idle { get; private set; }
-        public ChaseState Chase { get; private set; }
+        // The pursuit state: ChaseState for ground enemies, overridable (the flyer approaches from above).
+        public IState Chase { get; private set; }
         public WindupState Windup { get; private set; }
         public LungeState Lunge { get; private set; }
         public SwingState Swing { get; private set; }
@@ -48,7 +49,7 @@ namespace Enemies
         public int HomeFacing { get; private set; } = 1;
 
         // True when the player is close enough to home to be worth chasing (always true without a leash).
-        public bool PlayerInLeash =>
+        public virtual bool PlayerInLeash =>
             stats.LeashDistance <= 0f || (Senses.HasPlayer && Mathf.Abs(Senses.PlayerPoint.x - Home.x) <= stats.LeashDistance);
 
         // How close the player must be (horizontally, centre to centre) for the attack to land. Not a setting:
@@ -83,6 +84,9 @@ namespace Enemies
         // The walker patrols. Override to give another enemy type a different calm behaviour.
         protected virtual IState CreateIdleState() => new PatrolState(this);
 
+        // Ground enemies run at the player. Override for enemies that pursue differently.
+        protected virtual IState CreateChaseState() => new ChaseState(this);
+
         private void Awake()
         {
             Motor = GetComponent<EnemyMotor>();
@@ -102,7 +106,7 @@ namespace Enemies
 
             Fsm = new StateMachine();
             Idle = CreateIdleState();
-            Chase = new ChaseState(this);
+            Chase = CreateChaseState();
             Windup = new WindupState(this);
             Lunge = new LungeState(this);
             Swing = new SwingState(this);
@@ -235,6 +239,7 @@ namespace Enemies
             if (Idle is PatrolState || (!Application.isPlaying && GetType() == typeof(EnemyBrain)))
                 DrawPosts(home, stats.PatrolDistance, 1f, Color.green);
             DrawPosts(home, stats.LeashDistance, 2f, Color.red);
+            DrawExtraGizmos();
         }
 
         private static void DrawPosts(Vector3 home, float distance, float height, Color color)
@@ -248,6 +253,9 @@ namespace Enemies
                 Gizmos.DrawLine(post + Vector3.down * height, post + Vector3.up * height);
             }
         }
+
+        // Extra gizmos for enemy types, drawn while the enemy is selected.
+        protected virtual void DrawExtraGizmos() { }
 
         private void OnDrawGizmos()
         {

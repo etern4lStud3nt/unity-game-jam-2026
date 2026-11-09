@@ -4,11 +4,12 @@ namespace Enemies
 {
     // Moves a ground enemy: walks, turns, gets knocked back, and tells the states whether a wall or a ledge
     // is ahead. States only ask the motor to move; they never touch the Rigidbody2D themselves.
+    // FlyingMotor derives from it for enemies without gravity.
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class EnemyMotor : MonoBehaviour
     {
         [Tooltip("Layers that count as ground and walls (the tilemap's Ground layer).")]
-        [SerializeField] private LayerMask groundLayers;
+        [SerializeField] protected LayerMask groundLayers;
         [Tooltip("Child flipped to face the movement direction (sprite, hurtbox).")]
         [SerializeField] private Transform visual;
         [Tooltip("Faces left when the level starts (a guard watching the left side, a walker starting leftwards).")]
@@ -20,7 +21,7 @@ namespace Enemies
 
         private Rigidbody2D body;
         private Collider2D bodyCollider;
-        private float knockbackUntil;
+        protected float knockbackUntil;
 
         public Rigidbody2D Body => body;
         public int Facing { get; private set; } = 1;
@@ -32,7 +33,7 @@ namespace Enemies
             visual = transform.Find("Visual");
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             body = GetComponent<Rigidbody2D>();
             bodyCollider = GetComponent<Collider2D>();
@@ -49,7 +50,7 @@ namespace Enemies
             body.linearVelocityX = dir * speed;
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             if (!IsKnockedBack)
                 body.linearVelocityX = 0f;
@@ -65,7 +66,7 @@ namespace Enemies
 
         public void TurnAround() => Face(-Facing);
 
-        public void Knockback(int dir, float force, float time)
+        public virtual void Knockback(int dir, float force, float time)
         {
             knockbackUntil = Time.time + time;
             body.linearVelocityX = dir * force;

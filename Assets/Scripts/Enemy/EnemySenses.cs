@@ -17,6 +17,7 @@ namespace Enemies
         private Transform player;
         private Collider2D playerCollider;
         private Health playerHealth;
+        private Rigidbody2D playerBody;
         private float lastSeenTime = float.NegativeInfinity;
         private float nextSearchTime;
 
@@ -30,6 +31,8 @@ namespace Enemies
 
         // Centre of the player's body (not the pivot, which can sit at the feet).
         public Vector2 PlayerPoint => playerCollider != null ? (Vector2)playerCollider.bounds.center : (Vector2)player.position;
+        // The player's current velocity (for aiming ahead of them).
+        public Vector2 PlayerVelocity => playerBody != null ? playerBody.linearVelocity : Vector2.zero;
         public int PlayerDirection => HasPlayer ? (PlayerPoint.x >= transform.position.x ? 1 : -1) : 0;
         public float HorizontalDistance => HasPlayer ? Mathf.Abs(PlayerPoint.x - transform.position.x) : float.PositiveInfinity;
         public float VerticalDistance => HasPlayer ? Mathf.Abs(PlayerPoint.y - Eye.y) : float.PositiveInfinity;
@@ -87,6 +90,7 @@ namespace Enemies
 
             player = found.transform;
             playerHealth = found.GetComponentInParent<Health>();
+            playerBody = found.GetComponentInParent<Rigidbody2D>();
             playerCollider = null;
             foreach (Collider2D col in found.GetComponentsInChildren<Collider2D>())
             {
