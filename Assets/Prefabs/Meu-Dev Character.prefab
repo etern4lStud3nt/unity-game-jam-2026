@@ -89,6 +89,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 149449183237963507}
+    - targetCorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 687176511122013505}
   m_SourcePrefab: {fileID: 100100000, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
 --- !u!1 &3570890493642793211 stripped
 GameObject:
@@ -214,8 +217,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAudio
   characterController: {fileID: 5697780646105803072}
-  footstep: {fileID: 11400000, guid: d70ec3651e5e49f448e68d32e93e72ef, type: 2}
-  jump: {fileID: 11400000, guid: e97e45c77db8d8d44b23232a02c83ef3, type: 2}
+  footstep: {fileID: 11400000, guid: 7ebd74ae8cacbc549a3a5c5d590a12f8, type: 2}
+  jump: {fileID: 11400000, guid: 46229e0f9153d944286206a5cbee63e6, type: 2}
+  airJump: {fileID: 11400000, guid: 3a544d6132d3a2442bde8609880ac087, type: 2}
   stepInterval: 0.3
   minWalkSpeed: 0.1
   jumpSpeedChange: 3
@@ -280,6 +284,22 @@ MonoBehaviour:
   shakeForce: 0.15
   slashSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   slashColor: {r: 1, g: 1, b: 1, a: 0.5}
+--- !u!114 &687176511122013505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570890493642793211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed74f6d255b1f74c93938a61d71f45b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSounds
+  swing: {fileID: 11400000, guid: 794f6492c9ad9ba48a5c2a276e3384af, type: 2}
+  hit: {fileID: 0}
+  hurt: {fileID: 11400000, guid: 63478e0d0eccc4d4cbb60b8430334f10, type: 2}
+  death: {fileID: 11400000, guid: c3c96be3916879d43a8390fed3a69f7d, type: 2}
 --- !u!114 &5697780646105803072 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
