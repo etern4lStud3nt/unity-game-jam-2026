@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using CharacterController = Assets.Scripts.CharacterController;
 
-// Level testing helpers. Runs only in the editor and development builds.
+// Level testing helpers. Runs only in the editor and DEBUG builds.
 //   F1            fly mode (no collision, WASD / arrows to move, Shift = faster)
 //   PageDown/Up   teleport to the next / previous room's Spawn point
 //   F2            toggle double jump unlock
@@ -11,7 +11,7 @@ using CharacterController = Assets.Scripts.CharacterController;
 //   F4            hide / show this panel
 public class LevelDebugTools : MonoBehaviour
 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || DEBUG
     [SerializeField] private CharacterController character;
     [SerializeField] private Transform roomsRoot;
     [SerializeField] private float flySpeed = 15f;
@@ -22,6 +22,14 @@ public class LevelDebugTools : MonoBehaviour
     private bool flying;
     private bool showPanel = true;
     private int roomIndex = -1;
+    private string currentRoom = "-";
+    private Health health;
+
+    private void OnEnable() => EventBus.Subscribe<RoomEntered>(OnRoomEntered);
+
+    private void OnDisable() => EventBus.Unsubscribe<RoomEntered>(OnRoomEntered);
+
+    private void OnRoomEntered(RoomEntered evt) => currentRoom = evt.RoomId + " " + evt.RoomName;
 
     private void Start()
     {
@@ -33,6 +41,7 @@ public class LevelDebugTools : MonoBehaviour
         }
 
         body = character.GetComponent<Rigidbody2D>();
+        health = character.GetComponent<Health>();
         bodyCollider = character.GetComponent<Collider2D>();
 
         if (roomsRoot != null)
@@ -88,15 +97,16 @@ public class LevelDebugTools : MonoBehaviour
     private void OnGUI()
     {
         if (!showPanel) return;
-        string room = roomIndex >= 0 && roomIndex < rooms.Count ? rooms[roomIndex].name : "-";
+        string hp = health != null ? $"{health.CurrentHealth}/{health.MaxHealth}" : "-";
         string text =
             "LEVEL DEBUG  (F4 hide)\n" +
+            $"Room: {currentRoom}    HP: {hp}\n" +
             $"F1  Fly: {(flying ? "ON" : "off")}\n" +
             $"F2  Double jump: {(character.DoubleJumpUnlocked ? "ON" : "off")}\n" +
             $"F3  Wall jump: {(character.WallJumpUnlocked ? "ON" : "off")}\n" +
-            $"PgDn / PgUp  Room: {room}";
-        GUI.Box(new Rect(10, 10, 300, 100), GUIContent.none);
-        GUI.Label(new Rect(18, 14, 290, 95), text);
+            "PgDn / PgUp  next / previous room";
+        GUI.Box(new Rect(10, 10, 320, 115), GUIContent.none);
+        GUI.Label(new Rect(18, 14, 310, 110), text);
     }
 #endif
 }
