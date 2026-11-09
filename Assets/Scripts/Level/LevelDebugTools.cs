@@ -9,6 +9,7 @@ using CharacterController = Assets.Scripts.CharacterController;
 //   F2            toggle double jump unlock
 //   F3            toggle wall jump unlock
 //   F4            hide / show this panel
+//   F5            toggle dash unlock (dash = Left Shift)
 public class LevelDebugTools : MonoBehaviour
 {
 #if UNITY_EDITOR || DEBUG
@@ -61,6 +62,7 @@ public class LevelDebugTools : MonoBehaviour
         if (keyboard.f2Key.wasPressedThisFrame) character.DoubleJumpUnlocked = !character.DoubleJumpUnlocked;
         if (keyboard.f3Key.wasPressedThisFrame) character.WallJumpUnlocked = !character.WallJumpUnlocked;
         if (keyboard.f4Key.wasPressedThisFrame) showPanel = !showPanel;
+        if (keyboard.f5Key.wasPressedThisFrame) character.DashUnlocked = !character.DashUnlocked;
         if (keyboard.pageDownKey.wasPressedThisFrame) Teleport(roomIndex + 1);
         if (keyboard.pageUpKey.wasPressedThisFrame) Teleport(roomIndex - 1);
 
@@ -104,9 +106,10 @@ public class LevelDebugTools : MonoBehaviour
             $"F1  Fly: {(flying ? "ON" : "off")}\n" +
             $"F2  Double jump: {(character.DoubleJumpUnlocked ? "ON" : "off")}\n" +
             $"F3  Wall jump: {(character.WallJumpUnlocked ? "ON" : "off")}\n" +
+            $"F5  Dash (Shift): {(character.DashUnlocked ? "ON" : "off")}\n" +
             "PgDn / PgUp  next / previous room";
-        GUI.Box(new Rect(10, 10, 320, 115), GUIContent.none);
-        GUI.Label(new Rect(18, 14, 310, 110), text);
+        GUI.Box(new Rect(10, 10, 320, 132), GUIContent.none);
+        GUI.Label(new Rect(18, 14, 310, 127), text);
     }
 #endif
 }
