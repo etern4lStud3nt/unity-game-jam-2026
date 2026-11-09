@@ -44,3 +44,9 @@ public struct EnemyKilled : IEvent
     public GameObject Enemy;
     public Vector3 Position;
 }
+
+// The player picked up an ability (published by AbilityPickup).
+public struct AbilityUnlocked : IEvent
+{
+    public PlayerAbility Ability;
+}
