@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// American roulette (0, 00 and 1-36). Collects bets, picks a winning pocket and works out the payout.
+// Pocket 37 is the double zero.
 public class Roulette : MonoBehaviour
 {
+    public const int DoubleZero = 37;
+
     public Dictionary<int, Color> Pockets { get; private set; } = new()
     {
         { 0, Color.green },
@@ -42,7 +46,14 @@ public class Roulette : MonoBehaviour
         { 34, Color.red },
         { 35, Color.black },
         { 36, Color.red },
-        { 37, Color.green } // 37 is the double zero pocket
+        { DoubleZero, Color.green }
+    };
+
+    // Pockets in the order they sit around an American wheel, clockwise from 0.
+    public static readonly int[] WheelOrder =
+    {
+        0, 28, 9, 26, 30, 11, 7, 20, 32, 17, 5, 22, 34, 15, 3, 24, 36, 13, 1,
+        DoubleZero, 27, 10, 25, 29, 12, 8, 19, 31, 18, 6, 21, 33, 16, 4, 23, 35, 14, 2
     };
 
     public struct Bet
@@ -74,7 +85,25 @@ public class Roulette : MonoBehaviour
         }
     }
 
-    private readonly List<Bet> bets;
+    private readonly List<Bet> bets = new();
+
+    public IReadOnlyList<Bet> Bets => bets;
+
+    public int TotalBet
+    {
+        get
+        {
+            int total = 0;
+            foreach (Bet bet in bets)
+                total += bet.Chips;
+            return total;
+        }
+    }
+
+    // "00" for the double zero, the number otherwise.
+    public static string PocketLabel(int pocket) => pocket == DoubleZero ? "00" : pocket.ToString();
+
+    public void ClearBets() => bets.Clear();
 
     public void BetNumber(int number, int chips)
     {
@@ -88,62 +117,33 @@ public class Roulette : MonoBehaviour
         bets.Add(newBet);
     }
 
-    public void BetLow(int chips)
+    public void BetLow(int chips) => bets.Add(new Bet(Range(1, 18), chips));
+
+    public void BetHigh(int chips) => bets.Add(new Bet(Range(19, 36), chips));
+
+    // dozen 1 = 1-12, 2 = 13-24, 3 = 25-36.
+    public void BetDozen(int dozen, int chips)
     {
-        List<int> lowNums = new();
-        foreach (int n in Pockets.Keys)
-        {
-            if (n <= 18 && n >= 1)
-                lowNums.Add(n);
-        }
-
-        Bet newBet = new(lowNums, chips);
-        bets.Add(newBet);
-    }
-
-    public void BetHigh(int chips)
-    {
-        List<int> lowNums = new();
-        foreach (int n in Pockets.Keys)
-        {
-            if (n <= 19 && n >= 36)
-                lowNums.Add(n);
-        }
-
-        Bet newBet = new(lowNums, chips);
-        bets.Add(newBet);
+        int first = (Mathf.Clamp(dozen, 1, 3) - 1) * 12 + 1;
+        bets.Add(new Bet(Range(first, first + 11), chips));
     }
 
     public void BetOdd(int chips)
     {
         List<int> oddNums = new();
-        foreach (int n in Pockets.Keys)
-        {
-            if (n == 0 || n == 37)
-                continue;
-
+        for (int n = 1; n <= 36; n++)
             if (n % 2 != 0)
                 oddNums.Add(n);
-        }
-
-        Bet newBet = new(oddNums, chips);
-        bets.Add(newBet);
+        bets.Add(new Bet(oddNums, chips));
     }
 
     public void BetEven(int chips)
     {
         List<int> evenNums = new();
-        foreach (int n in Pockets.Keys)
-        {
-            if (n == 0 || n == 37)
-                continue;
-
+        for (int n = 1; n <= 36; n++)
             if (n % 2 == 0)
                 evenNums.Add(n);
-        }
-
-        Bet newBet = new(evenNums, chips);
-        bets.Add(newBet);
+        bets.Add(new Bet(evenNums, chips));
     }
 
     public int Spin()
@@ -151,6 +151,9 @@ public class Roulette : MonoBehaviour
         return Random.Range(0, 38);
     }
 
+    // Net result of all bets for this winning pocket: winnings minus every chip that was bet.
+    // Payouts as in a real casino: a color pays 1 to 1, and a bet on N numbers pays (36 / N - 1) to 1
+    // (single number 35 to 1, dozen 2 to 1, odd/even and low/high 1 to 1).
     public int GetPayout(int winningNumber)
     {
         int total = 0;
@@ -161,23 +164,23 @@ public class Roulette : MonoBehaviour
             if (bet.Numbers.Count == 0)
             {
                 if (bet.Color == Pockets[winningNumber])
-                    total += bet.Chips + bet.Chips * 2;
+                    total += bet.Chips * 2;
             }
             // Number bet
-            else
+            else if (bet.Numbers.Contains(winningNumber))
             {
-                foreach (int n in bet.Numbers)
-                {
-                    if (n == winningNumber)
-                    {
-                        total += bet.Chips + (bet.Chips / bet.Numbers.Count) * 35;
-                        break;
-                    }
-                }
+                total += bet.Chips * 36 / bet.Numbers.Count;
             }
-
         }
 
         return total;
+    }
+
+    private static List<int> Range(int first, int last)
+    {
+        List<int> numbers = new();
+        for (int n = first; n <= last; n++)
+            numbers.Add(n);
+        return numbers;
     }
 }
