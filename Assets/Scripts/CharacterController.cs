@@ -36,6 +36,8 @@ namespace Assets.Scripts
         public bool WallJumpUnlocked { get => wallJumpUnlocked; set => wallJumpUnlocked = value; }
         public bool DashUnlocked { get => dashUnlocked; set => dashUnlocked = value; }
         public bool IsDashing { get; private set; }
+        // +1 facing right, -1 facing left.
+        public float Facing => facing;
 
         private Rigidbody2D rigidbody;
         private Collider2D bodyCollider;
@@ -44,6 +46,7 @@ namespace Assets.Scripts
         private float nextDashTime;
         private float facing = 1f;
         private float savedGravity;
+        private float recoilUntil;
 
         public void Awake()
         {
@@ -72,7 +75,7 @@ namespace Assets.Scripts
 
         public void Walk(Vector2 direction)
         {
-            if (IsDashing)
+            if (IsDashing || Time.time < recoilUntil)
                 return;
 
             direction.Normalize();
@@ -136,6 +139,25 @@ namespace Assets.Scripts
         {
             StopAllCoroutines();
             EndDash();
+        }
+
+        // Pushes the character sideways for a moment (attack recoil); walking does not override it meanwhile.
+        public void Recoil(float velocityX, float time)
+        {
+            if (IsDashing)
+                return;
+            recoilUntil = Time.time + time;
+            rigidbody.linearVelocityX = velocityX;
+        }
+
+        // Bounces upwards (pogo off an enemy or spikes) and gives back the air jump and the dash.
+        public void Bounce(float upVelocity)
+        {
+            if (IsDashing)
+                return;
+            rigidbody.linearVelocityY = upVelocity;
+            canAirJump = true;
+            canDash = true;
         }
 
         public void Jump()

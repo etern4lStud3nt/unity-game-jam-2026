@@ -5,9 +5,14 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private CharacterController characterController;
+    [Tooltip("Empty = the PlayerAttack on the character.")]
+    [SerializeField] private PlayerAttack playerAttack;
 
     private void Start()
     {
+        if (playerAttack == null)
+            playerAttack = characterController.GetComponent<PlayerAttack>();
+
         inputManager.Jump += HandleJump;
         inputManager.Attack += HandleAttack;
         inputManager.Interact += HandleInteract;
@@ -35,7 +40,8 @@ public class Player : MonoBehaviour
 
     private void HandleAttack()
     {
-        Debug.Log("Attack");
+        if (playerAttack != null)
+            playerAttack.TryAttack(inputManager.MoveInput);
     }
 
     private void HandleInteract()
