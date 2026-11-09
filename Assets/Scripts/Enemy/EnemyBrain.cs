@@ -79,6 +79,8 @@ namespace Enemies
         }
 
         private Vector3 startScale;
+        private Collider2D[] ownColliders;
+        private Collider2D[] playerColliders;
 
         // Raised when the death animation starts (drops, kill counters, sounds). EnemyKilled goes out on the EventBus too.
         public event Action<EnemyBrain> Died;
@@ -106,6 +108,7 @@ namespace Enemies
             Senses.Configure(stats, Motor);
             Home = transform.position;
             startScale = transform.localScale;
+            ownColliders = GetComponents<Collider2D>();
             EnemyReset.Register(this);
 
             Fsm = new StateMachine();
@@ -162,6 +165,7 @@ namespace Enemies
 
         private void FixedUpdate()
         {
+            KeepIgnoringPlayer();
             Fsm.FixedTick();
         }
 
@@ -240,10 +244,36 @@ namespace Enemies
         // standing on them or pushing them, without needing a dedicated physics layer.
         private void IgnorePlayerCollisions(Transform player)
         {
-            Collider2D[] mine = GetComponents<Collider2D>();
-            foreach (Collider2D theirs in player.GetComponentsInChildren<Collider2D>())
-            foreach (Collider2D own in mine)
-                Physics2D.IgnoreCollision(own, theirs);
+            playerColliders = player.GetComponentsInChildren<Collider2D>();
+            ApplyIgnore();
+        }
+
+        // Unity forgets ignored pairs when the enemy object is switched off and on (death, then reset), so check
+        // every physics step and ignore them again if needed. Without this a revived enemy bumps into the player
+        // and its Hurtbox can never touch them.
+        private void KeepIgnoringPlayer()
+        {
+            if (playerColliders == null || ownColliders.Length == 0)
+                return;
+            foreach (Collider2D theirs in playerColliders)
+            {
+                if (theirs != null && !Physics2D.GetIgnoreCollision(ownColliders[0], theirs))
+                {
+                    ApplyIgnore();
+                    return;
+                }
+            }
+        }
+
+        private void ApplyIgnore()
+        {
+            foreach (Collider2D theirs in playerColliders)
+            {
+                if (theirs == null)
+                    continue;
+                foreach (Collider2D own in ownColliders)
+                    Physics2D.IgnoreCollision(own, theirs);
+            }
         }
 
 #if UNITY_EDITOR
