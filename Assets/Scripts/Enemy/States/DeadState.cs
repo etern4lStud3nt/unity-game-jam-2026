@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Enemies
 {
     // Final state: stops all physics (so the body no longer hurts or blocks), flashes, shrinks and fades,
-    // then destroys the enemy.
+    // then switches the enemy off. EnemyReset brings it back when the player respawns.
     public class DeadState : EnemyState
     {
         private Vector3 startScale;
@@ -28,7 +28,7 @@ namespace Enemies
                 Brain.Flash.Fade = 1f - t;
 
             if (t >= 1f)
-                Object.Destroy(Brain.gameObject);
+                Brain.gameObject.SetActive(false);
         }
     }
 }

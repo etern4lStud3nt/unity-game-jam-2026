@@ -78,7 +78,9 @@ namespace Enemies
             }
         }
 
-        // Raised when the death animation starts (drops, kill counters, sounds).
+        private Vector3 startScale;
+
+        // Raised when the death animation starts (drops, kill counters, sounds). EnemyKilled goes out on the EventBus too.
         public event Action<EnemyBrain> Died;
 
         // The walker patrols. Override to give another enemy type a different calm behaviour.
@@ -103,6 +105,8 @@ namespace Enemies
 
             Senses.Configure(stats, Motor);
             Home = transform.position;
+            startScale = transform.localScale;
+            EnemyReset.Register(this);
 
             Fsm = new StateMachine();
             Idle = CreateIdleState();
@@ -185,7 +189,34 @@ namespace Enemies
             Fsm.SetState(Dead);
         }
 
-        internal void RaiseDied() => Died?.Invoke(this);
+        internal void RaiseDied()
+        {
+            Died?.Invoke(this);
+            EventBus.Publish(new EnemyKilled { Enemy = gameObject, Position = transform.position });
+        }
+
+        // Back to where and how it was placed: alive, full health, calm. Used when the player respawns.
+        public void ResetToStart()
+        {
+            if (Fsm == null)
+                return;
+
+            gameObject.SetActive(true);
+            transform.localScale = startScale;
+            Motor.Body.simulated = true;
+            Motor.Body.position = Home;
+            transform.position = Home;
+            Motor.Body.linearVelocity = Vector2.zero;
+            if (Flash != null)
+                Flash.Fade = 1f;
+            Health.ResetHealth();
+            NextAttackTime = 0f;
+            SetAttackHitbox(false);
+            Motor.Face(HomeFacing);
+            Fsm.SetState(Idle, restart: true);
+        }
+
+        private void OnDestroy() => EnemyReset.Unregister(this);
 
         public void SetAttackHitbox(bool on)
         {
