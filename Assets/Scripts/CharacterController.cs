@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 namespace Assets.Scripts
 {
@@ -8,13 +9,35 @@ namespace Assets.Scripts
         [SerializeField] private float groundCheckLength = 1f;
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float jumpForce = 10f;
+        [SerializeField] private float dropThroughTime = 0.3f;
 
         private Rigidbody2D rigidbody;
+        private Collider2D bodyCollider;
         private bool canAirJump = false;
 
         public void Awake()
         {
             rigidbody = GetComponent<Rigidbody2D>();
+            bodyCollider = GetComponent<Collider2D>();
+        }
+
+        // Drops through the one-way platform the character stands on. Returns false when there is none.
+        public bool TryDropThrough()
+        {
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckLength, groundLayer);
+            if (hit.collider == null || !hit.collider.TryGetComponent(out PlatformEffector2D effector) || !effector.useOneWay)
+                return false;
+
+            StartCoroutine(IgnorePlatformFor(hit.collider));
+            return true;
+        }
+
+        private IEnumerator IgnorePlatformFor(Collider2D platform)
+        {
+            Physics2D.IgnoreCollision(bodyCollider, platform, true);
+            yield return new WaitForSeconds(dropThroughTime);
+            if (platform != null)
+                Physics2D.IgnoreCollision(bodyCollider, platform, false);
         }
 
         public void Walk(Vector2 direction)

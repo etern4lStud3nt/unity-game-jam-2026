@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
 
     private void HandleJump()
     {
+        // Down + jump drops through a one-way platform instead of jumping.
+        if (inputManager.MoveInput.y < -0.5f && characterController.TryDropThrough())
+            return;
+
         characterController.Jump();
     }
 
