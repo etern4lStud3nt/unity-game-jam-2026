@@ -175,3 +175,7 @@ Assets/Audio/_Placeholder/**/*.wav binary -filter
 
 # Placeholder tile sprites stay in plain git: the account LFS budget is used up
 Assets/Tiles/_Placeholder/**/*.png binary -filter
+
+# TMP Essential Resources (font + sprite) stay in plain git: the account LFS budget is used up
+"Assets/TextMesh Pro/**/*.ttf" binary -filter
+"Assets/TextMesh Pro/**/*.png" binary -filter
