@@ -11,6 +11,13 @@ namespace Assets.Scripts
         [SerializeField] private float jumpForce = 10f;
         [SerializeField] private float dropThroughTime = 0.3f;
 
+        [Header("Abilities (metroidvania unlocks)")]
+        [SerializeField] private bool doubleJumpUnlocked = true;
+        [SerializeField] private bool wallJumpUnlocked = true;
+
+        public bool DoubleJumpUnlocked { get => doubleJumpUnlocked; set => doubleJumpUnlocked = value; }
+        public bool WallJumpUnlocked { get => wallJumpUnlocked; set => wallJumpUnlocked = value; }
+
         private Rigidbody2D rigidbody;
         private Collider2D bodyCollider;
         private bool canAirJump = false;
@@ -55,7 +62,9 @@ namespace Assets.Scripts
             }
             else
             {
-                if (canAirJump)
+                // Air jump: double jump anywhere, or a wall jump while touching a wall.
+                bool allowed = doubleJumpUnlocked || (wallJumpUnlocked && IsTouchingWall());
+                if (canAirJump && allowed)
                 {
                     rigidbody.linearVelocityY = 0f;
                     rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -68,7 +77,7 @@ namespace Assets.Scripts
         {
             if (!canAirJump)
             {
-                if (IsGrounded() || IsTouchingWall())
+                if (IsGrounded() || (wallJumpUnlocked && IsTouchingWall()))
                 {
                     canAirJump = true;
                 }
