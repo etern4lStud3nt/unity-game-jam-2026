@@ -66,3 +66,12 @@ public struct PlayerHealthChanged : IEvent
     public int Max;
     public int Delta;
 }
+
+// The number of enemies the player has defeated changed (published by KillCounter).
+public struct KillCountChanged : IEvent
+{
+    public int Total;
+    // Which kind of enemy was defeated (its stats asset name, e.g. "Walker_Dash") and how many of that kind so far.
+    public string EnemyType;
+    public int OfType;
+}
