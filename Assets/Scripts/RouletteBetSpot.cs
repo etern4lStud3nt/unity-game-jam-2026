@@ -28,6 +28,8 @@ public class RouletteBetSpot : MonoBehaviour, IPointerClickHandler
     [SerializeField] private GameObject chipMarker;
     [SerializeField] private Image chipImage;
     [SerializeField] private TMP_Text chipText;
+    [Tooltip("Shown while this spot's number is one of the player's lucky numbers.")]
+    [SerializeField] private GameObject luckyMark;
 
     private Color baseColor;
 
@@ -61,6 +63,12 @@ public class RouletteBetSpot : MonoBehaviour, IPointerClickHandler
                 ? new Color32(0x1C, 0x1A, 0x20, 0xFF) : new Color32(0xF1, 0xE6, 0xD0, 0xFF);
         if (chipText != null)
             chipText.text = Amount.ToString();
+    }
+
+    public void SetLucky(bool lucky)
+    {
+        if (luckyMark != null)
+            luckyMark.SetActive(lucky);
     }
 
     public void SetHighlight(bool on, Color color)
