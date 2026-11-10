@@ -57,3 +57,12 @@ public struct MoneyChanged : IEvent
     public int Balance;
     public int Delta;
 }
+
+// The player's health changed for any reason: damage, healing, respawn or a new max health. Also sent once
+// at start (published by PlayerHealthEvents). Delta is negative for damage, positive for healing.
+public struct PlayerHealthChanged : IEvent
+{
+    public int Current;
+    public int Max;
+    public int Delta;
+}
