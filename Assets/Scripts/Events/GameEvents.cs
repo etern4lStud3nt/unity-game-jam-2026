@@ -50,3 +50,10 @@ public struct AbilityUnlocked : IEvent
 {
     public PlayerAbility Ability;
 }
+
+// The player's money changed (published by MoneyWallet). Delta is positive when money was gained.
+public struct MoneyChanged : IEvent
+{
+    public int Balance;
+    public int Delta;
+}
