@@ -28,6 +28,10 @@ namespace Assets.Scripts
         [Tooltip("Fastest the character can fall, in units per second.")]
         [SerializeField, Min(1f)] private float maxFallSpeed = 28f;
 
+        [Header("Steps")]
+        [Tooltip("Ledges up to this height (units) are walked up without jumping. 0 = off.")]
+        [SerializeField, Min(0f)] private float stepHeight = 0.55f;
+
         [Header("Wall (needs Wall Jump)")]
         [Tooltip("Fastest fall while pressing into a wall in the air.")]
         [SerializeField, Min(0f)] private float wallSlideSpeed = 4f;
@@ -275,6 +279,9 @@ namespace Assets.Scripts
                 return;
             }
 
+            if (grounded)
+                TryStepUp();
+
             float vy = rigidbody.linearVelocityY;
             wallSliding = wallJumpUnlocked && !grounded && wall != 0 && moveInputX * wall > 0.1f && vy < 0f;
             if (wallSliding)
@@ -294,6 +301,39 @@ namespace Assets.Scripts
         {
             RaycastHit2D bottomRaycast = Physics2D.Raycast(transform.position, Vector2.down, groundCheckLength, groundLayer);
             return bottomRaycast.collider != null;
+        }
+
+        // Walking into a ledge no higher than stepHeight lifts the character onto it, so small steps and the
+        // seams between tiles never stop the walk.
+        private void TryStepUp()
+        {
+            if (stepHeight <= 0f || Mathf.Abs(moveInputX) < 0.1f || Time.time < recoilUntil)
+                return;
+
+            float dir = Mathf.Sign(moveInputX);
+            Bounds b = bodyCollider.bounds;
+            float reach = b.extents.x + 0.08f;
+            float feet = b.min.y;
+
+            // Something blocks at foot height...
+            RaycastHit2D low = Physics2D.Raycast(new Vector2(b.center.x, feet + 0.05f), Vector2.right * dir, reach, groundLayer);
+            if (low.collider == null)
+                return;
+            // ...but not just above the step height.
+            if (Physics2D.Raycast(new Vector2(b.center.x, feet + stepHeight + 0.05f), Vector2.right * dir, reach, groundLayer).collider != null)
+                return;
+
+            // Find the top of the step just past the wall and climb onto it.
+            var probe = new Vector2(low.point.x + dir * 0.05f, feet + stepHeight + 0.05f);
+            RaycastHit2D top = Physics2D.Raycast(probe, Vector2.down, stepHeight + 0.05f, groundLayer);
+            if (top.collider == null)
+                return;
+            float rise = top.point.y - feet;
+            if (rise <= 0.01f || rise > stepHeight)
+                return;
+
+            rigidbody.position += new Vector2(dir * 0.05f, rise + 0.02f);
+            rigidbody.linearVelocity = new Vector2(dir * moveSpeed, Mathf.Max(0f, rigidbody.linearVelocityY));
         }
 
         // -1 = wall on the left, +1 = wall on the right, 0 = none.

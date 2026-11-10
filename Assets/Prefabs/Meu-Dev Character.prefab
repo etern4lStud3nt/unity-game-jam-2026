@@ -20,6 +20,18 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_Size.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_Size.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_EdgeRadius
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.x
       value: 190
