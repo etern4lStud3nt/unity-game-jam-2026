@@ -22,6 +22,8 @@ public class Roulette_UI : MonoBehaviour
     [SerializeField] private TMP_Text betText;
     [SerializeField] private TMP_Text resultText;
     [SerializeField] private TMP_Text deltaText;
+    [Tooltip("Parent of the wheel's number labels, named \"Pocket 7\", \"Pocket 00\"...; lucky ones turn gold.")]
+    [SerializeField] private Transform wheelNumbers;
     [SerializeField] private Button spinButton;
     [SerializeField] private Button clearButton;
     [SerializeField] private Button leaveButton;
@@ -34,13 +36,15 @@ public class Roulette_UI : MonoBehaviour
     [Header("Rules")]
     [Tooltip("Given when the player sits down with no chips (for testing the table on its own). 0 = none.")]
     [SerializeField, Min(0)] private int startingChips = 100;
+    [Tooltip("Given when the player has no lucky numbers yet, for testing the table on its own. Leave empty in the real game.")]
+    [SerializeField] private LuckyNumberData[] testLuckyNumbers;
 
     [Header("Spin")]
     [SerializeField, Min(0.5f)] private float spinDuration = 4f;
     [SerializeField, Min(1)] private int wheelTurns = 3;
     [SerializeField, Min(0f)] private float resultHoldTime = 1.5f;
     [Tooltip("Ball distance from the wheel centre while it runs on the rim (x) and once it sits in a pocket (y), as a fraction of the wheel's half size.")]
-    [SerializeField] private Vector2 ballRadius = new Vector2(0.92f, 0.73f);
+    [SerializeField] private Vector2 ballRadius = new Vector2(0.92f, 0.64f);
 
     [Header("Sounds (optional)")]
     [SerializeField] private SoundData spinSound;
@@ -95,12 +99,20 @@ public class Roulette_UI : MonoBehaviour
         if (startingChips > 0 && ChipWallet.Balance == 0)
             ChipWallet.Set(startingChips);
         OnBalanceChanged(ChipWallet.Balance);
+
+        LuckyNumbers.Changed += RefreshLucky;
+        if (LuckyNumbers.Count == 0 && testLuckyNumbers != null)
+            foreach (LuckyNumberData lucky in testLuckyNumbers)
+                if (lucky != null)
+                    lucky.Grant();
+        RefreshLucky();
         Refresh();
     }
 
     private void OnDisable()
     {
         ChipWallet.Changed -= OnBalanceChanged;
+        LuckyNumbers.Changed -= RefreshLucky;
         // Leaving mid-round gives the chips on the table back.
         if (!spinning)
             ClearBets();
@@ -165,6 +177,23 @@ public class Roulette_UI : MonoBehaviour
         SetText(betText, "BET " + total);
         if (spinButton != null) spinButton.interactable = total > 0 && !spinning;
         if (clearButton != null) clearButton.interactable = total > 0 && !spinning;
+    }
+
+    // Gold frame on lucky number spots and gold lucky numbers on the wheel (the cards are LuckyNumberHand's).
+    private void RefreshLucky()
+    {
+        foreach (RouletteBetSpot spot in spots)
+            spot.SetLucky(spot.BetType == RouletteBetType.Number && LuckyNumbers.Contains(spot.Value));
+
+        if (wheelNumbers != null)
+        {
+            foreach (TMP_Text label in wheelNumbers.GetComponentsInChildren<TMP_Text>(true))
+            {
+                string name = label.gameObject.name.Replace("Pocket ", "");
+                int pocket = name == "00" ? Roulette.DoubleZero : int.TryParse(name, out int n) ? n : -1;
+                label.color = LuckyNumbers.Contains(pocket) ? winColor : textColor;
+            }
+        }
     }
 
     private void OnBalanceChanged(int balance) => SetText(balanceText, "CHIPS " + balance);
