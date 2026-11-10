@@ -16,6 +16,26 @@ namespace Assets.Scripts
         [SerializeField] private bool wallJumpUnlocked = true;
         [SerializeField] private bool dashUnlocked = true;
 
+        [Header("Jump feel")]
+        [Tooltip("Upward speed is multiplied by this when the jump button is released early (short hop). 1 = no effect.")]
+        [SerializeField, Range(0f, 1f)] private float jumpCutMultiplier = 0.5f;
+        [Tooltip("Seconds after walking off a ledge during which a ground jump still works.")]
+        [SerializeField, Min(0f)] private float coyoteTime = 0.1f;
+        [Tooltip("Seconds a jump press is remembered before landing, so an early press still jumps.")]
+        [SerializeField, Min(0f)] private float jumpBufferTime = 0.1f;
+        [Tooltip("Gravity multiplier while falling. Above 1 makes jumps feel less floaty.")]
+        [SerializeField, Min(1f)] private float fallGravityMultiplier = 1.25f;
+        [Tooltip("Fastest the character can fall, in units per second.")]
+        [SerializeField, Min(1f)] private float maxFallSpeed = 28f;
+
+        [Header("Wall (needs Wall Jump)")]
+        [Tooltip("Fastest fall while pressing into a wall in the air.")]
+        [SerializeField, Min(0f)] private float wallSlideSpeed = 4f;
+        [Tooltip("Sideways speed a wall jump kicks the character away from the wall.")]
+        [SerializeField, Min(0f)] private float wallJumpPush = 7f;
+        [Tooltip("Seconds after a wall jump during which walking input is ignored, so the kick is not cancelled at once.")]
+        [SerializeField, Min(0f)] private float wallJumpControlLock = 0.12f;
+
         [Header("Dash")]
         [SerializeField] private float dashSpeed = 28f;
         [SerializeField] private float dashTime = 0.25f;
@@ -47,6 +67,15 @@ namespace Assets.Scripts
         private float facing = 1f;
         private float savedGravity;
         private float recoilUntil;
+        private float moveInputX;
+        private float lastGroundedTime = float.NegativeInfinity;
+        private float jumpBufferedUntil = float.NegativeInfinity;
+        private bool jumpHeld;
+        private bool jumpCuttable;
+        private bool wallSliding;
+
+        // True while pressing into a wall and sliding down it.
+        public bool IsWallSliding => wallSliding;
 
         public void Awake()
         {
@@ -78,6 +107,7 @@ namespace Assets.Scripts
             if (IsDashing || Time.time < recoilUntil)
                 return;
 
+            moveInputX = direction.x;
             direction.Normalize();
             if (Mathf.Abs(direction.x) > 0.1f)
                 facing = Mathf.Sign(direction.x);
@@ -156,48 +186,124 @@ namespace Assets.Scripts
             if (IsDashing)
                 return;
             rigidbody.linearVelocityY = upVelocity;
+            jumpCuttable = false;
             canAirJump = true;
             canDash = true;
         }
 
+        // Jump button pressed: ground jump (with coyote time), wall jump, or double jump. If none is possible
+        // right now, the press is buffered and fires as soon as one is (landing, touching a wall).
         public void Jump()
         {
-            if (IsGrounded())
+            jumpHeld = true;
+            jumpBufferedUntil = Time.time + jumpBufferTime;
+            if (TryJump())
+                jumpBufferedUntil = float.NegativeInfinity;
+        }
+
+        // Jump button released: cuts a rising jump short, for a small hop.
+        public void ReleaseJump()
+        {
+            jumpHeld = false;
+            if (jumpCuttable && rigidbody.linearVelocityY > 0f && !IsDashing)
+                rigidbody.linearVelocityY *= jumpCutMultiplier;
+            jumpCuttable = false;
+        }
+
+        private bool TryJump()
+        {
+            if (IsDashing)
+                return false;
+
+            if (IsGrounded() || Time.time - lastGroundedTime <= coyoteTime)
             {
-                rigidbody.linearVelocityY = 0f;
-                rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                lastGroundedTime = float.NegativeInfinity; // coyote time is used up
+                Launch(0f);
+                return true;
             }
-            else
+
+            int wall = WallSide();
+            if (wallJumpUnlocked && wall != 0)
             {
-                // Air jump: double jump anywhere, or a wall jump while touching a wall.
-                bool allowed = doubleJumpUnlocked || (wallJumpUnlocked && IsTouchingWall());
-                if (canAirJump && allowed)
-                {
-                    rigidbody.linearVelocityY = 0f;
-                    rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-                    canAirJump = false;
-                }
+                // Kick away from the wall; the short control lock keeps walking input from cancelling the kick.
+                Launch(-wall * wallJumpPush);
+                recoilUntil = Time.time + wallJumpControlLock;
+                facing = -wall;
+                return true;
             }
+
+            if (doubleJumpUnlocked && canAirJump)
+            {
+                Launch(0f);
+                canAirJump = false;
+                return true;
+            }
+            return false;
+        }
+
+        private void Launch(float sideways)
+        {
+            float speed = jumpForce / rigidbody.mass;
+            // A buffered jump whose button was already let go is a short hop.
+            if (!jumpHeld)
+                speed *= jumpCutMultiplier;
+            rigidbody.linearVelocityY = speed;
+            if (sideways != 0f)
+                rigidbody.linearVelocityX = sideways;
+            jumpCuttable = jumpHeld;
         }
 
         private void FixedUpdate()
         {
-            if (!canDash && !IsDashing && (IsGrounded() || (wallJumpUnlocked && IsTouchingWall())))
-                canDash = true;
+            bool grounded = IsGrounded();
+            int wall = WallSide();
+            if (grounded)
+                lastGroundedTime = Time.time;
 
-            if (!canAirJump)
+            if (!canDash && !IsDashing && (grounded || (wallJumpUnlocked && wall != 0)))
+                canDash = true;
+            if (!canAirJump && (grounded || (wallJumpUnlocked && wall != 0)))
+                canAirJump = true;
+
+            // Buffered jump: pressed a moment before it became possible.
+            if (Time.time <= jumpBufferedUntil && TryJump())
+                jumpBufferedUntil = float.NegativeInfinity;
+
+            if (IsDashing)
             {
-                if (IsGrounded() || (wallJumpUnlocked && IsTouchingWall()))
-                {
-                    canAirJump = true;
-                }
+                wallSliding = false;
+                return;
             }
+
+            float vy = rigidbody.linearVelocityY;
+            wallSliding = wallJumpUnlocked && !grounded && wall != 0 && moveInputX * wall > 0.1f && vy < 0f;
+            if (wallSliding)
+            {
+                vy = Mathf.Max(vy, -wallSlideSpeed);
+            }
+            else if (vy < 0f)
+            {
+                // Heavier fall than rise, capped at a top speed.
+                vy += Physics2D.gravity.y * rigidbody.gravityScale * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
+                vy = Mathf.Max(vy, -maxFallSpeed);
+            }
+            rigidbody.linearVelocityY = vy;
         }
 
         public bool IsGrounded()
         {
             RaycastHit2D bottomRaycast = Physics2D.Raycast(transform.position, Vector2.down, groundCheckLength, groundLayer);
             return bottomRaycast.collider != null;
+        }
+
+        // -1 = wall on the left, +1 = wall on the right, 0 = none.
+        public int WallSide()
+        {
+            if (Physics2D.Raycast(transform.position, Vector2.right, groundCheckLength, groundLayer).collider != null)
+                return 1;
+            if (Physics2D.Raycast(transform.position, Vector2.left, groundCheckLength, groundLayer).collider != null)
+                return -1;
+            return 0;
         }
 
         public bool IsTouchingWall()

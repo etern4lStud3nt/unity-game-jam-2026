@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
             playerAttack = characterController.GetComponent<PlayerAttack>();
 
         inputManager.Jump += HandleJump;
+        inputManager.JumpReleased += HandleJumpReleased;
         inputManager.Attack += HandleAttack;
         inputManager.Interact += HandleInteract;
         inputManager.Dash += HandleDash;
@@ -31,6 +32,11 @@ public class Player : MonoBehaviour
             return;
 
         characterController.Jump();
+    }
+
+    private void HandleJumpReleased()
+    {
+        characterController.ReleaseJump();
     }
 
     private void HandleDash()
@@ -52,6 +58,7 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         inputManager.Jump -= HandleJump;
+        inputManager.JumpReleased -= HandleJumpReleased;
         inputManager.Attack -= HandleAttack;
         inputManager.Interact -= HandleInteract;
         inputManager.Dash -= HandleDash;

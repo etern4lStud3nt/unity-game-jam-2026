@@ -8,6 +8,7 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     private InputSystem_Actions.PlayerActions playerActions;
 
     public event Action Jump;
+    public event Action JumpReleased;
     public event Action Attack;
     public event Action Interact;
     public event Action Dash;
@@ -51,6 +52,10 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
         if (context.started)
         {
             Jump?.Invoke();
+        }
+        else if (context.canceled)
+        {
+            JumpReleased?.Invoke();
         }
     }
 
