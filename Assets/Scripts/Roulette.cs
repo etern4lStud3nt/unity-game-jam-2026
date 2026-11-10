@@ -7,6 +7,16 @@ public class Roulette : MonoBehaviour
 {
     public const int DoubleZero = 37;
 
+    [Tooltip("Group bets (color, dozen, odd/even, low/high) that include lucky numbers win more often; their payout is " +
+             "capped so they return at most this much on average per chip: 0.2 = +20%. Single lucky numbers pay what " +
+             "their LuckyNumberData asset says; bets without lucky numbers pay as in a real casino.")]
+    [SerializeField, Range(0f, 2f)] private float luckyEdge = 0.2f;
+    [Tooltip("Lucky numbers together never land more often than this (their chances are scaled down to fit).")]
+    [SerializeField, Range(0.1f, 0.95f)] private float maxLuckyTotal = 0.85f;
+
+    public float LuckyEdge => luckyEdge;
+
+
     public Dictionary<int, Color> Pockets { get; private set; } = new()
     {
         { 0, Color.green },
@@ -146,35 +156,83 @@ public class Roulette : MonoBehaviour
         bets.Add(new Bet(evenNums, chips));
     }
 
+    // Picks the winning pocket. Lucky numbers land with their own fixed chance; the other pockets share the rest equally.
     public int Spin()
     {
-        return Random.Range(0, 38);
+        float roll = Random.value;
+        for (int pocket = 0; pocket < 38; pocket++)
+        {
+            roll -= Chance(pocket);
+            if (roll < 0f)
+                return pocket;
+        }
+        return 37;
+    }
+
+    // Chance (0-1) that the next spin lands on this pocket. Lucky numbers keep their own chance (scaled down only if
+    // together they would pass MaxLuckyTotal); every other pocket gets an equal share of what is left.
+    public float Chance(int pocket)
+    {
+        float luckyTotal = 0f;
+        int luckyCount = 0;
+        for (int p = 0; p < 38; p++)
+        {
+            float c = LuckyNumbers.ChanceOf(p);
+            if (c <= 0f)
+                continue;
+            luckyTotal += c;
+            luckyCount++;
+        }
+
+        float scale = luckyTotal > maxLuckyTotal ? maxLuckyTotal / luckyTotal : 1f;
+        float own = LuckyNumbers.ChanceOf(pocket);
+        if (own > 0f)
+            return own * scale;
+        return luckyCount >= 38 ? 0f : (1f - luckyTotal * scale) / (38 - luckyCount);
+    }
+
+    // Chance that the winning pocket is one of these numbers (or this color).
+    public float Chance(Bet bet)
+    {
+        float total = 0f;
+        for (int p = 0; p < 38; p++)
+            if (Covers(bet, p))
+                total += Chance(p);
+        return total;
+    }
+
+    // What a winning bet gives back per chip, stake included. A single lucky number pays its own payout (from its
+    // LuckyNumberData asset). Everything else pays as in a real casino (color 2x, a bet on N numbers 36/N x), except
+    // group bets that lucky numbers make likelier: those are capped so that, on average, they return at most
+    // 1 + LuckyEdge per chip.
+    public float ReturnPerChip(Bet bet)
+    {
+        if (bet.Numbers.Count == 1 && LuckyNumbers.Contains(bet.Numbers[0]))
+            return LuckyNumbers.PayoutOf(bet.Numbers[0]);
+
+        float standard = bet.Numbers.Count == 0 ? 2f : 36f / bet.Numbers.Count;
+        float chance = Chance(bet);
+        if (chance <= 0f)
+            return standard;
+        return Mathf.Min(standard, (1f + luckyEdge) / chance);
     }
 
     // Net result of all bets for this winning pocket: winnings minus every chip that was bet.
-    // Payouts as in a real casino: a color pays 1 to 1, and a bet on N numbers pays (36 / N - 1) to 1
-    // (single number 35 to 1, dozen 2 to 1, odd/even and low/high 1 to 1).
     public int GetPayout(int winningNumber)
     {
         int total = 0;
         foreach (Bet bet in bets)
         {
             total -= bet.Chips;
-            // Color Bet
-            if (bet.Numbers.Count == 0)
-            {
-                if (bet.Color == Pockets[winningNumber])
-                    total += bet.Chips * 2;
-            }
-            // Number bet
-            else if (bet.Numbers.Contains(winningNumber))
-            {
-                total += bet.Chips * 36 / bet.Numbers.Count;
-            }
+            if (Covers(bet, winningNumber))
+                total += Mathf.FloorToInt(bet.Chips * ReturnPerChip(bet));
         }
 
         return total;
     }
+
+    private bool Covers(Bet bet, int pocket) =>
+        bet.Numbers.Count == 0 ? bet.Color == Pockets[pocket] : bet.Numbers.Contains(pocket);
 
     private static List<int> Range(int first, int last)
     {
