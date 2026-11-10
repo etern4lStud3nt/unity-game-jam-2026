@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ce81dae1b5437c45a557e3a22aa7af7, type: 3}
   m_Name: Lucky_Start
   m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberData
-  displayName: Starting Number
+  displayName: Lucky Number
   givenBy: 
   number: 7
-  chance: 0.15
-  payout: 8
-  averagePerChip: +20%
+  chance: 0.2
+  payout: 10
+  averagePerChip: +100%
   story: 

@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Father's Chip
   givenBy: Father
   number: 15
-  chance: 0.255
-  payout: 5
-  averagePerChip: +27%
+  chance: 0.8
+  payout: 8
+  averagePerChip: +540%
   story: 

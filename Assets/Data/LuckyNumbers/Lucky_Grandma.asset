@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Grandma's Chip
   givenBy: Grandma
   number: 5
-  chance: 0.7
+  chance: 0.6
   payout: 2
-  averagePerChip: +40%
+  averagePerChip: +20%
   story: 

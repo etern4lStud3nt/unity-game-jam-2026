@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 
 // The player's lucky numbers, as the LuckyNumberData assets that granted them (a boss's Lucky Chip, a memory item,
-// the starting number), in the order they were earned. Each asset sets its number's fixed chance and payout.
-// Roulette pockets: 0-36, and 37 for 00. Roulette works out the rest: normal pockets share what is left, and group
-// bets that include lucky numbers are capped (Roulette.LuckyEdge).
+// the starting number), in the order they were earned. Each asset sets its number's chance (when the player bets on
+// it) and payout. Roulette pockets: 0-36, and 37 for 00. Roulette does the rest (see Roulette.Spin).
 public static class LuckyNumbers
 {
     private static readonly List<LuckyNumberData> Earned = new();

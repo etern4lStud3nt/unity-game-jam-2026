@@ -7,14 +7,6 @@ public class Roulette : MonoBehaviour
 {
     public const int DoubleZero = 37;
 
-    [Tooltip("Group bets (color, dozen, odd/even, low/high) that include lucky numbers win more often; their payout is " +
-             "capped so they return at most this much on average per chip: 0.2 = +20%. Single lucky numbers pay what " +
-             "their LuckyNumberData asset says; bets without lucky numbers pay as in a real casino.")]
-    [SerializeField, Range(0f, 2f)] private float luckyEdge = 0.2f;
-    [Tooltip("Lucky numbers together never land more often than this (their chances are scaled down to fit).")]
-    [SerializeField, Range(0.1f, 0.95f)] private float maxLuckyTotal = 0.85f;
-
-    public float LuckyEdge => luckyEdge;
 
 
     public Dictionary<int, Color> Pockets { get; private set; } = new()
@@ -156,39 +148,45 @@ public class Roulette : MonoBehaviour
         bets.Add(new Bet(evenNums, chips));
     }
 
-    // Picks the winning pocket. Lucky numbers land with their own fixed chance; the other pockets share the rest equally.
+    // Picks the winning pocket. Luck only works for lucky numbers the player bet on: each of those, highest chance
+    // first, gets one roll at its own chance (LuckyNumberData.Chance); the first that succeeds wins. If none does (or
+    // no lucky number was bet on), the wheel spins normally.
     public int Spin()
     {
-        float roll = Random.value;
-        for (int pocket = 0; pocket < 38; pocket++)
-        {
-            roll -= Chance(pocket);
-            if (roll < 0f)
-                return pocket;
-        }
-        return 37;
+        foreach (int number in LuckyNumbersBetOn())
+            if (Random.value < LuckyNumbers.ChanceOf(number))
+                return number;
+        return Random.Range(0, 38);
     }
 
-    // Chance (0-1) that the next spin lands on this pocket. Lucky numbers keep their own chance (scaled down only if
-    // together they would pass MaxLuckyTotal); every other pocket gets an equal share of what is left.
+    // Chance (0-1) that the next spin lands on this pocket, given the bets on the table.
     public float Chance(int pocket)
     {
-        float luckyTotal = 0f;
-        int luckyCount = 0;
-        for (int p = 0; p < 38; p++)
+        float chance = 0f;
+        float missedAll = 1f;
+        foreach (int number in LuckyNumbersBetOn())
         {
-            float c = LuckyNumbers.ChanceOf(p);
-            if (c <= 0f)
-                continue;
-            luckyTotal += c;
-            luckyCount++;
+            float c = LuckyNumbers.ChanceOf(number);
+            if (number == pocket)
+                chance += missedAll * c;
+            missedAll *= 1f - c;
         }
+        return chance + missedAll / 38f;
+    }
 
-        float scale = luckyTotal > maxLuckyTotal ? maxLuckyTotal / luckyTotal : 1f;
-        float own = LuckyNumbers.ChanceOf(pocket);
-        if (own > 0f)
-            return own * scale;
-        return luckyCount >= 38 ? 0f : (1f - luckyTotal * scale) / (38 - luckyCount);
+    // Lucky numbers with a bet on them, in the order their luck is tried: highest chance first.
+    private List<int> LuckyNumbersBetOn()
+    {
+        var numbers = new List<int>();
+        foreach (Bet bet in bets)
+            if (bet.Numbers.Count == 1 && LuckyNumbers.Contains(bet.Numbers[0]) && !numbers.Contains(bet.Numbers[0]))
+                numbers.Add(bet.Numbers[0]);
+        numbers.Sort((a, b) =>
+        {
+            int byChance = LuckyNumbers.ChanceOf(b).CompareTo(LuckyNumbers.ChanceOf(a));
+            return byChance != 0 ? byChance : a.CompareTo(b);
+        });
+        return numbers;
     }
 
     // Chance that the winning pocket is one of these numbers (or this color).
@@ -202,19 +200,13 @@ public class Roulette : MonoBehaviour
     }
 
     // What a winning bet gives back per chip, stake included. A single lucky number pays its own payout (from its
-    // LuckyNumberData asset). Everything else pays as in a real casino (color 2x, a bet on N numbers 36/N x), except
-    // group bets that lucky numbers make likelier: those are capped so that, on average, they return at most
-    // 1 + LuckyEdge per chip.
+    // LuckyNumberData asset); everything else pays as in a real casino: color 2x, a bet on N numbers 36/N x.
+    // A bet on a lucky number also makes its color, dozen, odd/even... likelier; those still pay normally, on purpose.
     public float ReturnPerChip(Bet bet)
     {
         if (bet.Numbers.Count == 1 && LuckyNumbers.Contains(bet.Numbers[0]))
             return LuckyNumbers.PayoutOf(bet.Numbers[0]);
-
-        float standard = bet.Numbers.Count == 0 ? 2f : 36f / bet.Numbers.Count;
-        float chance = Chance(bet);
-        if (chance <= 0f)
-            return standard;
-        return Mathf.Min(standard, (1f + luckyEdge) / chance);
+        return bet.Numbers.Count == 0 ? 2f : 36f / bet.Numbers.Count;
     }
 
     // Net result of all bets for this winning pocket: winnings minus every chip that was bet.

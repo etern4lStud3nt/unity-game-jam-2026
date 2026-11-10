@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 // The player's lucky numbers as a fanned hand of gold chips. A number earned while the screen is open flies into
 // the hand. Clicking a chip glides it to the middle of the screen over a dimmed background, with its stats on its
-// right: name, who gave it, its current chance on the wheel, its payout and its story. Clicking again (or the dimmed
+// right: name, who gave it, its chance when bet on, its payout and its story. Clicking again (or the dimmed
 // background) sends it back. Chips are copies of the inactive chip template, laid out under the hand.
 public class LuckyNumberHand : MonoBehaviour
 {
@@ -197,8 +197,8 @@ public class LuckyNumberHand : MonoBehaviour
     {
         Set(statTitle, data.DisplayName);
         Set(statFrom, string.IsNullOrWhiteSpace(data.GivenBy) ? null : "FROM " + data.GivenBy.ToUpperInvariant());
-        float chance = roulette != null ? roulette.Chance(data.Number) : data.Chance;
-        Set(statChance, "CHANCE " + (Mathf.Round(chance * 1000f) / 10f).ToString("0.#", CultureInfo.InvariantCulture) + "%");
+        // The chance it lands when the player bets on it; other lucky numbers do not change it.
+        Set(statChance, "CHANCE " + (Mathf.Round(data.Chance * 1000f) / 10f).ToString("0.#", CultureInfo.InvariantCulture) + "%");
         Set(statPayout, "PAYS " + data.Payout.ToString("0.#", CultureInfo.InvariantCulture) + "x");
         Set(statStory, string.IsNullOrWhiteSpace(data.Story) ? null : data.Story.Trim());
         if (statsLayout != null)

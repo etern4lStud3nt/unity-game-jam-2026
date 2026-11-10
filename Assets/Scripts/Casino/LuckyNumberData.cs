@@ -11,9 +11,9 @@ public class LuckyNumberData : ScriptableObject
     [SerializeField] private string givenBy;
     [Tooltip("Roulette pocket: 0-36, or 37 for 00.")]
     [SerializeField, Range(0, 37)] private int number = 7;
-    [Tooltip("Chance that the wheel lands on this number, whatever other lucky numbers the player has. " +
-             "0.25 = one spin in four. A normal pocket is about 0.026.")]
-    [SerializeField, Range(0.03f, 0.9f)] private float chance = 0.2f;
+    [Tooltip("Chance that the wheel lands on this number when the player bets on it: 0.9 = nine spins in ten. " +
+             "Other lucky numbers do not change it. A normal pocket is about 0.026.")]
+    [SerializeField, Range(0.03f, 0.99f)] private float chance = 0.5f;
     [Tooltip("What a winning bet on this number gives back, bet included: 5 = bet 10 chips, get 50 back. " +
              "A normal number pays 36.")]
     [SerializeField, Min(1f)] private float payout = 6f;

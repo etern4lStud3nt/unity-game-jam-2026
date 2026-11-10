@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Mother's Chip
   givenBy: Mother
   number: 9
-  chance: 0.3
-  payout: 4
-  averagePerChip: +20%
+  chance: 0.99
+  payout: 9
+  averagePerChip: +791%
   story: 
