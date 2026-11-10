@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3919542316585835378}
   - component: {fileID: 8107692053768044030}
   - component: {fileID: 8319626700905507632}
+  - component: {fileID: 431292206575630304}
   m_Layer: 0
   m_Name: Flyer
   m_TagString: Untagged
@@ -209,6 +210,24 @@ MonoBehaviour:
   currentState: 
   attackReach: 0
   territory: {fileID: 0}
+--- !u!114 &431292206575630304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499830760202940220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5389f4e76a30d841b67f6f3086bcc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMoneyDrop
+  amount: 4
+  coinValue: 1
+  coinPrefab: {fileID: 2686685830408325139, guid: fb55618eba9cbcc46bad44b97e2c358a, type: 3}
+  launchUp: {x: 12, y: 18}
+  launchSide: 3
+  playerTag: Player
 --- !u!1 &4392779783913542102
 GameObject:
   m_ObjectHideFlags: 0

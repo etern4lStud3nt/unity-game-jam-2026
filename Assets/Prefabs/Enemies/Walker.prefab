@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 3040328732749480793}
   - component: {fileID: 3989463288238968335}
   - component: {fileID: 1924440276681465016}
+  - component: {fileID: 7553811240075262773}
   m_Layer: 0
   m_Name: Walker
   m_TagString: Untagged
@@ -340,6 +341,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   visual: {fileID: 76736014518794809}
+  startFacingLeft: 0
   wallProbe: 0.1
   ledgeDepth: 0.6
 --- !u!114 &3040328732749480793
@@ -390,7 +392,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemies.EnemyBrain
   stats: {fileID: 11400000, guid: 5d26767bb17fbc34dbe2a8f92c3bbdc2, type: 2}
+  attackHitbox: {fileID: 0}
   currentState: 
+  attackReach: 0
+--- !u!114 &7553811240075262773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2873959921967857004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5389f4e76a30d841b67f6f3086bcc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMoneyDrop
+  amount: 3
+  coinValue: 1
+  coinPrefab: {fileID: 2686685830408325139, guid: fb55618eba9cbcc46bad44b97e2c358a, type: 3}
+  launchUp: {x: 12, y: 18}
+  launchSide: 3
+  playerTag: Player
 --- !u!1 &5171349901372925797
 GameObject:
   m_ObjectHideFlags: 0
