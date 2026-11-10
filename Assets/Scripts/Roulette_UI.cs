@@ -46,6 +46,24 @@ public class Roulette_UI : MonoBehaviour
     [Tooltip("Ball distance from the wheel centre while it runs on the rim (x) and once it sits in a pocket (y), as a fraction of the wheel's half size.")]
     [SerializeField] private Vector2 ballRadius = new Vector2(0.92f, 0.64f);
 
+    [Header("Win feel")]
+    [Tooltip("Shaken on a win; usually the screen's root.")]
+    [SerializeField] private RectTransform shakeTarget;
+    [Tooltip("Shake distance in UI units; bigger wins shake a bit harder, up to twice this.")]
+    [SerializeField, Min(0f)] private float shakeStrength = 12f;
+    [SerializeField, Min(0f)] private float shakeTime = 0.4f;
+    [Tooltip("Seconds the win amount takes to count up from 0.")]
+    [SerializeField, Min(0.1f)] private float countUpTime = 1f;
+    [Tooltip("How much the win amount swells on each beat while counting.")]
+    [SerializeField, Min(0f)] private float countPulse = 0.25f;
+
+    [Header("Bet punch (a spot bounces when chips land on it)")]
+    [Tooltip("How much bigger a spot gets for a moment. 1.12 = 12% bigger.")]
+    [SerializeField, Min(1f)] private float punchScale = 1.12f;
+    [SerializeField, Min(0.01f)] private float punchTime = 0.2f;
+    [Tooltip("Punch strength when a chip is taken back (1 = same as placing).")]
+    [SerializeField, Range(0f, 1f)] private float removePunch = 0.5f;
+
     [Header("Sounds (optional)")]
     [SerializeField] private SoundData spinSound;
     [SerializeField] private SoundData chipSound;
@@ -138,12 +156,14 @@ public class Roulette_UI : MonoBehaviour
             if (!ChipWallet.TrySpend(value))
                 return;
             spot.SetAmount(spot.Amount + value, selectedChip.Color);
+            spot.Punch(punchScale, punchTime);
             Play(chipSound);
         }
         else if (button == PointerEventData.InputButton.Right && spot.Amount > 0)
         {
             int back = Mathf.Min(value, spot.Amount);
             spot.SetAmount(spot.Amount - back, selectedChip.Color);
+            spot.Punch(1f + (punchScale - 1f) * removePunch, punchTime);
             ChipWallet.Add(back);
         }
         Refresh();
@@ -228,9 +248,10 @@ public class Roulette_UI : MonoBehaviour
         ChipWallet.Add(net + stake);
         if (net > 0)
         {
-            SetText(deltaText, "+" + net, winColor);
             Play(winSound);
             Play(winVoice);
+            StartCoroutine(Shake(Mathf.Clamp01(net / 200f)));
+            yield return CountUp(net);
         }
         else if (net < 0)
         {
@@ -254,6 +275,51 @@ public class Roulette_UI : MonoBehaviour
         roulette.ClearBets();
         spinning = false;
         Refresh();
+    }
+
+    // Shakes the screen, snapped to whole art pixels (4 UI units) so the pixel art stays crisp.
+    private IEnumerator Shake(float size)
+    {
+        if (shakeTarget == null || shakeStrength <= 0f)
+            yield break;
+        Vector2 home = shakeTarget.anchoredPosition;
+        float strength = shakeStrength * (1f + size);
+        for (float t = 0f; t < shakeTime; t += Time.deltaTime)
+        {
+            float fade = 1f - t / shakeTime;
+            Vector2 offset = UnityEngine.Random.insideUnitCircle * strength * fade;
+            shakeTarget.anchoredPosition = home + new Vector2(Mathf.Round(offset.x / 4f) * 4f, Mathf.Round(offset.y / 4f) * 4f);
+            yield return null;
+        }
+        shakeTarget.anchoredPosition = home;
+    }
+
+    // The win amount counts up from 0, beating bigger and smaller as it climbs, then pops once at the end.
+    private IEnumerator CountUp(int amount)
+    {
+        if (deltaText == null)
+            yield break;
+        deltaText.color = winColor;
+        Transform rect = deltaText.transform;
+        const float beats = 6f;
+        for (float t = 0f; t < countUpTime; t += Time.deltaTime)
+        {
+            float k = t / countUpTime;
+            int shown = Mathf.RoundToInt(amount * (1f - Mathf.Pow(1f - k, 2f)));
+            deltaText.text = "+" + shown;
+            rect.localScale = Vector3.one * (1f + countPulse * Mathf.Abs(Mathf.Sin(k * Mathf.PI * beats)));
+            yield return null;
+        }
+        deltaText.text = "+" + amount;
+
+        // Final pop.
+        for (float t = 0f; t < 0.25f; t += Time.deltaTime)
+        {
+            float k = t / 0.25f;
+            rect.localScale = Vector3.one * (1f + countPulse * 2f * Mathf.Sin(k * Mathf.PI));
+            yield return null;
+        }
+        rect.localScale = Vector3.one;
     }
 
     // The wheel turns counter-clockwise and stops with the winning pocket at the top, under the pointer;

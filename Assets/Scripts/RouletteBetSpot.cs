@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -63,6 +64,29 @@ public class RouletteBetSpot : MonoBehaviour, IPointerClickHandler
                 ? new Color32(0x1C, 0x1A, 0x20, 0xFF) : new Color32(0xF1, 0xE6, 0xD0, 0xFF);
         if (chipText != null)
             chipText.text = Amount.ToString();
+    }
+
+    // A quick springy pulse: grows to about `scale`, then settles back with a small wobble over `time` seconds.
+    public void Punch(float scale, float time)
+    {
+        if (!isActiveAndEnabled)
+            return;
+        StopCoroutine(nameof(PunchRoutine));
+        transform.SetAsLastSibling(); // drawn over its neighbours while it is bigger
+        StartCoroutine(PunchRoutine(scale - 1f, time));
+    }
+
+    private IEnumerator PunchRoutine(float extra, float time)
+    {
+        for (float t = 0f; t < time; t += Time.unscaledDeltaTime)
+        {
+            float k = t / time;
+            // Damped spring: up first, a small undershoot, then rest.
+            float wave = Mathf.Sin(k * Mathf.PI * 2f) * (1f - k) + Mathf.Sin(k * Mathf.PI) * 0.5f * (1f - k);
+            transform.localScale = Vector3.one * (1f + extra * wave);
+            yield return null;
+        }
+        transform.localScale = Vector3.one;
     }
 
     public void SetLucky(bool lucky)
