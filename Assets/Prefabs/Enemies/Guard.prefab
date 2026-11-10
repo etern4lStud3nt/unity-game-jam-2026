@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 1125445564788480355}
   - component: {fileID: 3096343144927225697}
   - component: {fileID: 1472317536368828816}
+  - component: {fileID: 5947782068066746668}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -301,6 +302,25 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 7d11de7ec3bf4ed4cbb801d8932355ef, type: 2}
   attackHitbox: {fileID: 2501749222677627858}
   currentState: 
+  attackReach: 2.3
+--- !u!114 &5947782068066746668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3366926791785777675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5389f4e76a30d841b67f6f3086bcc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMoneyDrop
+  amount: 6
+  coinValue: 1
+  coinPrefab: {fileID: 2686685830408325139, guid: fb55618eba9cbcc46bad44b97e2c358a, type: 3}
+  launchUp: {x: 12, y: 18}
+  launchSide: 3
+  playerTag: Player
 --- !u!1 &3412207683875036713
 GameObject:
   m_ObjectHideFlags: 0
