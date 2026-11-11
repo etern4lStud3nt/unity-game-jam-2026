@@ -96,6 +96,10 @@ namespace Bosses
         [field: SerializeField, Range(0f, 1f)] public float Phase2Health { get; private set; } = 0.5f;
         [field: Tooltip("Waiting times and the attack gap are multiplied by this in the second half.")]
         [field: SerializeField, Range(0.1f, 1f)] public float Phase2WaitScale { get; private set; } = 0.6f;
+        [field: Tooltip("Fewest needle attacks before she falls asleep in the second half (from her first nap there).")]
+        [field: SerializeField, Min(1)] public int Phase2MinAttacksBeforeSleep { get; private set; } = 5;
+        [field: Tooltip("Most needle attacks before she falls asleep in the second half (from her first nap there).")]
+        [field: SerializeField, Min(1)] public int Phase2MaxAttacksBeforeSleep { get; private set; } = 8;
 
         [field: Header("Death")]
         [field: Tooltip("Seconds she takes to fade out after the last hit.")]
@@ -105,6 +109,7 @@ namespace Bosses
         {
             MaxAttacksBeforeSleep = Mathf.Max(MaxAttacksBeforeSleep, MinAttacksBeforeSleep);
             MaxWait = Mathf.Max(MaxWait, MinWait);
+            Phase2MaxAttacksBeforeSleep = Mathf.Max(Phase2MaxAttacksBeforeSleep, Phase2MinAttacksBeforeSleep);
         }
     }
 }

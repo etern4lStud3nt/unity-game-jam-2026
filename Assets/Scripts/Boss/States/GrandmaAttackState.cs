@@ -4,7 +4,8 @@ namespace Bosses
 {
     // Awake: she walks away from the player, or jumps away (after a crouch) when they get close, while the needles
     // attack on their own timers, each attack (a chain of dives) using up one of a random number allowed. When none
-    // are left, no needle is still attacking and she is on the ground, she falls asleep. The second-half needles
+    // are left, no needle is still attacking and she is on the ground, she falls asleep (the second half has its own
+    // numbers, picked when she wakes up there). The second-half needles
     // join when she wakes up low enough (see GrandmaBoss.CheckPhase2).
     public class GrandmaAttackState : GrandmaState
     {
@@ -13,7 +14,9 @@ namespace Bosses
         protected override void OnEnter()
         {
             Boss.ShowSleep(false);
-            Boss.AttacksLeft = Random.Range(Stats.MinAttacksBeforeSleep, Stats.MaxAttacksBeforeSleep + 1);
+            Boss.AttacksLeft = Boss.InPhase2
+                ? Random.Range(Stats.Phase2MinAttacksBeforeSleep, Stats.Phase2MaxAttacksBeforeSleep + 1)
+                : Random.Range(Stats.MinAttacksBeforeSleep, Stats.MaxAttacksBeforeSleep + 1);
             Boss.CheckPhase2();
         }
 
