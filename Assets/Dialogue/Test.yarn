@@ -1,0 +1,28 @@
+title: Test_NPC
+---
+Stranger: Evening. You look like you need a bit of luck.
+<<if money() >= 10>>
+    Stranger: {money()} coins in your pocket. Not bad.
+<<else>>
+    Stranger: Empty pockets, huh?
+<<endif>>
+-> Ask for money
+    <<give_money 10>>
+    Stranger: Here. Don't spend it all at the table.
+-> Ask for a lucky number
+    <<if has_lucky_number(5)>>
+        Stranger: You already have mine.
+    <<else>>
+        <<give_lucky_number 5>>
+        Stranger: Take five. It never let me down.
+    <<endif>>
+-> Ask to learn something
+    <<if has_ability("Dash")>>
+        Stranger: You already know everything I know.
+    <<else>>
+        <<unlock_ability Dash>>
+        Stranger: Watch closely. Like this.
+    <<endif>>
+-> Leave
+    Stranger: Suit yourself.
+===
