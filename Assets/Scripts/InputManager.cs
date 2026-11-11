@@ -12,7 +12,17 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     public event Action Attack;
     public event Action Interact;
     public event Action Dash;
-    public Vector2 MoveInput { get; private set; }
+    // Interact, Jump or Attack pressed while gameplay is blocked (a conversation is running). Dialogue uses it to
+    // advance lines.
+    public event Action Confirm;
+
+    // Zero while gameplay is blocked.
+    public Vector2 MoveInput => gameplayBlocked ? Vector2.zero : moveInput;
+
+    // While true the gameplay events (Jump, Attack, Interact, Dash) are not raised; presses go to Confirm instead.
+    // Set by DialogueStarted / DialogueEnded, so the player stands still during a conversation.
+    private bool gameplayBlocked;
+    private Vector2 moveInput;
 
 
     protected override void Awake()
@@ -27,6 +37,21 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     private void OnEnable()
     {
         inputActionsObj.Enable();
+        EventBus.Subscribe<DialogueStarted>(OnDialogueStarted);
+        EventBus.Subscribe<DialogueEnded>(OnDialogueEnded);
+    }
+
+    private void OnDialogueStarted(DialogueStarted evt) => gameplayBlocked = true;
+
+    private void OnDialogueEnded(DialogueEnded evt) => gameplayBlocked = false;
+
+    // Raises the gameplay event, or Confirm while gameplay is blocked.
+    private void Raise(Action gameplayEvent)
+    {
+        if (gameplayBlocked)
+            Confirm?.Invoke();
+        else
+            gameplayEvent?.Invoke();
     }
 
     void InputSystem_Actions.IPlayerActions.OnAttack(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -34,7 +59,7 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
         if (context.started)
         {
             Debug.Log("Attack Input");
-            Attack?.Invoke();
+            Raise(Attack);
         }
     }
 
@@ -43,7 +68,7 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
         if (context.started)
         {
             Debug.Log("Interact Input");
-            Interact?.Invoke();
+            Raise(Interact);
         }
     }
 
@@ -51,9 +76,9 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     {
         if (context.started)
         {
-            Jump?.Invoke();
+            Raise(Jump);
         }
-        else if (context.canceled)
+        else if (context.canceled && !gameplayBlocked)
         {
             JumpReleased?.Invoke();
         }
@@ -61,7 +86,7 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
 
     void InputSystem_Actions.IPlayerActions.OnDash(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && !gameplayBlocked)
         {
             Dash?.Invoke();
         }
@@ -69,13 +94,16 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
 
     void InputSystem_Actions.IPlayerActions.OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        MoveInput = context.ReadValue<Vector2>();
-        Debug.Log($"Move Input: {MoveInput}");
+        moveInput = context.ReadValue<Vector2>();
+        Debug.Log($"Move Input: {moveInput}");
     }
 
     private void OnDisable()
     {
         inputActionsObj.Disable();
+        EventBus.Unsubscribe<DialogueStarted>(OnDialogueStarted);
+        EventBus.Unsubscribe<DialogueEnded>(OnDialogueEnded);
+        gameplayBlocked = false;
     }
 
     private void OnDestroy()
