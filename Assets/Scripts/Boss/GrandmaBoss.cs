@@ -12,7 +12,8 @@ namespace Bosses
     // DamageOnContact trigger, like the enemies' Hurtbox).
     //
     // The fight starts on the Yarn signal Start Signal (the end of her intro conversation) or StartFight(), and
-    // publishes BossFightStarted; her death publishes BossDefeated and switches on the reward. If the player dies,
+    // publishes BossFightStarted (BossPhaseChanged when the second half begins); her death publishes BossDefeated
+    // and switches on the reward. If the player dies,
     // the fight goes back to the start, and being in the arena again restarts it without the intro.
     //
     // Keep the needles and the reward outside her object (siblings under the prefab root): a player hit finds the
@@ -249,6 +250,7 @@ namespace Bosses
             if (phase2Started || !IsAwake || !InPhase2 || !AllStartingNeedlesOut())
                 return;
             phase2Started = true;
+            EventBus.Publish(new BossPhaseChanged { RoomId = RoomId, Phase = 2 });
             if (phase2Needles == null)
                 return;
             foreach (Needle needle in phase2Needles)

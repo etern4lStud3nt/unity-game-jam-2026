@@ -17,6 +17,14 @@ public struct BossFightStarted : IEvent
     public string RoomId;
 }
 
+// A boss moved on to another phase of its fight (Phase 2 = its second half). A restarted fight begins again at
+// phase 1 with BossFightStarted.
+public struct BossPhaseChanged : IEvent
+{
+    public string RoomId;
+    public int Phase;
+}
+
 // A boss was defeated (published by the boss when its death starts).
 public struct BossDefeated : IEvent
 {
