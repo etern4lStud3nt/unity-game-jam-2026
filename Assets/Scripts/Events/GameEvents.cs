@@ -67,6 +67,14 @@ public struct PlayerHealthChanged : IEvent
     public int Delta;
 }
 
+// A Yarn conversation started (published by DialogueBridge). The player stops until DialogueEnded.
+public struct DialogueStarted : IEvent
+{
+    public string Node;
+}
+
+public struct DialogueEnded : IEvent { }
+
 // The number of enemies the player has defeated changed (published by KillCounter).
 public struct KillCountChanged : IEvent
 {
