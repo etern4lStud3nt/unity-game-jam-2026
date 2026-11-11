@@ -7,8 +7,12 @@ Stranger: Evening. You look like you need a bit of luck.
     Stranger: Empty pockets, huh?
 <<endif>>
 -> Ask for money
-    <<give_money 10>>
-    Stranger: Here. Don't spend it all at the table.
+    <<once>>
+        <<give_money 10>>
+        Stranger: Here. Don't spend it all at the table.
+    <<else>>
+        Stranger: I already gave you some. Go win the rest.
+    <<endonce>>
 -> Ask for a lucky number
     <<if has_lucky_number(5)>>
         Stranger: You already have mine.
@@ -25,4 +29,5 @@ Stranger: Evening. You look like you need a bit of luck.
     <<endif>>
 -> Leave
     Stranger: Suit yourself.
+    <<signal test_npc_leave>>
 ===
