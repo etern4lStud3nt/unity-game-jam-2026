@@ -10,10 +10,18 @@ public struct RoomEntered : IEvent
     public bool IsBossRoom;
 }
 
-// The player entered a boss arena for the first time this session.
+// A boss fight began (published by the boss, e.g. GrandmaBoss when her intro conversation ends). Also sent again
+// when the fight restarts after the player died. RoomId is the arena's LevelRoom id.
 public struct BossFightStarted : IEvent
 {
     public string RoomId;
+}
+
+// A boss was defeated (published by the boss when its death starts).
+public struct BossDefeated : IEvent
+{
+    public string RoomId;
+    public Vector3 Position;
 }
 
 // The player lost health (published by PlayerHealthEvents).
