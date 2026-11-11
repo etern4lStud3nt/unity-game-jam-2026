@@ -59,6 +59,22 @@ namespace Assets.Scripts
         public bool DoubleJumpUnlocked { get => doubleJumpUnlocked; set => doubleJumpUnlocked = value; }
         public bool WallJumpUnlocked { get => wallJumpUnlocked; set => wallJumpUnlocked = value; }
         public bool DashUnlocked { get => dashUnlocked; set => dashUnlocked = value; }
+
+        public bool IsUnlocked(PlayerAbility ability) => UnlockedFlag(ability);
+
+        public void Unlock(PlayerAbility ability) => UnlockedFlag(ability) = true;
+
+        private ref bool UnlockedFlag(PlayerAbility ability)
+        {
+            switch (ability)
+            {
+                case PlayerAbility.Dash: return ref dashUnlocked;
+                case PlayerAbility.WallJump: return ref wallJumpUnlocked;
+                case PlayerAbility.DoubleJump: return ref doubleJumpUnlocked;
+                default: throw new System.ArgumentOutOfRangeException(nameof(ability), ability, null);
+            }
+        }
+
         public bool IsDashing { get; private set; }
         // +1 facing right, -1 facing left.
         public float Facing => facing;

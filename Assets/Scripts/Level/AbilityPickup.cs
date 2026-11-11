@@ -41,23 +41,22 @@ public class AbilityPickup : MonoBehaviour
             return;
 
         taken = true;
-        Unlock(controller);
-        ScreenMessage.Show(string.IsNullOrEmpty(title) ? DefaultTitle() : title, string.IsNullOrEmpty(hint) ? DefaultHint() : hint);
-        EventBus.Publish(new AbilityUnlocked { Ability = ability });
+        Grant(controller, ability, title, hint);
         StartCoroutine(Pop());
     }
 
-    private void Unlock(CharacterController controller)
+    // Unlocks the ability on the player, shows its name and key on screen and publishes AbilityUnlocked. Used by the
+    // pickups and by anything else that gives an ability (a Yarn command, a casino store...). Empty title or hint =
+    // the ability's defaults.
+    public static void Grant(CharacterController controller, PlayerAbility ability, string title = null, string hint = null)
     {
-        switch (ability)
-        {
-            case PlayerAbility.Dash: controller.DashUnlocked = true; break;
-            case PlayerAbility.WallJump: controller.WallJumpUnlocked = true; break;
-            case PlayerAbility.DoubleJump: controller.DoubleJumpUnlocked = true; break;
-        }
+        controller.Unlock(ability);
+        ScreenMessage.Show(string.IsNullOrEmpty(title) ? DefaultTitle(ability) : title,
+            string.IsNullOrEmpty(hint) ? DefaultHint(ability) : hint);
+        EventBus.Publish(new AbilityUnlocked { Ability = ability });
     }
 
-    private string DefaultTitle()
+    private static string DefaultTitle(PlayerAbility ability)
     {
         switch (ability)
         {
@@ -67,7 +66,7 @@ public class AbilityPickup : MonoBehaviour
         }
     }
 
-    private string DefaultHint()
+    private static string DefaultHint(PlayerAbility ability)
     {
         switch (ability)
         {
