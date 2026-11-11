@@ -1293,7 +1293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214b651bb52f4e94ea8c6a080b7b1840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 30
+  maxHealth: 12
   invincibilityDuration: 0
   destroyOnDeath: 0
   onDamaged:
@@ -1352,6 +1352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossMusic
   roomId: A3
   fightMusic: {fileID: 11400000, guid: 647d185f579d2344ba8acdccba462049, type: 2}
+  phase2Music: {fileID: 11400000, guid: 05d723269d5b867448d38f21ac50680d, type: 2}
   defeatMusic: {fileID: 0}
   fadeDuration: 1
 --- !u!114 &7061935834312066449

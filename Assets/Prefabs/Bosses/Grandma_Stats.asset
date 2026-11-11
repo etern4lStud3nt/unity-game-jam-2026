@@ -23,8 +23,8 @@ MonoBehaviour:
   <HoverDrift>k__BackingField: 1
   <HoverBob>k__BackingField: 0.5
   <ChainDives>k__BackingField: 2
-  <ChainChance>k__BackingField: 0.3
-  <WindupTime>k__BackingField: 0.35
+  <ChainChance>k__BackingField: 0
+  <WindupTime>k__BackingField: 0.57
   <AimLockTime>k__BackingField: 0.1
   <Prediction>k__BackingField: 0.5
   <DiveSpeed>k__BackingField: 30
@@ -47,4 +47,6 @@ MonoBehaviour:
   <JumpCooldown>k__BackingField: 1
   <Phase2Health>k__BackingField: 0.5
   <Phase2WaitScale>k__BackingField: 0.6
+  <Phase2MinAttacksBeforeSleep>k__BackingField: 5
+  <Phase2MaxAttacksBeforeSleep>k__BackingField: 8
   <DeathFadeTime>k__BackingField: 0.8

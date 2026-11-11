@@ -322,6 +322,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1.4712642
       objectReference: {fileID: 0}
+    - target: {fileID: 2891361341135211963, guid: 8fb0aab42dcf9484ea67e7c9aea9ebf1, type: 3}
+      propertyPath: phase2Music
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2891361341135211963, guid: 8fb0aab42dcf9484ea67e7c9aea9ebf1, type: 3}
+      propertyPath: fadeDuration
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3155903941030451432, guid: 8fb0aab42dcf9484ea67e7c9aea9ebf1, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1987,7 +1995,7 @@ Transform:
   m_GameObject: {fileID: 2024482051}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 3, z: 0}
+  m_LocalPosition: {x: -0.29, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
