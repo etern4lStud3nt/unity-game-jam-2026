@@ -1,0 +1,6 @@
+title: Grandma_Intro
+---
+// Placeholder: the real intro goes here. The last line must stay: it starts the fight.
+Grandma: ...
+<<signal grandma_fight>>
+===

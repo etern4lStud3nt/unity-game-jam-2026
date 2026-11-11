@@ -45,6 +45,9 @@ public class AudioManager : Singleton<AudioManager>
 
     private readonly MusicDeck[] musicDecks = new MusicDeck[2];
     private int activeMusicDeck;
+    private Object musicHolder; // compares equal to null once the holder is destroyed, which ends the hold
+    private AreaData currentArea;
+    private MusicTrack currentMusicOverride;
 
     private readonly AudioSource[] ambienceSources = new AudioSource[2];
     private readonly Fade[] ambienceFades = new Fade[2];
@@ -309,6 +312,26 @@ public class AudioManager : Singleton<AudioManager>
         musicDecks[activeMusicDeck].SetLayer(layerName, volume, fadeDuration);
     }
 
+    // While something holds the music (a boss fight), walking into rooms does not change it. The area is still
+    // remembered, so the hold can hand the music back to it.
+    public bool IsMusicHeld => musicHolder != null;
+
+    public void HoldMusic(Object holder)
+    {
+        musicHolder = holder;
+    }
+
+    // Ends the hold (only the one who holds it can). resumeArea plays the music of the last area entered.
+    public void ReleaseMusic(Object holder, bool resumeArea)
+    {
+        if (musicHolder != holder)
+            return;
+
+        musicHolder = null;
+        if (resumeArea && currentArea != null)
+            PlayMusic(AreaMusic(), currentArea.FadeDuration);
+    }
+
     // ---------- Areas & ambience ----------
 
     // Called by RoomArea. musicOverride lets a room (a boss arena) play something other than its area's music.
@@ -317,9 +340,14 @@ public class AudioManager : Singleton<AudioManager>
         if (area == null)
             return;
 
-        PlayMusic(musicOverride != null ? musicOverride : area.Music, area.FadeDuration);
+        currentArea = area;
+        currentMusicOverride = musicOverride;
+        if (!IsMusicHeld)
+            PlayMusic(AreaMusic(), area.FadeDuration);
         PlayAmbience(area.Ambience, area.FadeDuration);
     }
+
+    private MusicTrack AreaMusic() => currentMusicOverride != null ? currentMusicOverride : currentArea.Music;
 
     public void PlayAmbience(SoundData ambience, float fadeDuration)
     {
