@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53ac0b2875dbb3247bc2f953df41ec39, type: 3}
+  m_Name: Grandma_Stats
+  m_EditorClassIdentifier: Assembly-CSharp::Bosses.GrandmaStats
+  <MinAttacksBeforeSleep>k__BackingField: 3
+  <MaxAttacksBeforeSleep>k__BackingField: 5
+  <SleepTime>k__BackingField: 3
+  <StartingNeedles>k__BackingField: 2
+  <AttacksBeforeNextNeedle>k__BackingField: 02000000i
+  <AttackGap>k__BackingField: 0.8
+  <MinWait>k__BackingField: 0.4
+  <MaxWait>k__BackingField: 1.2
+  <HoverDrift>k__BackingField: 1
+  <HoverBob>k__BackingField: 0.5
+  <ChainDives>k__BackingField: 2
+  <ChainChance>k__BackingField: 0.3
+  <WindupTime>k__BackingField: 0.35
+  <AimLockTime>k__BackingField: 0.1
+  <Prediction>k__BackingField: 0.5
+  <DiveSpeed>k__BackingField: 30
+  <MaxDiveDistance>k__BackingField: 30
+  <StickDepth>k__BackingField: 0.3
+  <ChainStuckTime>k__BackingField: 0.15
+  <PullBackDistance>k__BackingField: 1.5
+  <PullBackSpeed>k__BackingField: 20
+  <StuckTime>k__BackingField: 0.5
+  <ReturnSpeed>k__BackingField: 20
+  <FallSpeed>k__BackingField: 14
+  <CounterCooldown>k__BackingField: 1
+  <WalkSpeed>k__BackingField: 3.5
+  <KeepAwayDistance>k__BackingField: 6
+  <EdgeMargin>k__BackingField: 4
+  <JumpTriggerDistance>k__BackingField: 3.5
+  <JumpWarningTime>k__BackingField: 0.4
+  <JumpTime>k__BackingField: 0.7
+  <JumpHeight>k__BackingField: 4
+  <JumpCooldown>k__BackingField: 1
+  <Phase2Health>k__BackingField: 0.5
+  <Phase2WaitScale>k__BackingField: 0.6
+  <DeathFadeTime>k__BackingField: 0.8
