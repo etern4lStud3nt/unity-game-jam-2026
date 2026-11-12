@@ -65,9 +65,9 @@ namespace Bosses
         [field: SerializeField, Min(0.1f)] public float FallSpeed { get; private set; } = 14f;
 
         [field: Header("Hit while awake")]
-        [field: Tooltip("Hitting her while she is awake sends the nearest waiting needle at the player straight away " +
-                        "(it still shakes first). At most once per this many seconds.")]
-        [field: SerializeField, Min(0f)] public float CounterCooldown { get; private set; } = 1f;
+        [field: Tooltip("Hitting her while she is awake sends the nearest free needle (waiting or flying back) at the " +
+                        "player straight away (it still shakes first). At most once per this many seconds; 0 = every hit.")]
+        [field: SerializeField, Min(0f)] public float CounterCooldown { get; private set; } = 0f;
 
         [field: Header("Walking")]
         [field: Tooltip("Units per second she walks.")]
