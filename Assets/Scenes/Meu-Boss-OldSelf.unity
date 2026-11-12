@@ -539,54 +539,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: upSize.x
-      value: 0.8369894
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: upSize.y
-      value: 1.6880833
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: downSize.x
-      value: 0.91786385
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: downSize.y
-      value: 1.4960892
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: sideSize.x
-      value: 1.3730845
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: sideSize.y
-      value: 0.89419293
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: upOffset.x
-      value: -0.00000047683716
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: upOffset.y
-      value: 1.3654151
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: downOffset.x
-      value: 0.016200066
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: downOffset.y
-      value: -1.279195
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: sideOffset.x
-      value: 1.2134578
-      objectReference: {fileID: 0}
-    - target: {fileID: 149449183237963507, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: sideOffset.y
-      value: 0.01846981
-      objectReference: {fileID: 0}
     - target: {fileID: 3570890493642793211, guid: 66b1015ad153f86479807558f73fb340, type: 3}
       propertyPath: m_Name
       value: Meu-Dev Character
