@@ -120,7 +120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4bb89ee2f7b334f8b0d8a2b63ec2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueBridge
-  restartDelay: 0.2
 --- !u!114 &4516194447861984838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,3 +137,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21c8ec8714b437b4d96146f397f7b439, type: 2}
   - {fileID: 11400000, guid: 53c907455fa8acf4591875463216f16a, type: 2}
   - {fileID: 11400000, guid: 2cc830422ca6ca14ba925cfdf4dbc28d, type: 2}
+  - {fileID: 11400000, guid: ecc4a0dcdeecb9d4b9ee659bd67b252c, type: 2}

@@ -5,7 +5,8 @@ using CharacterController = Assets.Scripts.CharacterController;
 
 // The roulette table. There is no real game: Interact plays the oldest lucky number the player has not played yet,
 // the big wheel comes up on screen, spins and slows down, and the number's reward (LuckyNumberData > Reward) unlocks.
-// A lucky number always wins. Numbers whose reward is None are skipped. The small wheel on the table is only art.
+// A lucky number always wins. A number with Reward None spins too if it has a Table Message (a dud: the message shows
+// instead of an ability); without one it is skipped. The small wheel on the table is only art.
 // The spin itself is the wheel's own animation (its Animator); this only speeds it up and slows it to a stop.
 public class CasinoTable : CasinoInteractable
 {
@@ -78,11 +79,11 @@ public class CasinoTable : CasinoInteractable
         StartCoroutine(Play(number, controller));
     }
 
-    // The oldest earned lucky number with a reward that has not been played yet.
+    // The oldest earned lucky number the table can play (an ability or a dud message) that has not been played yet.
     private static LuckyNumberData NextToPlay()
     {
         foreach (LuckyNumberData data in LuckyNumbers.All)
-            if (data.Reward != LuckyNumberReward.None && !Played.Contains(data))
+            if (data.PlayableAtTable && !Played.Contains(data))
                 return data;
         return null;
     }
@@ -104,7 +105,9 @@ public class CasinoTable : CasinoInteractable
             yield return Spin();
             yield return new WaitForSeconds(stopPause);
             yield return Pop(1f, 0f);
-            if (controller != null)
+            if (number.Reward == LuckyNumberReward.None)
+                ScreenMessage.Show(number.TableMessage, number.TableMessageHint);
+            else if (controller != null)
                 AbilityPickup.Grant(controller, ToAbility(number.Reward));
         }
         finally

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberData
   displayName: Grandma's Lucky Number
   givenBy: Grandma
-  number: 5
+  number: 6
   chance: 0.99
   payout: 2
   averagePerChip: +98%
