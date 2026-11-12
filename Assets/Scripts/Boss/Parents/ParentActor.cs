@@ -210,12 +210,11 @@ namespace Bosses
             Fsm.SetState(Dashing, restart: true);
         }
 
-        // One half of the cross dive: appears up and to side (-1 left, 1 right) of aim after delay seconds, hangs,
-        // then dives diagonally through aim to the floor.
-        public void CrossDive(int side, Vector2 aim, float delay = 0f)
+        // One half of the cross dive: appears up and to side (-1 left, 1 right) of the player after delay seconds,
+        // hangs aiming at them, then dives diagonally to the floor through where it aimed.
+        public void CrossDive(int side, float delay = 0f)
         {
             CrossDiving.Side = side >= 0 ? 1 : -1;
-            CrossDiving.Aim = aim;
             CrossDiving.Delay = Mathf.Max(0f, delay);
             Fsm.SetState(CrossDiving, restart: true);
         }

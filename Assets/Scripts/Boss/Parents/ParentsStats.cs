@@ -95,7 +95,10 @@ namespace Bosses
         [field: Tooltip("How steeply they must dive at least: 0 = may fly flat sideways, 1 = only straight down. " +
                         "Keeps a dive at a player high in the air from crossing the whole room.")]
         [field: SerializeField, Range(0f, 1f)] public float CrossDiveMinDownward { get; private set; } = 0.4f;
-        [field: Tooltip("Seconds the second one appears after the first. 0 = both dive at the same moment.")]
+        [field: Tooltip("Seconds at the end of each one's warning during which its aim no longer follows the player.")]
+        [field: SerializeField, Min(0f)] public float CrossDiveAimLock { get; private set; } = 0.15f;
+        [field: Tooltip("Seconds the second one appears after the first. It aims on its own, at where the player " +
+                        "went after the first. 0 = both at the same moment.")]
         [field: SerializeField, Min(0f)] public float CrossDiveStagger { get; private set; } = 0.35f;
 
         [field: Header("Combo: slippers + dive")]

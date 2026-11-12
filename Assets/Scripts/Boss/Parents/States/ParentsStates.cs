@@ -150,15 +150,14 @@ namespace Bosses
                     Mother.Volley(far, Boss.WaveCount);
                     break;
                 case Move.CrossDive:
-                    // Both aim at the same spot (CrossDiveAim), so their paths cross there; which one goes first,
-                    // and from which side, is random.
+                    // Each aims on its own (ParentCrossDiveState), from opposite sides; which one goes first, and
+                    // from which side, is random.
                     bool fatherFirst = Random.value < 0.5f;
                     ParentActor first = fatherFirst ? Father : Mother;
                     ParentActor second = fatherFirst ? Mother : (ParentActor)Father;
                     int side = Random.value < 0.5f ? 1 : -1;
-                    Vector2 aim = CrossDiveAim();
-                    first.CrossDive(side, aim);
-                    second.CrossDive(-side, aim, Stats.CrossDiveStagger);
+                    first.CrossDive(side);
+                    second.CrossDive(-side, Stats.CrossDiveStagger);
                     break;
                 case Move.Combo:
                     Mother.Volley(far, Boss.WaveCount);
@@ -166,19 +165,6 @@ namespace Bosses
                     diveAt = -1f;
                     break;
             }
-        }
-
-        // Where the cross dive aims: ahead of the player by their running speed times the time until the first dive
-        // reaches them (the warning plus the flight from the hang point), scaled by Cross Dive Prediction. Only
-        // sideways; locked when the move begins.
-        private Vector2 CrossDiveAim()
-        {
-            Vector2 aim = Boss.PlayerPoint;
-            float rise = Stats.CrossDiveHeight - (aim.y - Boss.FloorY);
-            float flight = new Vector2(Stats.CrossDiveSideOffset, Mathf.Max(0f, rise)).magnitude / Stats.CrossDiveSpeed;
-            aim.x += Boss.PlayerVelocity.x * (Stats.CrossDiveTell + flight) * Stats.CrossDivePrediction;
-            aim.x = Boss.ClampToArena(aim.x);
-            return aim;
         }
 
         // The Father appears a random moment (Combo Dive Delay) after the Mother's first wave has left, so the two
