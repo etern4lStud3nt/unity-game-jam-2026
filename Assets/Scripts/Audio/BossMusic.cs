@@ -38,14 +38,8 @@ public class BossMusic : MonoBehaviour
     // In Start, once every collider of the scene is enabled, so the room around the boss can be found.
     private void Start()
     {
-        if (!string.IsNullOrEmpty(roomId))
-            return;
-        foreach (Collider2D candidate in Physics2D.OverlapPointAll(transform.position))
-            if (candidate.isTrigger && candidate.TryGetComponent(out LevelRoom room))
-            {
-                roomId = room.RoomId;
-                return;
-            }
+        if (string.IsNullOrEmpty(roomId) && LevelRoom.FindAt(transform.position) is LevelRoom room)
+            roomId = room.RoomId;
     }
 
     private void OnFightStarted(BossFightStarted evt)
