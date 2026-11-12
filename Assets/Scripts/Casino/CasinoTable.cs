@@ -1,29 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using CharacterController = Assets.Scripts.CharacterController;
 
 // The roulette table. There is no real game: Interact plays the oldest lucky number the player has not played yet,
 // the big wheel comes up on screen, spins and slows down, and the number's reward (LuckyNumberData > Reward) unlocks.
 // A lucky number always wins. Numbers whose reward is None are skipped. The small wheel on the table is only art.
+// The spin itself is the wheel's own animation (its Animator); this only speeds it up and slows it to a stop.
 public class CasinoTable : CasinoInteractable
 {
     [Header("Spin screen")]
     [Tooltip("The on-screen spin (a canvas with the big wheel). Hidden until the player plays a number.")]
     [SerializeField] private GameObject spinScreen;
-    [Tooltip("The big wheel on the spin screen; its sprite is stepped through the frames.")]
-    [SerializeField] private Image spinWheel;
-    [Tooltip("The spin, one full turn, in order. Played in a loop while spinning.")]
-    [SerializeField] private Sprite[] spinFrames;
+    [Tooltip("The big wheel on the spin screen. Its default state is the looping spin animation.")]
+    [SerializeField] private Animator spinWheel;
 
     [Header("Spin")]
     [Tooltip("How long the wheel spins before the reward comes, in seconds.")]
     [SerializeField, Min(0.1f)] private float spinTime = 2.5f;
-    [Tooltip("Frames per second when the spin starts.")]
-    [SerializeField, Min(1f)] private float startSpeed = 30f;
-    [Tooltip("Frames per second just before it stops.")]
-    [SerializeField, Min(0.1f)] private float endSpeed = 3f;
+    [Tooltip("Animation speed when the spin starts: 1 = as the clip is made, 2 = twice as fast.")]
+    [SerializeField, Min(0.01f)] private float startSpeed = 1.25f;
+    [Tooltip("Animation speed just before it stops.")]
+    [SerializeField, Min(0f)] private float endSpeed = 0.2f;
     [Tooltip("Pause on the stopped wheel before it goes away and the reward shows, in seconds.")]
     [SerializeField, Min(0f)] private float stopPause = 0.6f;
     [Tooltip("How long the wheel takes to pop in and out, in seconds.")]
@@ -78,9 +76,10 @@ public class CasinoTable : CasinoInteractable
             input.BlockGameplay();
         try
         {
-            ShowFrame(0);
             if (spinScreen != null)
                 spinScreen.SetActive(true);
+            if (spinWheel != null)
+                spinWheel.speed = startSpeed;
             yield return Pop(0f, 1f);
             yield return Spin();
             yield return new WaitForSeconds(stopPause);
@@ -114,30 +113,23 @@ public class CasinoTable : CasinoInteractable
         wheel.localScale = Vector3.one * to;
     }
 
-    // Steps through the frames, starting fast and slowing to a stop (ease out).
+    // Plays the wheel's animation from the start, fast at first and slowing to a stop (ease out), then holds it.
     private IEnumerator Spin()
     {
-        if (spinFrames == null || spinFrames.Length == 0)
+        if (spinWheel == null)
         {
             yield return new WaitForSeconds(spinTime);
             yield break;
         }
 
-        float frame = 0f;
+        spinWheel.Rebind();
         for (float t = 0f; t < spinTime; t += Time.deltaTime)
         {
             float k = t / spinTime;
-            float speed = Mathf.Lerp(startSpeed, endSpeed, 1f - (1f - k) * (1f - k));
-            frame += speed * Time.deltaTime;
-            ShowFrame(Mathf.FloorToInt(frame));
+            spinWheel.speed = Mathf.Lerp(startSpeed, endSpeed, 1f - (1f - k) * (1f - k));
             yield return null;
         }
-    }
-
-    private void ShowFrame(int index)
-    {
-        if (spinWheel != null && spinFrames != null && spinFrames.Length > 0)
-            spinWheel.sprite = spinFrames[index % spinFrames.Length];
+        spinWheel.speed = 0f;
     }
 
     private static PlayerAbility ToAbility(LuckyNumberReward reward)
