@@ -8,7 +8,7 @@ using UnityEngine;
 // music back. Put it on the boss. Leave the arena's RoomArea Music Override empty.
 public class BossMusic : MonoBehaviour
 {
-    [Tooltip("The arena's LevelRoom id (e.g. A3). Empty = react to any boss.")]
+    [Tooltip("The arena's LevelRoom id (e.g. A3). Empty = the LevelRoom the boss is placed in (any boss if none).")]
     [SerializeField] private string roomId;
     [SerializeField] private MusicTrack fightMusic;
     [Tooltip("Optional. Plays from the boss's second half on; empty = the fight music keeps playing.")]
@@ -33,6 +33,19 @@ public class BossMusic : MonoBehaviour
         EventBus.Unsubscribe<PlayerRespawned>(OnPlayerRespawned);
         if (AudioManager.Instance != null)
             AudioManager.Instance.ReleaseMusic(this, resumeArea: false);
+    }
+
+    // In Start, once every collider of the scene is enabled, so the room around the boss can be found.
+    private void Start()
+    {
+        if (!string.IsNullOrEmpty(roomId))
+            return;
+        foreach (Collider2D candidate in Physics2D.OverlapPointAll(transform.position))
+            if (candidate.isTrigger && candidate.TryGetComponent(out LevelRoom room))
+            {
+                roomId = room.RoomId;
+                return;
+            }
     }
 
     private void OnFightStarted(BossFightStarted evt)
