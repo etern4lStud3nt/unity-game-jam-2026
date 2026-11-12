@@ -34,11 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 190
+      value: 129.47
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -154
+      value: -88.01
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.z
@@ -73,8 +73,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: dashSpeed
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: jumpForce
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: moveSpeed
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: wallJumpPush
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -283,12 +295,12 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  sideSize: {x: 1.6, y: 1.1}
-  sideOffset: {x: 1.1, y: 0}
-  upSize: {x: 1.3, y: 1.6}
-  upOffset: {x: 0, y: 1.2}
-  downSize: {x: 1.3, y: 1.6}
-  downOffset: {x: 0, y: -1.2}
+  sideSize: {x: 1.3730845, y: 0.89419293}
+  sideOffset: {x: 1.2134578, y: 0.01846981}
+  upSize: {x: 0.8369894, y: 1.6880833}
+  upOffset: {x: -0.00000047683716, y: 1.3654151}
+  downSize: {x: 0.91786385, y: 1.4960892}
+  downOffset: {x: 0.016200066, y: -1.279195}
   hitStop: 0.05
   recoilSpeed: 6
   recoilTime: 0.1
