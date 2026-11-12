@@ -133,6 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11854f276397c15459cf4a6e4808b031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfTrap
+  height: 0.5
 --- !u!1 &321082463289363146
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11854f276397c15459cf4a6e4808b031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfTrap
+  height: 0.5
 --- !u!1 &2530985922620552367
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,7 +583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214b651bb52f4e94ea8c6a080b7b1840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 20
+  maxHealth: 15
   invincibilityDuration: 0
   destroyOnDeath: 0
   onDamaged:
@@ -712,6 +714,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba9155113b5da334282f6b378b529d0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfBoss
+  arena: {fileID: 0}
+  startSignal: oldself_fight
+  reward: {fileID: 4737698871221139605}
+  playerTag: Player
+  currentState: 
   stats: {fileID: 11400000, guid: 4b14300689f238e47918a24862b0e641, type: 2}
   slashHitbox: {fileID: 321082463289363146}
   hand: {fileID: 766333792805386036}
@@ -721,15 +728,7 @@ MonoBehaviour:
   - {fileID: 6149407113677393603}
   - {fileID: 6638816652108383421}
   - {fileID: 1780855271093642107}
-  arena: {fileID: 0}
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  startSignal: oldself_fight
   visual: {fileID: 692819790516450864}
-  reward: {fileID: 4737698871221139605}
-  playerTag: Player
-  currentState: 
 --- !u!114 &7185620462589947722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,6 +750,7 @@ MonoBehaviour:
   landSpeed: 4
   landScale: {x: 1.25, y: 0.8}
   maxLandScale: {x: 1.45, y: 0.6}
+  maxLandSpeed: 20
   leanPerSpeed: 1.2
   maxLean: 18
   leanSmoothing: 0.08
@@ -776,8 +776,11 @@ MonoBehaviour:
   whenFast: 0
   minSpeed: 4
   tint: {r: 0.7, g: 0.9, b: 1, a: 0.5}
+  replaceColor: 0
   interval: 0.03
   lifetime: 0.2
+  stretch: 0
+  backOffset: 0
 --- !u!1 &2857268676564131724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11854f276397c15459cf4a6e4808b031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfTrap
+  height: 0.5
 --- !u!1 &4696880947208256401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1471,8 +1475,11 @@ MonoBehaviour:
   whenFast: 1
   minSpeed: 14
   tint: {r: 1, g: 1, b: 1, a: 0.5}
+  replaceColor: 0
   interval: 0.03
   lifetime: 0.08
+  stretch: 0
+  backOffset: 0
 --- !u!114 &1302205979906505074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1951,6 +1958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11854f276397c15459cf4a6e4808b031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfTrap
+  height: 0.5
 --- !u!1 &6068878246186195845
 GameObject:
   m_ObjectHideFlags: 0
