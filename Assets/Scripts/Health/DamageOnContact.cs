@@ -2,7 +2,8 @@ using UnityEngine;
 
 // Damages any object with a Health component that touches this one: spikes, enemy bodies, projectiles.
 // Works with both trigger and solid 2D colliders, and keeps hurting while the object stays in contact
-// (the target's invincibility time decides how often a hit actually lands).
+// (the target's invincibility time decides how often a hit actually lands). Disabling the component stops the
+// damage but keeps the collider, so the object can still be hit or pogoed.
 [RequireComponent(typeof(Collider2D))]
 public class DamageOnContact : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class DamageOnContact : MonoBehaviour
 
     private void TryDamage(Collider2D other)
     {
+        // Unity sends contact messages to disabled components too.
+        if (!enabled)
+            return;
+
         // The collider can sit on a child, so look up from it; the Rigidbody2D object usually carries the tag.
         Health health = other.GetComponentInParent<Health>();
         if (health == null || health.gameObject == gameObject || !HasTargetTag(other, health))

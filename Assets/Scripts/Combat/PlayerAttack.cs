@@ -8,7 +8,7 @@ using CharacterController = Assets.Scripts.CharacterController;
 // The player's nail swing, Hollow Knight style: sideways by default, up while holding up, down while holding down
 // in the air. Anything with a Health in front of the swing takes damage once per swing. A landed hit freezes the
 // game for a moment (hitstop), shakes the camera and pushes the player back; a downward hit on an enemy or on
-// spikes bounces the player up instead (pogo) and gives back the air jump and dash.
+// spikes (or a PogoTarget) bounces the player up instead (pogo) and gives back the air jump and dash.
 // Put it on the character next to CharacterController; Player calls TryAttack on the Attack input.
 public class PlayerAttack : MonoBehaviour
 {
@@ -136,8 +136,9 @@ public class PlayerAttack : MonoBehaviour
                     hitSomething = true;
                 }
             }
-            // Spikes cannot be damaged, but a downward swing can still bounce off them.
-            else if (direction == Vector2.down && other.GetComponentInParent<Hazard>() != null)
+            // Spikes (and other pogo targets) cannot be damaged, but a downward swing can still bounce off them.
+            else if (direction == Vector2.down
+                     && (other.GetComponentInParent<Hazard>() != null || other.GetComponentInParent<PogoTarget>() != null))
             {
                 hitSomething = true;
             }
