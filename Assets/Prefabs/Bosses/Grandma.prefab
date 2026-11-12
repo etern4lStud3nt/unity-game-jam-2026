@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7223960140418866462}
   - component: {fileID: 6990361525460456666}
   - component: {fileID: 4128311941219145804}
+  - component: {fileID: 1420362708310828333}
   m_Layer: 0
   m_Name: Needle 2
   m_TagString: Untagged
@@ -161,6 +162,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentState: 
+--- !u!114 &1420362708310828333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57084015066040684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &949480149419898961
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,6 +281,7 @@ GameObject:
   - component: {fileID: 8758681651859513729}
   - component: {fileID: 3142559281582422363}
   - component: {fileID: 5871549018980634750}
+  - component: {fileID: 7487693554555568119}
   m_Layer: 0
   m_Name: Needle 3
   m_TagString: Untagged
@@ -415,6 +429,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentState: 
+--- !u!114 &7487693554555568119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1700633726677718149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &1702960059584832252
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,6 +766,7 @@ GameObject:
   - component: {fileID: 1314654124388413931}
   - component: {fileID: 6183603399580153639}
   - component: {fileID: 8768740574187935459}
+  - component: {fileID: 7714868611454949943}
   m_Layer: 0
   m_Name: Needle 6
   m_TagString: Untagged
@@ -887,6 +914,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentState: 
+--- !u!114 &7714868611454949943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2764871182492296040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &3155903941030451432
 GameObject:
   m_ObjectHideFlags: 0
@@ -1048,6 +1087,7 @@ GameObject:
   - component: {fileID: 2841218778081836210}
   - component: {fileID: 8317965881751380760}
   - component: {fileID: 8425790074348507245}
+  - component: {fileID: 5163135658043419285}
   m_Layer: 0
   m_Name: Needle 1
   m_TagString: Untagged
@@ -1195,6 +1235,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentState: 
+--- !u!114 &5163135658043419285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3205266860390486751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &4234517728982409044
 GameObject:
   m_ObjectHideFlags: 0
@@ -2293,6 +2345,7 @@ GameObject:
   - component: {fileID: 7902087833347213922}
   - component: {fileID: 5049013261763546967}
   - component: {fileID: 3383773543464079482}
+  - component: {fileID: 7562192592800523110}
   m_Layer: 0
   m_Name: Needle 4
   m_TagString: Untagged
@@ -2440,6 +2493,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentState: 
+--- !u!114 &7562192592800523110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7849002389220245101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &8425432156951184557
 GameObject:
   m_ObjectHideFlags: 0
@@ -2638,6 +2703,7 @@ GameObject:
   - component: {fileID: 1004765619480868228}
   - component: {fileID: 7453905645232724753}
   - component: {fileID: 2141861920463517879}
+  - component: {fileID: 8842982436756825739}
   m_Layer: 0
   m_Name: Needle 5
   m_TagString: Untagged
@@ -2785,3 +2851,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   currentState: 
+--- !u!114 &8842982436756825739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8955251604618927548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget

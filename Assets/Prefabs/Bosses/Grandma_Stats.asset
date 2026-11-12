@@ -36,7 +36,7 @@ MonoBehaviour:
   <StuckTime>k__BackingField: 0.5
   <ReturnSpeed>k__BackingField: 20
   <FallSpeed>k__BackingField: 14
-  <CounterCooldown>k__BackingField: 1
+  <CounterCooldown>k__BackingField: 0
   <WalkSpeed>k__BackingField: 3.5
   <KeepAwayDistance>k__BackingField: 6
   <EdgeMargin>k__BackingField: 4

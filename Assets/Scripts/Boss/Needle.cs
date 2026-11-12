@@ -7,7 +7,8 @@ namespace Bosses
     // so it follows her), then attacks with a chain of dives: shakes while aiming ahead of the player, dives point
     // first in a straight line and sticks in the ground or a wall; pulls back, aims and dives again, and after the
     // last dive flies back. It hurts on touch only while attacking, from the first shake to the last dive sticking
-    // (a trigger with DamageOnContact on this object, switched on and off with the attack).
+    // (a trigger with DamageOnContact on this object; the component is switched on and off with the attack, the
+    // collider stays on so the player can always pogo off the needle with a PogoTarget next to it).
     // Draw the sprite pointing down: the needle's local down is its point. Grandma drives it (GrandmaBoss).
     [RequireComponent(typeof(Rigidbody2D))]
     public class Needle : MonoBehaviour
@@ -20,7 +21,7 @@ namespace Bosses
         [SerializeField] private string currentState;
 
         private Vector2 localSpot;
-        private Collider2D hurtArea;
+        private DamageOnContact damage;
 
         public GrandmaBoss Boss { get; private set; }
         public GrandmaStats Stats => Boss.Stats;
@@ -56,6 +57,9 @@ namespace Bosses
         // Waiting at its spot, free to attack.
         public bool IsWaiting => Fsm != null && Fsm.Current == Hover;
 
+        // Not busy with an attack or lying on the ground: waiting, or flying back to its spot.
+        public bool IsFree => Fsm != null && (Fsm.Current == Hover || Fsm.Current == Return);
+
         // From the first shake to the last dive sticking (Grandma does not fall asleep in the middle of it).
         public bool IsAttacking => Fsm != null && (Fsm.Current == Aim || Fsm.Current == Dive || Fsm.Current == PullBack
                                                    || (Fsm.Current == Stuck && ChainLeft > 0));
@@ -67,7 +71,7 @@ namespace Bosses
             Body = GetComponent<Rigidbody2D>();
             Body.bodyType = RigidbodyType2D.Kinematic;
             Flash = GetComponent<EnemyFlash>();
-            hurtArea = GetComponent<Collider2D>();
+            damage = GetComponent<DamageOnContact>();
             localSpot = boss.transform.InverseTransformPoint(transform.position);
 
             Fsm = new StateMachine();
@@ -118,8 +122,8 @@ namespace Bosses
                 return;
             Fsm.Tick();
             currentState = Fsm.Current?.GetType().Name;
-            if (hurtArea != null)
-                hurtArea.enabled = IsAttacking;
+            if (damage != null)
+                damage.enabled = IsAttacking;
         }
 
         private void FixedUpdate() => Fsm?.FixedTick();

@@ -398,7 +398,8 @@ namespace Bosses
 
         // ---------- Hit while awake ----------
 
-        // The nearest waiting needle attacks straight away (it still shakes first), outside the attack count.
+        // The nearest free needle (waiting, or flying back) attacks straight away (it still shakes first), outside
+        // the attack count. With no Counter Cooldown every hit sends one, so a string of hits brings several at once.
         private void Counter()
         {
             if (!IsAwake || Time.time < nextCounterTime || !HasPlayer)
@@ -407,7 +408,7 @@ namespace Bosses
             float best = float.PositiveInfinity;
             foreach (Needle needle in allNeedles)
             {
-                if (!needle.IsWaiting)
+                if (!needle.IsFree)
                     continue;
                 float distance = (needle.Body.position - PlayerPoint).sqrMagnitude;
                 if (distance < best)
