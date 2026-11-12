@@ -19,6 +19,15 @@ public class LevelRoom : MonoBehaviour
         GetComponent<Collider2D>().isTrigger = true;
     }
 
+    // The room whose trigger covers point (e.g. the arena a boss was placed in), or null.
+    public static LevelRoom FindAt(Vector2 point)
+    {
+        foreach (Collider2D candidate in Physics2D.OverlapPointAll(point))
+            if (candidate.isTrigger && candidate.TryGetComponent(out LevelRoom room))
+                return room;
+        return null;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!IsPlayer(other))

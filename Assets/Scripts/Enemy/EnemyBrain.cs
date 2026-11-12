@@ -165,7 +165,8 @@ namespace Enemies
 
         private void FixedUpdate()
         {
-            KeepIgnoringPlayer();
+            // Unity forgets ignored pairs when the enemy is switched off and on (death, then reset).
+            PlayerPassThrough.Keep(ownColliders, playerColliders);
             Fsm.FixedTick();
         }
 
@@ -241,39 +242,11 @@ namespace Enemies
         }
 
         // The player walks through enemies (and takes contact damage from the Hurtbox trigger) instead of
-        // standing on them or pushing them, without needing a dedicated physics layer.
+        // standing on them or pushing them.
         private void IgnorePlayerCollisions(Transform player)
         {
             playerColliders = player.GetComponentsInChildren<Collider2D>();
-            ApplyIgnore();
-        }
-
-        // Unity forgets ignored pairs when the enemy object is switched off and on (death, then reset), so check
-        // every physics step and ignore them again if needed. Without this a revived enemy bumps into the player
-        // and its Hurtbox can never touch them.
-        private void KeepIgnoringPlayer()
-        {
-            if (playerColliders == null || ownColliders.Length == 0)
-                return;
-            foreach (Collider2D theirs in playerColliders)
-            {
-                if (theirs != null && !Physics2D.GetIgnoreCollision(ownColliders[0], theirs))
-                {
-                    ApplyIgnore();
-                    return;
-                }
-            }
-        }
-
-        private void ApplyIgnore()
-        {
-            foreach (Collider2D theirs in playerColliders)
-            {
-                if (theirs == null)
-                    continue;
-                foreach (Collider2D own in ownColliders)
-                    Physics2D.IgnoreCollision(own, theirs);
-            }
+            PlayerPassThrough.Ignore(ownColliders, playerColliders);
         }
 
 #if UNITY_EDITOR

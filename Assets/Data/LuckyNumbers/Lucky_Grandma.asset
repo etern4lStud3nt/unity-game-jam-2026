@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ce81dae1b5437c45a557e3a22aa7af7, type: 3}
   m_Name: Lucky_Grandma
   m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberData
-  displayName: Grandma's Chip
+  displayName: Grandma's Lucky Number
   givenBy: Grandma
   number: 5
-  chance: 0.6
+  chance: 0.99
   payout: 2
-  averagePerChip: +20%
+  averagePerChip: +98%
   story: 

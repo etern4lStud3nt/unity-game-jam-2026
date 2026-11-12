@@ -21,11 +21,18 @@ namespace Enemies
 
         private Rigidbody2D body;
         private Collider2D bodyCollider;
+        private float baseGravityScale;
+        private bool airborne;
         protected float knockbackUntil;
 
         public Rigidbody2D Body => body;
+        public LayerMask GroundLayers => groundLayers;
         public int Facing { get; private set; } = 1;
         public bool IsKnockedBack => Time.time < knockbackUntil;
+
+        // How many times it has come back to the ground after leaving it, counted by TrackLanding. A state remembers
+        // the count when it jumps and knows it has landed once the count goes up: no take-off grace timers needed.
+        public int Landings { get; private set; }
 
         private void Reset()
         {
@@ -37,6 +44,7 @@ namespace Enemies
         {
             body = GetComponent<Rigidbody2D>();
             bodyCollider = GetComponent<Collider2D>();
+            baseGravityScale = body.gravityScale;
             Facing = startFacingLeft ? -1 : 1;
             ApplyFacing();
         }
@@ -65,6 +73,40 @@ namespace Enemies
         }
 
         public void TurnAround() => Face(-Facing);
+
+        // Sets the whole velocity at once (a jump, a dive).
+        public void SetVelocity(Vector2 velocity) => body.linearVelocity = velocity;
+
+        // Sets the gravity so a jump rises `height` units in `riseTime` seconds and returns the take-off speed.
+        // The gravity stays changed until RestoreGravity.
+        public float JumpGravity(float height, float riseTime)
+        {
+            float gravity = 2f * height / (riseTime * riseTime);
+            float world = Mathf.Abs(Physics2D.gravity.y);
+            body.gravityScale = world > 0f ? gravity / world : baseGravityScale;
+            return gravity * riseTime;
+        }
+
+        // Hangs in the air until RestoreGravity.
+        public void SuspendGravity() => body.gravityScale = 0f;
+
+        // Back to the gravity scale it was placed with.
+        public void RestoreGravity() => body.gravityScale = baseGravityScale;
+
+        // Counts Landings. Only an owner that jumps calls it, once per physics step, so enemies that never jump pay
+        // nothing for it.
+        public void TrackLanding()
+        {
+            if (!IsGrounded)
+            {
+                airborne = true;
+            }
+            else if (airborne && body.linearVelocityY <= 0.01f)
+            {
+                airborne = false;
+                Landings++;
+            }
+        }
 
         public virtual void Knockback(int dir, float force, float time)
         {

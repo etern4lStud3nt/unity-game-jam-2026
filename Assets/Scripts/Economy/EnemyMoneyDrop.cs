@@ -44,13 +44,7 @@ public class EnemyMoneyDrop : MonoBehaviour
                 body.linearVelocity = new Vector2(Random.Range(-launchSide, launchSide), Random.Range(launchUp.x, launchUp.y));
 
             // Only the solid collider ignores the player; the pickup trigger must still see them.
-            foreach (Collider2D own in coin.GetComponentsInChildren<Collider2D>())
-            {
-                if (own.isTrigger)
-                    continue;
-                foreach (Collider2D theirs in playerColliders)
-                    Physics2D.IgnoreCollision(own, theirs);
-            }
+            PlayerPassThrough.Ignore(coin.GetComponentsInChildren<Collider2D>(), playerColliders);
         }
     }
 }
