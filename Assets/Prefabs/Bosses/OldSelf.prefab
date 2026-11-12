@@ -470,6 +470,8 @@ GameObject:
   - component: {fileID: 899511449434322169}
   - component: {fileID: 5280250189435058359}
   - component: {fileID: 1439586729217557562}
+  - component: {fileID: 7185620462589947722}
+  - component: {fileID: 2924917888076656883}
   m_Layer: 0
   m_Name: Old Self
   m_TagString: Untagged
@@ -728,6 +730,54 @@ MonoBehaviour:
   reward: {fileID: 4737698871221139605}
   playerTag: Player
   currentState: 
+--- !u!114 &7185620462589947722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625503546078658988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331f35c28a951e84d9e6a3f94861e581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteJuice
+  target: {fileID: 1382450470805942595}
+  health: {fileID: 0}
+  stretchPerSpeed: 0.01
+  maxStretch: 0.3
+  takeOffSpeed: 4
+  takeOffScale: {x: 0.8, y: 1.25}
+  landSpeed: 4
+  landScale: {x: 1.25, y: 0.8}
+  maxLandScale: {x: 1.45, y: 0.6}
+  leanPerSpeed: 1.2
+  maxLean: 18
+  leanSmoothing: 0.08
+  bobHeight: 0
+  bobFrequency: 1.2
+  hitScale: {x: 1.15, y: 0.85}
+  punchTime: 0.18
+  breathAmount: 0.05
+  breathRate: 1.5
+--- !u!114 &2924917888076656883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625503546078658988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720591702e9d1a949a916f801e80b58c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfterimageTrail
+  source: {fileID: 692819790516450864}
+  whenFast: 0
+  minSpeed: 4
+  tint: {r: 0.7, g: 0.9, b: 1, a: 0.5}
+  interval: 0.03
+  lifetime: 0.2
 --- !u!1 &2857268676564131724
 GameObject:
   m_ObjectHideFlags: 0
@@ -1221,6 +1271,8 @@ GameObject:
   - component: {fileID: 8499544825582908296}
   - component: {fileID: 1768930497296287602}
   - component: {fileID: 1515107687459513329}
+  - component: {fileID: 2592699727673097312}
+  - component: {fileID: 1302205979906505074}
   m_Layer: 0
   m_Name: Thrown Card
   m_TagString: Untagged
@@ -1237,7 +1289,7 @@ Transform:
   m_GameObject: {fileID: 4696880947208256401}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.37, z: 0}
   m_LocalScale: {x: 0.45, y: 0.65, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1403,6 +1455,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 706a9e6c833e54842bbcb207dc6602f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfProjectile
+--- !u!114 &2592699727673097312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4696880947208256401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720591702e9d1a949a916f801e80b58c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AfterimageTrail
+  source: {fileID: 0}
+  whenFast: 1
+  minSpeed: 14
+  tint: {r: 1, g: 1, b: 1, a: 0.5}
+  interval: 0.03
+  lifetime: 0.08
+--- !u!114 &1302205979906505074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4696880947208256401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &4737698871221139605
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,7 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21a3607e41fdfb840a26c8eb2517dfd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberPickup
-  luckyNumber: {fileID: 0}
+  luckyNumber: {fileID: 11400000, guid: 24a7ecfa5aefc8b4cbc9e294741e6798, type: 2}
   title: 
   hint: 
   playerTag: Player
@@ -2295,7 +2377,7 @@ Transform:
   m_GameObject: {fileID: 8001694377403152608}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.04, y: 0.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -49,6 +49,7 @@ namespace Bosses
         private Collider2D playerCollider;
         private Rigidbody2D playerBody;
         private CinemachineImpulseSource impulse;
+        private AfterimageTrail trail;
         private Vector2 home;
         private Vector3 visualScale;
         private float baseGravityScale;
@@ -65,6 +66,8 @@ namespace Bosses
         public Rigidbody2D Body { get; private set; }
         public StateMachine Fsm { get; private set; }
         public OldSelfProjectile Projectile => projectile;
+        // Bends the sprite (take-offs, landings, leans, hits); optional.
+        public SpriteJuice Juice { get; private set; }
         public LayerMask GroundLayers => groundLayers;
         public string RoomId { get; private set; }
 
@@ -106,6 +109,8 @@ namespace Bosses
             Body.freezeRotation = true;
             baseGravityScale = Body.gravityScale;
             impulse = GetComponent<CinemachineImpulseSource>();
+            Juice = GetComponent<SpriteJuice>();
+            trail = GetComponent<AfterimageTrail>();
             ownColliders = GetComponentsInChildren<Collider2D>(true);
             solidColliders = System.Array.FindAll(ownColliders, own => !own.isTrigger);
             home = transform.position;
@@ -387,6 +392,19 @@ namespace Bosses
                 slashHitbox.SetActive(on);
         }
 
+        public void Punch(Vector2 scale)
+        {
+            if (Juice != null)
+                Juice.Punch(scale);
+        }
+
+        // Afterimages behind it, for the dash and the dive only.
+        public void SetTrail(bool on)
+        {
+            if (trail != null)
+                trail.Emitting = on;
+        }
+
         public void Shake(float force)
         {
             if (impulse != null && force > 0f)
@@ -399,6 +417,7 @@ namespace Bosses
             SetWarning(false);
             SetCrouch(false);
             SetSlashHitbox(false);
+            SetTrail(false);
             ResetGravity();
         }
 

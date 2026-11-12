@@ -51,6 +51,8 @@ namespace Bosses
         [field: SerializeField, Min(0f)] public float DiveHangTime { get; private set; } = 0.4f;
         [field: Tooltip("Seconds at the end of the hang during which the aim no longer follows the player.")]
         [field: SerializeField, Min(0f)] public float DiveAimLockTime { get; private set; } = 0.1f;
+        [field: Tooltip("0 = dives at where the player is, 1 = at where they will be if they keep running.")]
+        [field: SerializeField, Range(0f, 1f)] public float DivePrediction { get; private set; } = 0.5f;
         [field: SerializeField, Min(0.1f)] public float DiveSpeed { get; private set; } = 28f;
         [field: Tooltip("Camera shake when it hits the ground. 0 = none.")]
         [field: SerializeField, Min(0f)] public float DiveShake { get; private set; } = 0.6f;

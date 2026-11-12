@@ -26,6 +26,7 @@ namespace Bosses
                 Boss.SetWarning(false);
                 Boss.SetSlashHitbox(true);
                 Boss.Shake(Stats.SlashShake);
+                Boss.Punch(new UnityEngine.Vector2(1.3f, 0.8f));
                 return;
             }
 

@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Bosses
 {
-    // Jumps straight up (Dive Jump Height), hangs in the air shaking while it aims at the player (Dive Hang Time,
-    // the aim locks for the last Dive Aim Lock Time), then dives in a straight line until it hits the ground. The
+    // Jumps straight up (Dive Jump Height), hangs in the air shaking while it aims at (or ahead of, Dive
+    // Prediction) the player (Dive Hang Time, the aim locks for the last Dive Aim Lock Time), then dives in a straight line until it hits the ground. The
     // camera shakes on impact. It always dives at least a little downwards, so it cannot fly off upwards.
     public class OldSelfAirDiveState : OldSelfState
     {
@@ -36,18 +36,19 @@ namespace Bosses
                     Boss.SetGravity(false);
                     Body.linearVelocity = Vector2.zero;
                     Boss.SetWarning(true);
-                    Aim();
+                    Aim(Stats.DiveHangTime * Boss.TimeScale);
                     return;
 
                 case Step.Hang:
                     float hang = Stats.DiveHangTime * Boss.TimeScale;
                     if (TimeInState < hang - Stats.DiveAimLockTime)
-                        Aim();
+                        Aim(hang - TimeInState);
                     if (TimeInState < hang)
                         return;
                     step = Step.Dive;
                     RestartTimer();
                     Boss.SetWarning(false);
+                    Boss.SetTrail(true);
                     return;
 
                 case Step.Dive:
@@ -70,9 +71,17 @@ namespace Bosses
                 Body.linearVelocity = direction * Stats.DiveSpeed;
         }
 
-        private void Aim()
+        // Aims ahead of the player: their running speed times the time until the dive reaches them (the rest of
+        // the hang plus the flight), scaled by Dive Prediction.
+        private void Aim(float untilDive)
         {
-            Vector2 to = Boss.PlayerPoint - Body.worldCenterOfMass;
+            Vector2 from = Body.worldCenterOfMass;
+            Vector2 target = Boss.PlayerPoint;
+            float flight = Vector2.Distance(from, target) / Stats.DiveSpeed;
+            target.x += Boss.PlayerVelocity.x * (Mathf.Max(0f, untilDive) + flight) * Stats.DivePrediction;
+            target.x = Boss.ClampToArena(target.x);
+
+            Vector2 to = target - from;
             to.y = Mathf.Min(to.y, -0.3f * to.magnitude);
             direction = to.sqrMagnitude > 0.001f ? to.normalized : Vector2.down;
             Boss.Face(direction.x >= 0f ? 1 : -1);

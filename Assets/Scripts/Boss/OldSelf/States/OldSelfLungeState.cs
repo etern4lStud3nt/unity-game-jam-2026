@@ -30,6 +30,7 @@ namespace Bosses
                 startX = Body.position.x;
                 Boss.SetCrouch(false);
                 Boss.SetWarning(false);
+                Boss.SetTrail(true);
                 return;
             }
 

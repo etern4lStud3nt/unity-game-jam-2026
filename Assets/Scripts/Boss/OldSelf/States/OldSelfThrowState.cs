@@ -30,12 +30,14 @@ namespace Bosses
                 RestartTimer();
                 Boss.SetWarning(false);
                 Boss.Projectile.Launch(Boss.HandPoint, Vector2.right * Boss.Motor.Facing);
+                Boss.Punch(new Vector2(1.2f, 0.85f));
                 return;
             }
 
             if (Boss.Projectile.IsFlying && TimeInState < MaxWait)
                 return;
             Boss.Shake(Stats.CatchShake);
+            Boss.Punch(new Vector2(0.85f, 1.15f));
             Fsm.SetState(Boss.Recover);
         }
 
