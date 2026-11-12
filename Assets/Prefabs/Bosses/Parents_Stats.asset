@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d76b0b1ec061de74891c6caa603aaea1, type: 3}
+  m_Name: Parents_Stats
+  m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentsStats
+  <IdleBetween>k__BackingField: 0.35
+  <ComboChance>k__BackingField: 0.3
+  <DashWeight>k__BackingField: 1
+  <DiveWeight>k__BackingField: 1
+  <VolleyWeight>k__BackingField: 1
+  <EdgeMargin>k__BackingField: 1.5
+  <AppearPunch>k__BackingField: {x: 0.6, y: 1.4}
+  <VanishTime>k__BackingField: 0.15
+  <CrouchScale>k__BackingField: 0.8
+  <DashTell>k__BackingField: 0.45
+  <DashSpeed>k__BackingField: 30
+  <DashShake>k__BackingField: 0.2
+  <DashRecover>k__BackingField: 0.6
+  <DiveHeight>k__BackingField: 7
+  <DiveTell>k__BackingField: 0.5
+  <DiveSpeed>k__BackingField: 32
+  <ImpactShake>k__BackingField: 1
+  <ImpactPunch>k__BackingField: {x: 1.4, y: 0.65}
+  <StuckTime>k__BackingField: 0.7
+  <LaneHeights>k__BackingField:
+  - 0.5
+  - 1.8
+  - 3.1
+  - 4.4
+  - 5.7
+  - 7
+  <GapLanes>k__BackingField: 2
+  <ThrowTell>k__BackingField: 0.4
+  <WaveTell>k__BackingField: 0.55
+  <WaveInterval>k__BackingField: 0.45
+  <WaveCount>k__BackingField: 3
+  <SlipperSpeed>k__BackingField: 13
+  <SlipperSpawnAhead>k__BackingField: 0.8
+  <SlipperSpin>k__BackingField: 0
+  <ThrowPunch>k__BackingField: {x: 1.2, y: 0.85}
+  <ReloadTime>k__BackingField: 0.9
+  <ComboDiveDelay>k__BackingField: {x: 0.2, y: 0.9}
+  <Phase2Health>k__BackingField: 0.5
+  <Phase2IdleBetween>k__BackingField: 0.15
+  <Phase2ComboChance>k__BackingField: 0.45
+  <Phase2CrossDashWeight>k__BackingField: 1
+  <CrossDashStagger>k__BackingField: 0.4
+  <Phase2DiveChain>k__BackingField: {x: 2, y: 3}
+  <ChainPause>k__BackingField: 0.25
+  <Phase2WaveCount>k__BackingField: 4
+  <PhaseShake>k__BackingField: 0.8
+  <LastWordsNode>k__BackingField: Parents_LastWords
+  <EndFallSpeed>k__BackingField: 14
+  <WalkSpeed>k__BackingField: 6
+  <WalkInDistance>k__BackingField: 5
+  <KneelOffset>k__BackingField: 1.2
+  <EndingStepTimeout>k__BackingField: 6
+  <EndFadeTime>k__BackingField: 1.5
