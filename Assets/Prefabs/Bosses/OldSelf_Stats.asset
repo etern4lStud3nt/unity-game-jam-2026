@@ -23,17 +23,18 @@ MonoBehaviour:
   <LungeWeight>k__BackingField: 1
   <AirDiveWeight>k__BackingField: 1
   <ThrowWeight>k__BackingField: 1
-  <SlashWeight>k__BackingField: 2
+  <SlashWeight>k__BackingField: 3
   <SlashRange>k__BackingField: 3
   <LungeWindup>k__BackingField: 0.45
-  <LungeSpeed>k__BackingField: 22
-  <LungeDistance>k__BackingField: 12
-  <LungeShake>k__BackingField: 0.2
-  <DiveJumpHeight>k__BackingField: 5
+  <LungeSpeed>k__BackingField: 32
+  <LungeDistance>k__BackingField: 24
+  <LungeShake>k__BackingField: 0.3
+  <DiveJumpHeight>k__BackingField: 6
   <DiveRiseTime>k__BackingField: 0.35
   <DiveHangTime>k__BackingField: 0.4
   <DiveAimLockTime>k__BackingField: 0.1
-  <DiveSpeed>k__BackingField: 28
+  <DivePrediction>k__BackingField: 0.99
+  <DiveSpeed>k__BackingField: 35
   <DiveShake>k__BackingField: 0.6
   <ThrowWindup>k__BackingField: 0.4
   <ThrowDistance>k__BackingField: 16
