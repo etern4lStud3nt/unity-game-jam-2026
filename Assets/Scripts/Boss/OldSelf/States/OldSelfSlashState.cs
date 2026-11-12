@@ -10,7 +10,7 @@ namespace Bosses
         protected override void OnEnter()
         {
             slashing = false;
-            Boss.StopX();
+            Motor.Stop();
             Boss.FacePlayer();
             Boss.SetWarning(true);
         }
@@ -26,7 +26,7 @@ namespace Bosses
                 Boss.SetWarning(false);
                 Boss.SetSlashHitbox(true);
                 Boss.Shake(Stats.SlashShake);
-                Boss.Punch(new UnityEngine.Vector2(1.3f, 0.8f));
+                Boss.Punch(Stats.SlashPunch);
                 return;
             }
 
@@ -37,15 +37,9 @@ namespace Bosses
         protected override void OnFixedTick()
         {
             if (slashing && !Boss.WallAhead)
-                Body.linearVelocityX = Boss.Motor.Facing * Stats.SlashStep;
+                Motor.Move(Motor.Facing, Stats.SlashStep);
             else
-                Boss.StopX();
-        }
-
-        protected override void OnExit()
-        {
-            Boss.StopAttackEffects();
-            Boss.StopX();
+                Motor.Stop();
         }
     }
 }

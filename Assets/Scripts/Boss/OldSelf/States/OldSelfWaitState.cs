@@ -8,15 +8,10 @@ namespace Bosses
 
         protected override void OnEnter()
         {
-            Boss.StopX();
-            if (Boss.Flash != null)
-                Boss.Flash.Fade = 1f;
+            Motor.Stop();
+            Boss.ResetFade();
         }
 
-        protected override void OnTick()
-        {
-            if (Boss.ShouldStartOnSight && Boss.PlayerInArena)
-                Boss.StartFight();
-        }
+        protected override void OnTick() => Boss.StartOnSight();
     }
 }

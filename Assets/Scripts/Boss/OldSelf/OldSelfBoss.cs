@@ -8,17 +8,17 @@ namespace Bosses
     // spot, then picks an attack at random (weighted, never the same twice in a row): Lunge along the ground, Air Dive
     // (jump, hang, dive at the player), Throw (flies out and comes back) or, up close, Slash. Every attack shakes
     // first as a warning and is followed by a short opening (Recover). Too many hits stagger it for a bigger opening.
-    // In the second half the pauses shrink, attacks can chain and it lays traps on the floor.
+    // In the second half the pauses shrink, attacks can chain and it lays traps on the floor and in the air.
     //
-    // The fight starts on the Yarn signal Start Signal or StartFight() (empty signal = when the player is in the
-    // arena) and publishes BossFightStarted / BossPhaseChanged / BossDefeated like Grandma. If the player dies, the
-    // fight goes back to the start.
+    // The fight start (Start Signal), the arena, a lost attempt, its death and its reward work as for every boss
+    // (BossFight); BossPhaseChanged goes out when the second half begins.
     //
     // Physics: a dynamic Rigidbody2D with a solid collider (it lands on any floor) that the player passes through,
-    // plus a Hurtbox child (trigger + DamageOnContact) for contact damage. Keep the thrown object, the traps and
-    // the reward outside its object (siblings under the prefab root), or player hits on them would hurt the boss.
+    // plus a Hurtbox child (trigger + DamageOnContact) for contact damage. The motor moves it, owns its gravity and
+    // counts its landings. Keep the thrown object, the traps and the reward outside its object (siblings under the
+    // prefab root), or player hits on them would hurt the boss.
     [RequireComponent(typeof(Health), typeof(Rigidbody2D), typeof(EnemyMotor))]
-    public class OldSelfBoss : MonoBehaviour
+    public class OldSelfBoss : BossFight
     {
         [SerializeField] private OldSelfStats stats;
         [Tooltip("The slash's damage area (trigger + DamageOnContact), switched on during a slash. Put it under the " +
@@ -29,47 +29,28 @@ namespace Bosses
         [SerializeField] private OldSelfProjectile projectile;
         [Tooltip("Traps laid in the second half (see Trap Every Attacks).")]
         [SerializeField] private OldSelfTrap[] traps;
-        [Tooltip("The arena. Empty = the LevelRoom trigger it was placed in.")]
-        [SerializeField] private Collider2D arena;
-        [Tooltip("Floor and walls (the tilemap's Ground layer); used to place traps and stop thrown objects.")]
-        [SerializeField] private LayerMask groundLayers;
-        [Tooltip("Name of the Yarn <<signal ...>> that starts the fight. Empty = it starts when the player is in the arena.")]
-        [SerializeField] private string startSignal;
         [Tooltip("Squashed while crouching before a lunge. Usually the Visual child.")]
         [SerializeField] private Transform visual;
-        [Tooltip("Switched on after it dies: its lucky number pickup, placed where it should appear. Optional.")]
-        [SerializeField] private GameObject reward;
-        [SerializeField] private string playerTag = "Player";
-        [Tooltip("Read only: the state it is in right now.")]
-        [SerializeField] private string currentState;
 
         private Collider2D[] ownColliders;
-        private Collider2D[] solidColliders;
         private Collider2D[] playerColliders;
-        private Collider2D playerCollider;
-        private Rigidbody2D playerBody;
         private CinemachineImpulseSource impulse;
         private AfterimageTrail trail;
-        private Vector2 home;
         private Vector3 visualScale;
-        private float baseGravityScale;
         private int hitsSinceStagger;
         private int attacksSinceTraps;
-        private bool introDone;
-        private bool phase2Started;
         private IState lastAttack;
+        private IState[] attacks;
+        private readonly float[] attackWeights = new float[4];
 
         public OldSelfStats Stats => stats;
-        public Health Health { get; private set; }
-        public EnemyFlash Flash { get; private set; }
         public EnemyMotor Motor { get; private set; }
         public Rigidbody2D Body { get; private set; }
-        public StateMachine Fsm { get; private set; }
         public OldSelfProjectile Projectile => projectile;
         // Bends the sprite (take-offs, landings, leans, hits); optional.
         public SpriteJuice Juice { get; private set; }
-        public LayerMask GroundLayers => groundLayers;
-        public string RoomId { get; private set; }
+        // Floor and walls: the motor's Ground layers.
+        public LayerMask GroundLayers => Motor.GroundLayers;
 
         public OldSelfWaitState Waiting { get; private set; }
         public OldSelfIdleState Idle { get; private set; }
@@ -82,38 +63,34 @@ namespace Bosses
         public OldSelfStaggerState Stagger { get; private set; }
         public OldSelfDeadState Dead { get; private set; }
 
+        protected override IState WaitingState => Waiting;
+        protected override IState DefeatedState => Dead;
+
         // True when the attack that just ended was chained onto another (so chains stay two long).
         public bool Chained { get; set; }
 
-        public bool InPhase2 => phase2Started;
+        public bool InPhase2 { get; private set; }
 
         // Pauses, warnings and openings shrink in the second half.
         public float TimeScale => InPhase2 ? stats.Phase2TimeScale : 1f;
 
-        public bool HasPlayer => playerCollider != null;
-        public Vector2 PlayerPoint => HasPlayer ? (Vector2)playerCollider.bounds.center : Body.position;
-        public Vector2 PlayerVelocity => playerBody != null ? playerBody.linearVelocity : Vector2.zero;
         public int PlayerSide => PlayerPoint.x >= Body.position.x ? 1 : -1;
         public float PlayerDistanceX => Mathf.Abs(PlayerPoint.x - Body.position.x);
-        public bool PlayerInArena => HasPlayer && arena != null && arena.OverlapPoint(PlayerPoint);
         public Vector2 HandPoint => hand != null ? (Vector2)hand.position : Body.worldCenterOfMass;
-        public bool ShouldStartOnSight => introDone || string.IsNullOrEmpty(startSignal);
+        public bool IsGrounded => Motor.IsGrounded;
+        public bool WallAhead => Motor.WallAhead;
 
-        private void Awake()
+        protected override void Awake()
         {
-            Health = GetComponent<Health>();
-            Flash = GetComponent<EnemyFlash>();
+            base.Awake();
             Motor = GetComponent<EnemyMotor>();
             Body = GetComponent<Rigidbody2D>();
             Body.bodyType = RigidbodyType2D.Dynamic;
             Body.freezeRotation = true;
-            baseGravityScale = Body.gravityScale;
             impulse = GetComponent<CinemachineImpulseSource>();
             Juice = GetComponent<SpriteJuice>();
             trail = GetComponent<AfterimageTrail>();
             ownColliders = GetComponentsInChildren<Collider2D>(true);
-            solidColliders = System.Array.FindAll(ownColliders, own => !own.isTrigger);
-            home = transform.position;
             if (visual != null)
                 visualScale = visual.localScale;
 
@@ -132,7 +109,6 @@ namespace Bosses
                         trap.Init(this);
             SetSlashHitbox(false);
 
-            Fsm = new StateMachine();
             Waiting = new OldSelfWaitState(this);
             Idle = new OldSelfIdleState(this);
             Hop = new OldSelfHopState(this);
@@ -143,85 +119,43 @@ namespace Bosses
             Recover = new OldSelfRecoverState(this);
             Stagger = new OldSelfStaggerState(this);
             Dead = new OldSelfDeadState(this);
+            attacks = new IState[] { Lunge, AirDive, Throw, Slash };
         }
 
-        private void OnEnable()
+        protected override void Start()
         {
-            if (Fsm == null)
-                return;
-            Health.Damaged += OnDamaged;
-            Health.Death += OnDeath;
-            EventBus.Subscribe<DialogueSignal>(OnDialogueSignal);
-            EventBus.Subscribe<PlayerRespawned>(OnPlayerRespawned);
-        }
-
-        private void OnDisable()
-        {
-            if (Fsm == null)
-                return;
-            Health.Damaged -= OnDamaged;
-            Health.Death -= OnDeath;
-            EventBus.Unsubscribe<DialogueSignal>(OnDialogueSignal);
-            EventBus.Unsubscribe<PlayerRespawned>(OnPlayerRespawned);
-        }
-
-        // In Start, once every collider of the scene is enabled, so the room around it can be found.
-        private void Start()
-        {
-            if (arena == null)
-                arena = FindRoomAt(transform.position);
-            if (arena == null)
-                Debug.LogWarning($"{name} found no LevelRoom trigger around it; assign the Arena.", this);
-            else if (arena.TryGetComponent(out LevelRoom room))
-                RoomId = room.RoomId;
-
-            GameObject found = GameObject.FindWithTag(playerTag);
-            if (found != null)
+            base.Start();
+            if (HasPlayer)
             {
-                playerBody = found.GetComponent<Rigidbody2D>();
-                playerCollider = found.GetComponent<Collider2D>();
-                playerColliders = found.GetComponentsInChildren<Collider2D>();
-                IgnorePlayer();
+                playerColliders = Player.GetComponentsInChildren<Collider2D>();
+                PlayerPassThrough.Ignore(ownColliders, playerColliders);
             }
-            if (reward != null)
-                reward.SetActive(false);
-            Fsm.SetState(Waiting);
         }
 
-        private void Update()
+        protected override void FixedUpdate()
         {
-            Fsm.Tick();
-            currentState = Fsm.Current?.GetType().Name;
-        }
-
-        private void FixedUpdate()
-        {
-            KeepIgnoringPlayer();
-            Fsm.FixedTick();
+            PlayerPassThrough.Keep(ownColliders, playerColliders);
+            Motor.TrackLanding();
+            base.FixedUpdate();
         }
 
         // ---------- Fight flow ----------
 
-        public void StartFight()
-        {
-            if (Fsm == null || Fsm.Current != Waiting)
-                return;
-            introDone = true;
-            EventBus.Publish(new BossFightStarted { RoomId = RoomId });
-            Fsm.SetState(Idle);
-        }
+        protected override void OnFightStarted() => Fsm.SetState(Idle);
 
         // Picks the next attack: weighted at random, never the last one again, Slash only when the player is close.
         public void StartAttack()
         {
-            float slash = PlayerDistanceX <= stats.SlashRange ? stats.SlashWeight : 0f;
-            IState[] options = { Lunge, AirDive, Throw, Slash };
-            float[] weights = { stats.LungeWeight, stats.AirDiveWeight, Projectile != null ? stats.ThrowWeight : 0f, slash };
+            float[] weights = attackWeights;
+            weights[0] = stats.LungeWeight;
+            weights[1] = stats.AirDiveWeight;
+            weights[2] = projectile != null ? stats.ThrowWeight : 0f;
+            weights[3] = PlayerDistanceX <= stats.SlashRange ? stats.SlashWeight : 0f;
 
             float total = 0f;
-            for (int i = 0; i < options.Length; i++)
+            for (int i = 0; i < attacks.Length; i++)
             {
-                if (options[i] == lastAttack)
+                if (attacks[i] == lastAttack)
                     weights[i] = 0f;
                 total += weights[i];
             }
@@ -230,12 +164,12 @@ namespace Bosses
             if (total > 0f)
             {
                 float pick = Random.value * total;
-                for (int i = 0; i < options.Length; i++)
+                for (int i = 0; i < attacks.Length; i++)
                 {
                     pick -= weights[i];
                     if (weights[i] > 0f && pick <= 0f)
                     {
-                        next = options[i];
+                        next = attacks[i];
                         break;
                     }
                 }
@@ -258,11 +192,11 @@ namespace Bosses
 
         private void CheckPhase2()
         {
-            if (phase2Started || Health.IsDead || stats.Phase2Health <= 0f
+            if (InPhase2 || stats.Phase2Health <= 0f
                 || Health.CurrentHealth > Mathf.CeilToInt(Health.MaxHealth * stats.Phase2Health))
                 return;
-            phase2Started = true;
-            EventBus.Publish(new BossPhaseChanged { RoomId = RoomId, Phase = 2 });
+            InPhase2 = true;
+            PublishPhase(2);
             LayTraps();
         }
 
@@ -271,9 +205,9 @@ namespace Bosses
         private void LayTraps()
         {
             attacksSinceTraps = 0;
-            if (traps == null || arena == null)
+            if (traps == null || Arena == null)
                 return;
-            Bounds bounds = arena.bounds;
+            Bounds bounds = Arena.bounds;
             float left = bounds.min.x + stats.EdgeMargin;
             float right = bounds.max.x - stats.EdgeMargin;
             int count = Mathf.Min(stats.TrapCount, traps.Length);
@@ -281,23 +215,25 @@ namespace Bosses
                 return;
 
             // One trap per equal slice of the arena, somewhere inside its slice, so they never bunch up.
+            const float sliceJitter = 0.3f;
             float slice = (right - left) / count;
             for (int i = 0; i < count; i++)
             {
                 if (traps[i] == null)
                     continue;
-                float x = left + slice * (i + Random.Range(0.2f, 0.8f));
+                float x = left + slice * (i + 0.5f + Random.Range(-sliceJitter, sliceJitter));
                 if (!FloorBelow(new Vector2(x, bounds.max.y), bounds.size.y, out Vector2 floor))
                     continue;
-                traps[i].Place(Random.value < stats.AirTrapChance ? InTheAir(floor) : floor);
+                traps[i].Place(Random.value < stats.AirTrapChance ? InTheAir(floor, traps[i].Height) : floor);
             }
         }
 
-        private Vector2 InTheAir(Vector2 floor)
+        // A point Air Trap Height above floor, lowered so a trap trapHeight tall stays clear of any ceiling.
+        private Vector2 InTheAir(Vector2 floor, float trapHeight)
         {
-            const float headroom = 0.8f;
+            float headroom = trapHeight + 0.1f;
             float height = Random.Range(stats.AirTrapHeight.x, stats.AirTrapHeight.y);
-            RaycastHit2D ceiling = Physics2D.Raycast(floor + Vector2.up * 0.1f, Vector2.up, height + headroom, groundLayers);
+            RaycastHit2D ceiling = Physics2D.Raycast(floor + Vector2.up * 0.1f, Vector2.up, height + headroom, GroundLayers);
             if (ceiling.collider != null)
                 height = Mathf.Max(0f, ceiling.distance - headroom);
             return floor + Vector2.up * height;
@@ -307,7 +243,7 @@ namespace Bosses
         public bool HasFloorAt(float x, float fromY, float maxDrop)
         {
             var from = new Vector2(x, fromY + 0.5f);
-            return Physics2D.Raycast(from, Vector2.down, maxDrop + 0.5f, groundLayers).collider != null;
+            return Physics2D.Raycast(from, Vector2.down, maxDrop + 0.5f, GroundLayers).collider != null;
         }
 
         // The lowest ground surface under from (the arena floor, not the ceiling or a ledge above it). Walks down the
@@ -320,14 +256,15 @@ namespace Bosses
             bool found = false;
             float bottom = from.y - depth;
             Vector2 probe = from;
+            LayerMask ground = GroundLayers;
             for (int guard = 0; guard < 400 && probe.y > bottom; guard++)
             {
-                if (Physics2D.OverlapPoint(probe, groundLayers) != null)
+                if (Physics2D.OverlapPoint(probe, ground) != null)
                 {
                     probe.y -= step;
                     continue;
                 }
-                RaycastHit2D hit = Physics2D.Raycast(probe, Vector2.down, probe.y - bottom, groundLayers);
+                RaycastHit2D hit = Physics2D.Raycast(probe, Vector2.down, probe.y - bottom, ground);
                 if (hit.collider == null)
                     break;
                 point = hit.point;
@@ -337,37 +274,18 @@ namespace Bosses
             return found;
         }
 
-        // ---------- Movement helpers (used by the states) ----------
-
-        // Sets the gravity so a jump rises `height` units in `riseTime` seconds, and returns the take-off speed.
-        public float JumpGravity(float height, float riseTime)
-        {
-            float gravity = 2f * height / (riseTime * riseTime);
-            float world = Mathf.Abs(Physics2D.gravity.y);
-            Body.gravityScale = world > 0f ? gravity / world : baseGravityScale;
-            return gravity * riseTime;
-        }
-
-        public void SetGravity(bool on) => Body.gravityScale = on ? baseGravityScale : 0f;
-
-        public void ResetGravity() => Body.gravityScale = baseGravityScale;
-
-        public void StopX() => Body.linearVelocityX = 0f;
+        // ---------- Helpers for the states ----------
 
         public void Face(int direction) => Motor.Face(direction);
 
         public void FacePlayer() => Motor.Face(PlayerSide);
 
-        public bool IsGrounded => Motor.IsGrounded;
-
-        public bool WallAhead => Motor.WallAhead;
-
         // An x position inside the arena, Edge Margin from its sides.
         public float ClampToArena(float x)
         {
-            if (arena == null)
+            if (Arena == null)
                 return x;
-            Bounds bounds = arena.bounds;
+            Bounds bounds = Arena.bounds;
             return Mathf.Clamp(x, bounds.min.x + stats.EdgeMargin, bounds.max.x - stats.EdgeMargin);
         }
 
@@ -376,7 +294,7 @@ namespace Bosses
             if (visual == null)
                 return;
             Vector3 scale = visual.localScale;
-            scale.y = visualScale.y * (on ? 0.8f : 1f);
+            scale.y = visualScale.y * (on ? stats.CrouchScale : 1f);
             visual.localScale = scale;
         }
 
@@ -411,27 +329,16 @@ namespace Bosses
                 impulse.GenerateImpulseWithForce(force);
         }
 
-        // Puts every attack effect back to rest: used when an attack is cut short (stagger, death, a lost attempt).
+        // Puts every move's effects back to rest. Runs after every state's exit (OldSelfState), so nothing a state
+        // switched on (warning, crouch, slash hitbox, trail, changed gravity, sideways speed) outlives it.
         public void StopAttackEffects()
         {
             SetWarning(false);
             SetCrouch(false);
             SetSlashHitbox(false);
             SetTrail(false);
-            ResetGravity();
-        }
-
-        public void SetCollidersEnabled(bool on)
-        {
-            foreach (Collider2D own in ownColliders)
-                if (own != null)
-                    own.enabled = on;
-        }
-
-        public void ShowReward()
-        {
-            if (reward != null)
-                reward.SetActive(true);
+            Motor.RestoreGravity();
+            Motor.Stop();
         }
 
         public void PutAwayThrownAndTraps()
@@ -444,22 +351,11 @@ namespace Bosses
                         trap.PutAway();
         }
 
-        // ---------- Events ----------
+        // ---------- Hits and a lost attempt ----------
 
-        private void OnDialogueSignal(DialogueSignal evt)
+        protected override void OnHit(int amount)
         {
-            if (!string.IsNullOrEmpty(startSignal) && evt.Name == startSignal)
-                StartFight();
-        }
-
-        private void OnDamaged(int amount)
-        {
-            if (Health.IsDead)
-                return;
-            if (Flash != null)
-                Flash.Hit();
             CheckPhase2();
-
             if (stats.HitsToStagger <= 0 || Fsm.Current == Waiting || Fsm.Current == Stagger)
                 return;
             hitsSinceStagger++;
@@ -470,70 +366,18 @@ namespace Bosses
             }
         }
 
-        private void OnDeath() => Fsm.SetState(Dead);
-
-        // A lost attempt: back to the start, full health. A defeated Old Self stays defeated.
-        private void OnPlayerRespawned(PlayerRespawned evt)
+        // Back to the start: thrown object and traps put away, first half, standing where it was placed.
+        protected override void ResetForRetry()
         {
-            if (Fsm.Current == Dead)
-                return;
-            Health.ResetHealth();
             PutAwayThrownAndTraps();
-            StopAttackEffects();
-            phase2Started = false;
+            InPhase2 = false;
             hitsSinceStagger = 0;
             attacksSinceTraps = 0;
             lastAttack = null;
             Chained = false;
-            Body.linearVelocity = Vector2.zero;
-            Body.position = home;
-            transform.position = home;
-            Fsm.SetState(Waiting, restart: true);
+            Motor.SetVelocity(Vector2.zero);
+            Body.position = Home;
+            transform.position = Home;
         }
-
-        // ---------- Player collisions ----------
-
-        // The player walks through the boss (and takes contact damage from the Hurtbox) instead of standing on it.
-        // Only the solid colliders: an ignored pair gets no trigger messages either, so ignoring the Hurtbox or the
-        // slash hitbox would stop them hurting.
-        private void IgnorePlayer()
-        {
-            if (playerColliders == null)
-                return;
-            foreach (Collider2D theirs in playerColliders)
-                if (theirs != null)
-                    foreach (Collider2D own in solidColliders)
-                        if (own != null)
-                            Physics2D.IgnoreCollision(own, theirs);
-        }
-
-        // Unity forgets ignored pairs when colliders are switched off and on, so check every physics step.
-        private void KeepIgnoringPlayer()
-        {
-            if (playerColliders == null || solidColliders.Length == 0 || solidColliders[0] == null)
-                return;
-            foreach (Collider2D theirs in playerColliders)
-                if (theirs != null && !Physics2D.GetIgnoreCollision(solidColliders[0], theirs))
-                {
-                    IgnorePlayer();
-                    return;
-                }
-        }
-
-        private static Collider2D FindRoomAt(Vector2 point)
-        {
-            foreach (Collider2D candidate in Physics2D.OverlapPointAll(point))
-                if (candidate.isTrigger && candidate.GetComponent<LevelRoom>() != null)
-                    return candidate;
-            return null;
-        }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
-        {
-            if (Application.isPlaying && !string.IsNullOrEmpty(currentState))
-                UnityEditor.Handles.Label(transform.position + Vector3.up * 1.5f, currentState);
-        }
-#endif
     }
 }

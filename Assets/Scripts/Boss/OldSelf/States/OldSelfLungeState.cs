@@ -14,7 +14,7 @@ namespace Bosses
         protected override void OnEnter()
         {
             dashing = false;
-            Boss.StopX();
+            Motor.Stop();
             Boss.FacePlayer();
             Boss.SetCrouch(true);
             Boss.SetWarning(true);
@@ -22,39 +22,32 @@ namespace Bosses
 
         protected override void OnTick()
         {
+            if (dashing || TimeInState < Stats.LungeWindup * Boss.TimeScale)
+                return;
+            dashing = true;
+            startX = Body.position.x;
+            Boss.SetCrouch(false);
+            Boss.SetWarning(false);
+            Boss.SetTrail(true);
+        }
+
+        // The body only moves in physics steps, so the stop checks run here too.
+        protected override void OnFixedTick()
+        {
             if (!dashing)
             {
-                if (TimeInState < Stats.LungeWindup * Boss.TimeScale)
-                    return;
-                dashing = true;
-                startX = Body.position.x;
-                Boss.SetCrouch(false);
-                Boss.SetWarning(false);
-                Boss.SetTrail(true);
+                Motor.Stop();
                 return;
             }
 
             if (Mathf.Abs(Body.position.x - startX) >= Stats.LungeDistance || Boss.WallAhead
-                || Boss.Motor.LedgeAhead(Stats.LungeSpeed))
+                || Motor.LedgeAhead(Stats.LungeSpeed))
             {
-                Boss.StopX();
                 Boss.Shake(Stats.LungeShake);
                 Fsm.SetState(Boss.Recover);
+                return;
             }
-        }
-
-        protected override void OnFixedTick()
-        {
-            if (dashing)
-                Body.linearVelocityX = Boss.Motor.Facing * Stats.LungeSpeed;
-            else
-                Boss.StopX();
-        }
-
-        protected override void OnExit()
-        {
-            Boss.StopAttackEffects();
-            Boss.StopX();
+            Motor.Move(Motor.Facing, Stats.LungeSpeed);
         }
     }
 }

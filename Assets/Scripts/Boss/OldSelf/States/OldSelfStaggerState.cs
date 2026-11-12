@@ -8,8 +8,7 @@ namespace Bosses
 
         protected override void OnEnter()
         {
-            Boss.StopAttackEffects();
-            Boss.StopX();
+            Motor.Stop();
             Boss.SetCrouch(true);
             Boss.SetWarning(true);
         }
@@ -20,8 +19,6 @@ namespace Bosses
                 Fsm.SetState(Boss.Hop);
         }
 
-        protected override void OnFixedTick() => Boss.StopX();
-
-        protected override void OnExit() => Boss.StopAttackEffects();
+        protected override void OnFixedTick() => Motor.Stop();
     }
 }

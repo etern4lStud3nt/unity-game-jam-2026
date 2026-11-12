@@ -20,10 +20,14 @@ namespace Bosses
         [field: SerializeField, Min(0.1f)] public float HopTime { get; private set; } = 0.5f;
         [field: Tooltip("Shortest and longest sideways distance of a hop.")]
         [field: SerializeField] public Vector2 HopDistance { get; private set; } = new Vector2(3f, 7f);
+        [field: Tooltip("Lowest ground (units below where it stands) it may hop down onto. It never hops into a pit.")]
+        [field: SerializeField, Min(0f)] public float HopMaxDrop { get; private set; } = 5.5f;
         [field: Tooltip("Units it keeps from the arena's left and right edges when picking where to hop.")]
         [field: SerializeField, Min(0f)] public float EdgeMargin { get; private set; } = 1.5f;
         [field: Tooltip("Seconds it stands open after an attack: the player's moment to hit it.")]
         [field: SerializeField, Min(0f)] public float RecoverTime { get; private set; } = 0.6f;
+        [field: Tooltip("Height of the sprite (1 = normal) while it crouches before a lunge or staggers.")]
+        [field: SerializeField, Range(0.3f, 1f)] public float CrouchScale { get; private set; } = 0.8f;
 
         [field: Header("Choosing an attack (weights; 0 = never)")]
         [field: SerializeField, Min(0f)] public float LungeWeight { get; private set; } = 1f;
@@ -54,6 +58,8 @@ namespace Bosses
         [field: Tooltip("0 = dives at where the player is, 1 = at where they will be if they keep running.")]
         [field: SerializeField, Range(0f, 1f)] public float DivePrediction { get; private set; } = 0.5f;
         [field: SerializeField, Min(0.1f)] public float DiveSpeed { get; private set; } = 28f;
+        [field: Tooltip("How steeply it must dive at least: 0 = it may dive flat sideways, 1 = only straight down.")]
+        [field: SerializeField, Range(0f, 1f)] public float DiveMinDownward { get; private set; } = 0.3f;
         [field: Tooltip("Camera shake when it hits the ground. 0 = none.")]
         [field: SerializeField, Min(0f)] public float DiveShake { get; private set; } = 0.6f;
 
@@ -72,6 +78,9 @@ namespace Bosses
         [field: SerializeField, Min(0.1f)] public float ThrowScale { get; private set; } = 1f;
         [field: Tooltip("Camera shake when it catches it. 0 = none.")]
         [field: SerializeField, Min(0f)] public float CatchShake { get; private set; } = 0.1f;
+        [field: Tooltip("Sprite squash (width, height) as it throws, and as it catches.")]
+        [field: SerializeField] public Vector2 ThrowPunch { get; private set; } = new Vector2(1.2f, 0.85f);
+        [field: SerializeField] public Vector2 CatchPunch { get; private set; } = new Vector2(0.85f, 1.15f);
 
         [field: Header("Slash (close)")]
         [field: Tooltip("Seconds it shakes before slashing (the warning).")]
@@ -82,6 +91,8 @@ namespace Bosses
         [field: SerializeField, Min(0f)] public float SlashStep { get; private set; } = 6f;
         [field: Tooltip("Camera shake on the slash. 0 = none.")]
         [field: SerializeField, Min(0f)] public float SlashShake { get; private set; } = 0.1f;
+        [field: Tooltip("Sprite squash (width, height) as it slashes.")]
+        [field: SerializeField] public Vector2 SlashPunch { get; private set; } = new Vector2(1.3f, 0.8f);
 
         [field: Header("Stagger (too many hits)")]
         [field: Tooltip("Hits that stagger it. Counted from the last stagger. 0 = never.")]
@@ -106,6 +117,8 @@ namespace Bosses
         [field: SerializeField] public Vector2 AirTrapHeight { get; private set; } = new Vector2(1.5f, 3.5f);
         [field: Tooltip("Seconds a trap blinks before it starts to hurt (the warning).")]
         [field: SerializeField, Min(0f)] public float TrapArmTime { get; private set; } = 0.6f;
+        [field: Tooltip("Blinks per second while a trap is not armed yet.")]
+        [field: SerializeField, Min(0.1f)] public float TrapBlinkRate { get; private set; } = 6f;
         [field: Tooltip("Seconds a trap stays. The player can also break it with a hit.")]
         [field: SerializeField, Min(0f)] public float TrapLifetime { get; private set; } = 6f;
 

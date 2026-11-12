@@ -11,7 +11,7 @@ namespace Bosses
 
         protected override void OnEnter()
         {
-            Boss.StopX();
+            Motor.Stop();
             if (Boss.InPhase2 && !Boss.Chained && Boss.IsGrounded && Random.value < Stats.Phase2ChainChance)
             {
                 Boss.Chained = true;
@@ -27,6 +27,6 @@ namespace Bosses
                 Fsm.SetState(Boss.Idle);
         }
 
-        protected override void OnFixedTick() => Boss.StopX();
+        protected override void OnFixedTick() => Motor.Stop();
     }
 }

@@ -6,16 +6,17 @@ namespace Bosses
     // thrown object comes back to its hand. The camera shakes a little on the catch.
     public class OldSelfThrowState : OldSelfState
     {
-        private const float MaxWait = 5f;
-
         private bool thrown;
 
         public OldSelfThrowState(OldSelfBoss boss) : base(boss) { }
 
+        // Safety stop: the whole flight out and back (even from the far end of the arena), plus a second.
+        private float MaxWait => Stats.ThrowOutTime + 2f * Stats.ThrowDistance / Stats.ThrowReturnSpeed + 1f;
+
         protected override void OnEnter()
         {
             thrown = false;
-            Boss.StopX();
+            Motor.Stop();
             Boss.FacePlayer();
             Boss.SetWarning(true);
         }
@@ -29,20 +30,18 @@ namespace Bosses
                 thrown = true;
                 RestartTimer();
                 Boss.SetWarning(false);
-                Boss.Projectile.Launch(Boss.HandPoint, Vector2.right * Boss.Motor.Facing);
-                Boss.Punch(new Vector2(1.2f, 0.85f));
+                Boss.Projectile.Launch(Boss.HandPoint, Vector2.right * Motor.Facing);
+                Boss.Punch(Stats.ThrowPunch);
                 return;
             }
 
             if (Boss.Projectile.IsFlying && TimeInState < MaxWait)
                 return;
             Boss.Shake(Stats.CatchShake);
-            Boss.Punch(new Vector2(0.85f, 1.15f));
+            Boss.Punch(Stats.CatchPunch);
             Fsm.SetState(Boss.Recover);
         }
 
-        protected override void OnFixedTick() => Boss.StopX();
-
-        protected override void OnExit() => Boss.StopAttackEffects();
+        protected override void OnFixedTick() => Motor.Stop();
     }
 }
