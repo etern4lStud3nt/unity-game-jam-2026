@@ -24,9 +24,10 @@ public class SpriteJuice : MonoBehaviour
     [SerializeField] private Vector2 takeOffScale = new Vector2(0.8f, 1.25f);
     [Tooltip("Falling faster than this and then stopping counts as a landing.")]
     [SerializeField, Min(0.1f)] private float landSpeed = 4f;
-    [Tooltip("Squash of a landing at Land Speed; faster landings squash more, up to Max Land Squash.")]
+    [Tooltip("Squash of a landing at Land Speed; faster landings squash more, up to Max Land Scale at Max Land Speed.")]
     [SerializeField] private Vector2 landScale = new Vector2(1.25f, 0.8f);
     [SerializeField] private Vector2 maxLandScale = new Vector2(1.45f, 0.6f);
+    [SerializeField, Min(0.1f)] private float maxLandSpeed = 20f;
 
     [Header("Lean")]
     [Tooltip("Degrees of lean per unit of sideways speed.")]
@@ -51,11 +52,13 @@ public class SpriteJuice : MonoBehaviour
     [SerializeField, Min(0f)] private float breathAmount = 0.05f;
     [SerializeField, Min(0f)] private float breathRate = 1.5f;
 
+    // Moving slower than this (units per second) counts as standing still on that axis.
+    private const float StillSpeed = 0.5f;
+
     private Vector3 restScale;
     private Vector3 restPosition;
     private Quaternion restRotation;
     private Vector3 lastPosition;
-    private Vector2 velocity;
     private Vector2 punch = Vector2.one;
     private float punchStarted = -1f;
     private float lean;
@@ -64,6 +67,7 @@ public class SpriteJuice : MonoBehaviour
     private bool wasFalling;
     private bool wasStanding = true;
     private float lastFallSpeed;
+    private bool atRest;
 
     // A slow up-and-down swell, e.g. while asleep.
     public bool Breathing { get; set; }
@@ -120,9 +124,26 @@ public class SpriteJuice : MonoBehaviour
 
         Vector2 moved = transform.position - lastPosition;
         lastPosition = transform.position;
-        velocity = moved / dt;
+        Vector2 velocity = moved / dt;
 
-        DetectTakeOffAndLanding();
+        DetectTakeOffAndLanding(velocity.y);
+
+        // Standing still, settled and not breathing: put the rest pose back once, then leave the transform alone.
+        bool still = punchStarted < 0f && !Breathing && velocity.sqrMagnitude < StillSpeed * StillSpeed
+                     && Mathf.Abs(lean) < 0.05f;
+        if (still)
+        {
+            if (!atRest)
+            {
+                atRest = true;
+                lean = leanVelocity = 0f;
+                target.localScale = restScale;
+                target.localPosition = restPosition;
+                target.localRotation = restRotation;
+            }
+            return;
+        }
+        atRest = false;
 
         // Punch: eases back to 1.
         Vector2 punchNow = Vector2.one;
@@ -157,7 +178,7 @@ public class SpriteJuice : MonoBehaviour
 
         // Walk bob: little hops while moving sideways on the level.
         Vector3 position = restPosition;
-        if (bobHeight > 0f && Mathf.Abs(velocity.x) > 0.5f && Mathf.Abs(velocity.y) < 0.5f)
+        if (bobHeight > 0f && Mathf.Abs(velocity.x) > StillSpeed && Mathf.Abs(velocity.y) < StillSpeed)
         {
             walked += Mathf.Abs(moved.x);
             position.y += Mathf.Abs(Mathf.Sin(walked * bobFrequency * Mathf.PI)) * bobHeight;
@@ -165,21 +186,20 @@ public class SpriteJuice : MonoBehaviour
         target.localPosition = position;
     }
 
-    private void DetectTakeOffAndLanding()
+    private void DetectTakeOffAndLanding(float verticalSpeed)
     {
-        bool standing = Mathf.Abs(velocity.y) < 0.5f;
-        if (velocity.y > takeOffSpeed && wasStanding)
+        if (verticalSpeed > takeOffSpeed && wasStanding)
             Punch(takeOffScale);
 
-        if (wasFalling && velocity.y > -0.5f)
+        if (wasFalling && verticalSpeed > -StillSpeed)
         {
-            float hardness = Mathf.InverseLerp(landSpeed, landSpeed * 5f, Mathf.Abs(lastFallSpeed));
+            float hardness = Mathf.InverseLerp(landSpeed, maxLandSpeed, -lastFallSpeed);
             Punch(Vector2.Lerp(landScale, maxLandScale, hardness));
         }
 
-        if (velocity.y < -landSpeed)
-            lastFallSpeed = velocity.y;
-        wasFalling = velocity.y < -landSpeed;
-        wasStanding = standing;
+        wasFalling = verticalSpeed < -landSpeed;
+        if (wasFalling)
+            lastFallSpeed = verticalSpeed;
+        wasStanding = Mathf.Abs(verticalSpeed) < StillSpeed;
     }
 }

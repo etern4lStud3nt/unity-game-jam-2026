@@ -3,8 +3,9 @@ using Unity.Cinemachine;
 using UnityEngine;
 using CharacterController = Assets.Scripts.CharacterController;
 
-// Makes the dash feel fast: stretched afterimages, speed streaks behind the player and a small camera kick.
-// Put it on the character next to CharacterController. Purely visual; it never touches physics.
+// Makes the dash feel fast: stretched afterimages (an AfterimageTrail it adds and drives), speed streaks behind the
+// player and a small camera kick. Put it on the character next to CharacterController. Purely visual; it never
+// touches physics.
 // No [RequireComponent(typeof(CharacterController))]: our CharacterController shares its name with Unity's
 // built-in 3D CharacterController, and requiring it made Unity re-add the Rigidbody2D on the prefab variant,
 // which then dropped this component on load.
@@ -31,14 +32,12 @@ public class DashEffects : MonoBehaviour
     [SerializeField] private CinemachineImpulseSource impulse;
     [SerializeField] private float kickForce = 0.25f;
 
+    // How far behind the dash each afterimage is left.
+    private const float GhostBehind = 0.15f;
+
     private CharacterController controller;
-    private readonly List<SpriteRenderer> pool = new();
-    private readonly List<float> born = new();
     private readonly List<TrailRenderer> streaks = new();
-    private Transform ghostRoot;
-    private float nextGhost;
-    private float direction;
-    private bool dashing;
+    private AfterimageTrail ghosts;
 
     private void Awake()
     {
@@ -52,8 +51,11 @@ public class DashEffects : MonoBehaviour
         if (source == null) source = GetComponentInChildren<SpriteRenderer>();
         if (impulse == null) impulse = GetComponent<CinemachineImpulseSource>();
 
-        // Ghosts live outside the character so they stay where they were left.
-        ghostRoot = new GameObject(name + " Dash Ghosts").transform;
+        if (source != null)
+        {
+            ghosts = gameObject.AddComponent<AfterimageTrail>();
+            ghosts.Configure(source.transform, ghostColor, true, ghostInterval, ghostLifetime, ghostStretch, GhostBehind);
+        }
         BuildStreaks();
     }
 
@@ -72,16 +74,9 @@ public class DashEffects : MonoBehaviour
         OnDashEnded();
     }
 
-    private void OnDestroy()
-    {
-        if (ghostRoot != null) Destroy(ghostRoot.gameObject);
-    }
-
     private void OnDashStarted(float dir)
     {
-        direction = dir;
-        dashing = true;
-        nextGhost = 0f;
+        if (ghosts != null) ghosts.Emitting = true;
         foreach (TrailRenderer streak in streaks)
         {
             streak.Clear();
@@ -94,66 +89,9 @@ public class DashEffects : MonoBehaviour
 
     private void OnDashEnded()
     {
-        dashing = false;
+        if (ghosts != null) ghosts.Emitting = false;
         foreach (TrailRenderer streak in streaks)
             if (streak != null) streak.emitting = false;
-    }
-
-    private void LateUpdate()
-    {
-        if (dashing && source != null && Time.time >= nextGhost)
-        {
-            nextGhost = Time.time + ghostInterval;
-            SpawnGhost();
-        }
-
-        for (int i = 0; i < pool.Count; i++)
-        {
-            SpriteRenderer ghost = pool[i];
-            if (!ghost.gameObject.activeSelf) continue;
-
-            float t = (Time.time - born[i]) / ghostLifetime;
-            if (t >= 1f)
-            {
-                ghost.gameObject.SetActive(false);
-                continue;
-            }
-
-            Color c = ghostColor;
-            c.a *= 1f - t;
-            ghost.color = c;
-        }
-    }
-
-    private void SpawnGhost()
-    {
-        int index = pool.FindIndex(g => !g.gameObject.activeSelf);
-        if (index < 0)
-        {
-            var go = new GameObject("Ghost");
-            go.transform.SetParent(ghostRoot, false);
-            pool.Add(go.AddComponent<SpriteRenderer>());
-            born.Add(0f);
-            index = pool.Count - 1;
-        }
-
-        SpriteRenderer ghost = pool[index];
-        ghost.sprite = source.sprite;
-        ghost.flipX = source.flipX;
-        ghost.drawMode = source.drawMode;
-        ghost.size = source.size;
-        ghost.sharedMaterial = source.sharedMaterial;
-        ghost.sortingLayerID = source.sortingLayerID;
-        ghost.sortingOrder = source.sortingOrder - 1;
-
-        Transform t = ghost.transform;
-        t.SetPositionAndRotation(source.transform.position - new Vector3(direction * 0.15f, 0f, 0f), source.transform.rotation);
-        Vector3 scale = source.transform.lossyScale;
-        t.localScale = new Vector3(scale.x * (1f + ghostStretch), scale.y * (1f - ghostStretch * 0.25f), scale.z);
-
-        born[index] = Time.time;
-        ghost.color = ghostColor;
-        ghost.gameObject.SetActive(true);
     }
 
     private void BuildStreaks()
