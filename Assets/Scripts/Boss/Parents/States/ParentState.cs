@@ -66,6 +66,7 @@ namespace Bosses
         private int dashesLeft;
         private int direction;
         private float endX;
+        private float tellX;
 
         public ParentDashState(ParentActor actor) : base(actor) { }
 
@@ -102,6 +103,9 @@ namespace Bosses
                     Actor.SetCrouch(false);
                     Actor.SetWarning(false);
                     Actor.SetTrail(true);
+                    Actor.Punch(Stats.DashLaunchPunch);
+                    Actor.PlaySound(Stats.DashSound);
+                    Boss.Shake(Stats.DashLaunchShake);
                     return;
 
                 case Step.Rest:
@@ -120,21 +124,37 @@ namespace Bosses
             }
         }
 
+        // Braking never goes below this share of the dash speed, so the skid always reaches the far side.
+        private const float MinSkidSpeed = 0.2f;
+
         protected override void OnFixedTick()
         {
+            if (step == Step.Tell)
+            {
+                // Slides back a little while it winds up (eased), then snaps forward.
+                float k = Stats.DashTell > 0f ? Mathf.Clamp01(TimeInState / Stats.DashTell) : 1f;
+                float pull = Stats.DashWindupPull * (1f - (1f - k) * (1f - k));
+                Body.MovePosition(new Vector2(tellX - direction * pull, Body.position.y));
+                return;
+            }
             if (step != Step.Dash)
                 return;
+
             float left = (endX - Body.position.x) * direction;
-            if (left <= Stats.DashSpeed * Time.fixedDeltaTime)
+            float speed = Stats.DashSpeed;
+            if (Stats.DashSkid > 0f)
+                speed *= Mathf.Clamp(left / Stats.DashSkid, MinSkidSpeed, 1f);
+            if (left <= speed * Time.fixedDeltaTime)
                 EndDash();
             else
-                Actor.SetVelocity(Vector2.right * (direction * Stats.DashSpeed));
+                Actor.SetVelocity(Vector2.right * (direction * speed));
         }
 
         private void StartTell()
         {
             step = Step.Tell;
             RestartTimer();
+            tellX = Body.position.x;
             Actor.SetCrouch(true);
             Actor.SetWarning(true);
         }
@@ -147,6 +167,7 @@ namespace Bosses
             Actor.SetVelocity(Vector2.zero);
             Body.position = new Vector2(endX, Body.position.y);
             Actor.SetTrail(false);
+            Actor.Punch(Stats.DashStopPunch);
             Boss.Shake(Stats.DashShake);
             if (dashesLeft <= 0)
             {

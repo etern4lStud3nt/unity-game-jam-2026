@@ -68,8 +68,9 @@ namespace Bosses
         [field: SerializeField, Min(0.1f)] public float SlipperSpeed { get; private set; } = 13f;
         [field: Tooltip("Units in front of her the slippers appear.")]
         [field: SerializeField, Min(0f)] public float SlipperSpawnAhead { get; private set; } = 0.8f;
-        [field: Tooltip("Degrees per second a flying slipper spins. 0 = it flies flat.")]
-        [field: SerializeField] public float SlipperSpin { get; private set; }
+        [field: Tooltip("Degrees per second a flying slipper spins, rolling forwards. 0 = it flies flat. Only the " +
+                        "sprite spins: the hitbox stays flat, so a wave's gap stays as wide as it looks at rest.")]
+        [field: SerializeField] public float SlipperSpin { get; private set; } = 900f;
         [field: Tooltip("Sprite squash (width, height) as she throws a wave.")]
         [field: SerializeField] public Vector2 ThrowPunch { get; private set; } = new Vector2(1.2f, 0.85f);
         [field: Tooltip("Seconds she bends down for new slippers after a volley: the player's moment to hit her.")]
@@ -91,6 +92,9 @@ namespace Bosses
         [field: Tooltip("0 = they dive at where the player stood when the move began, 1 = at where the player will be " +
                         "when the first dive arrives if they keep running the same way.")]
         [field: SerializeField, Range(0f, 1f)] public float CrossDivePrediction { get; private set; } = 0.5f;
+        [field: Tooltip("How steeply they must dive at least: 0 = may fly flat sideways, 1 = only straight down. " +
+                        "Keeps a dive at a player high in the air from crossing the whole room.")]
+        [field: SerializeField, Range(0f, 1f)] public float CrossDiveMinDownward { get; private set; } = 0.4f;
         [field: Tooltip("Seconds the second one appears after the first. 0 = both dive at the same moment.")]
         [field: SerializeField, Min(0f)] public float CrossDiveStagger { get; private set; } = 0.35f;
 
@@ -110,6 +114,54 @@ namespace Bosses
         [field: SerializeField, Min(1)] public int Phase2WaveCount { get; private set; } = 4;
         [field: Tooltip("Camera shake when the second half begins. 0 = none.")]
         [field: SerializeField, Min(0f)] public float PhaseShake { get; private set; } = 0.8f;
+
+        [field: Header("Game feel")]
+        [field: Tooltip("Seconds one takes to fade in when it appears.")]
+        [field: SerializeField, Min(0f)] public float AppearFadeTime { get; private set; } = 0.08f;
+        [field: Tooltip("Units a dasher slides back while it winds up (the dash then snaps forward).")]
+        [field: SerializeField, Min(0f)] public float DashWindupPull { get; private set; } = 0.5f;
+        [field: Tooltip("Sprite stretch (width, height) as the dash launches.")]
+        [field: SerializeField] public Vector2 DashLaunchPunch { get; private set; } = new Vector2(1.4f, 0.7f);
+        [field: Tooltip("Camera shake as the dash launches. 0 = none.")]
+        [field: SerializeField, Min(0f)] public float DashLaunchShake { get; private set; } = 0.1f;
+        [field: Tooltip("Units over which the dash brakes before the far side, like a skid. 0 = stops dead.")]
+        [field: SerializeField, Min(0f)] public float DashSkid { get; private set; } = 2f;
+        [field: Tooltip("Sprite squash (width, height) as the dash comes to a stop.")]
+        [field: SerializeField] public Vector2 DashStopPunch { get; private set; } = new Vector2(0.8f, 1.2f);
+        [field: Tooltip("Units a diver draws back (up, or away from its dive) while it hangs and shakes.")]
+        [field: SerializeField, Min(0f)] public float HangPull { get; private set; } = 0.4f;
+        [field: Tooltip("Show a thin line along the dive's path during the dive warnings.")]
+        [field: SerializeField] public bool DiveLines { get; private set; } = true;
+        [field: Tooltip("Thickness of the dive line in units.")]
+        [field: SerializeField, Min(0.01f)] public float DiveLineWidth { get; private set; } = 0.08f;
+        [field: Tooltip("How visible (0-1) the dive line is at the end of the warning; it fades in from nothing.")]
+        [field: SerializeField, Range(0f, 1f)] public float DiveLineAlpha { get; private set; } = 0.35f;
+        [field: Tooltip("Camera shake as each slipper wave flies. 0 = none.")]
+        [field: SerializeField, Min(0f)] public float ThrowShake { get; private set; } = 0.08f;
+        [field: Tooltip("Seconds a slipper takes to pop to full size when it appears in her hand.")]
+        [field: SerializeField, Min(0f)] public float SlipperPopTime { get; private set; } = 0.12f;
+        [field: Tooltip("Degrees a hanging slipper wiggles back and forth before it flies.")]
+        [field: SerializeField, Min(0f)] public float SlipperWiggle { get; private set; } = 12f;
+        [field: Tooltip("Wiggles per second of a hanging slipper.")]
+        [field: SerializeField, Min(0f)] public float SlipperWiggleRate { get; private set; } = 4f;
+        [field: Tooltip("Sprite stretch (width, height) of a slipper as it is let go.")]
+        [field: SerializeField] public Vector2 SlipperLaunchStretch { get; private set; } = new Vector2(1.5f, 0.7f);
+        [field: Tooltip("Camera shake on the hit that empties the shared health. 0 = none.")]
+        [field: SerializeField, Min(0f)] public float DeathShake { get; private set; } = 1.5f;
+
+        [field: Header("Sounds (optional; empty = silent)")]
+        [field: Tooltip("Plays whenever either one appears for a move.")]
+        [field: SerializeField] public SoundData AppearSound { get; private set; }
+        [field: Tooltip("The Father's voice as he appears for a move (give the sound a cooldown so it does not " +
+                        "come every time).")]
+        [field: SerializeField] public SoundData FatherVoice { get; private set; }
+        [field: Tooltip("The Mother's voice as she appears for a move.")]
+        [field: SerializeField] public SoundData MotherVoice { get; private set; }
+        [field: SerializeField] public SoundData DashSound { get; private set; }
+        [field: SerializeField] public SoundData ImpactSound { get; private set; }
+        [field: SerializeField] public SoundData ThrowSound { get; private set; }
+        [field: Tooltip("Plays when the shared health runs out.")]
+        [field: SerializeField] public SoundData DefeatSound { get; private set; }
 
         [field: Header("Ending")]
         [field: Tooltip("Yarn node of their last words. Empty = none.")]

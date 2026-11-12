@@ -4,7 +4,7 @@ namespace Bosses
 {
     // One half of the cross dive, for either parent. It appears up and to Side of Aim (Cross Dive Height over the
     // floor, Cross Dive Side Offset sideways; after Delay seconds, still away), hangs there shaking (Cross Dive Tell,
-    // the warning; nothing moves any more), then dives diagonally through Aim down to the floor, through any
+    // the warning; nothing moves any more), then dives diagonally through Aim and on down to the floor, through any
     // platform, and stays stuck there (Stuck Time, the opening) before it leaves. The director sends the two from
     // opposite sides at the same Aim, one a little after the other, so their paths cross where the player stood.
     public class ParentCrossDiveState : ParentState<ParentActor>
@@ -16,6 +16,7 @@ namespace Bosses
 
         private Step step;
         private Vector2 direction;
+        private Vector2 hangPoint;
 
         public ParentCrossDiveState(ParentActor actor) : base(actor) { }
 
@@ -40,10 +41,17 @@ namespace Bosses
                     step = Step.Hang;
                     RestartTimer();
                     Vector2 from = HangPoint();
+                    // At the aim (the player, even in the air), but never flatter than Cross Dive Min Downward, so
+                    // a high aim cannot turn it into a flat flight across the room.
                     Vector2 to = Aim - from;
-                    // Always downwards, even if the arena squeezed the hang point.
-                    to.y = Mathf.Min(to.y, -0.1f);
-                    direction = to.normalized;
+                    direction = to.sqrMagnitude > 0.001f ? to.normalized : Vector2.down;
+                    if (-direction.y < Stats.CrossDiveMinDownward)
+                    {
+                        float down = Mathf.Max(Stats.CrossDiveMinDownward, 0.1f);
+                        float side = Mathf.Sqrt(Mathf.Max(0f, 1f - down * down));
+                        direction = new Vector2(direction.x >= 0f ? side : -side, -down);
+                    }
+                    hangPoint = from;
                     Actor.Appear(from, -Side);
                     Actor.SetWarning(true);
                     return;
@@ -53,6 +61,7 @@ namespace Bosses
                         return;
                     step = Step.Dive;
                     RestartTimer();
+                    Actor.HideDiveLine();
                     Actor.SetWarning(false);
                     Actor.SetTrail(true);
                     return;
@@ -66,10 +75,28 @@ namespace Bosses
 
         protected override void OnFixedTick()
         {
+            if (step == Step.Hang)
+            {
+                // Draws back away from its dive while it shakes (eased), with the line showing its path.
+                float k = Stats.CrossDiveTell > 0f ? Mathf.Clamp01(TimeInState / Stats.CrossDiveTell) : 1f;
+                Vector2 at = hangPoint - direction * (Stats.HangPull * (1f - (1f - k) * (1f - k)));
+                Body.MovePosition(at);
+                float length = (at.y - Boss.FloorY) / Mathf.Max(0.1f, -direction.y);
+                Actor.ShowDiveLine(at, direction, length, k);
+                return;
+            }
             if (step != Step.Dive)
                 return;
             Vector2 velocity = direction * Stats.CrossDiveSpeed;
             float drop = Body.position.y - Actor.StandY;
+            // Safety net: at the arena's edge it stops going sideways and drops straight down, so it never leaves
+            // the room whatever the angle.
+            float x = Body.position.x + velocity.x * Time.fixedDeltaTime;
+            if (!Mathf.Approximately(Boss.ClampToArena(x), x))
+            {
+                direction = Vector2.down;
+                velocity = direction * Stats.CrossDiveSpeed;
+            }
             if (drop <= -velocity.y * Time.fixedDeltaTime)
                 Land();
             else
@@ -93,6 +120,7 @@ namespace Bosses
             Body.position = new Vector2(Boss.ClampToArena(Body.position.x), Actor.StandY);
             Actor.SetTrail(false);
             Actor.Punch(Stats.ImpactPunch);
+            Actor.PlaySound(Stats.ImpactSound);
             Boss.Shake(Stats.ImpactShake);
             Actor.IsAttacking = false;
             Actor.IsRecovering = true;

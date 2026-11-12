@@ -11,6 +11,8 @@ namespace Bosses
 
         protected override void BuildStates() => Throwing = new MotherVolleyState(this);
 
+        protected override SoundData Voice => Stats.MotherVoice;
+
         // Appears at the side of the room (side: -1 left, 1 right), throws waves waves of slippers, then reloads.
         public void Volley(int side, int waves)
         {

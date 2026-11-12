@@ -34,6 +34,11 @@ namespace Bosses
         private Quaternion visualRotation;
         private IState shownState;
         private bool ready;
+        // When the fade-in of an appearance began; negative = not fading in.
+        private float fadeInFrom = -1f;
+        // The dive line: a stretched copy of its own sprite, outside its object so it stays where it was drawn.
+        private SpriteRenderer diveLine;
+        private Color lineColor = Color.white;
 
         public ParentsBoss Boss { get; private set; }
         public ParentsStats Stats => Boss.Stats;
@@ -86,9 +91,31 @@ namespace Bosses
             Falling = new ParentFallState(this);
             WalkingTo = new ParentWalkToState(this);
             BuildStates();
+            BuildDiveLine();
+        }
+
+        private void BuildDiveLine()
+        {
+            SpriteRenderer source = visual != null
+                ? visual.GetComponentInChildren<SpriteRenderer>(true)
+                : GetComponentInChildren<SpriteRenderer>(true);
+            if (source == null)
+                return;
+            var line = new GameObject(name + " Dive Line");
+            line.transform.SetParent(Boss.transform, false);
+            diveLine = line.AddComponent<SpriteRenderer>();
+            diveLine.sprite = source.sprite;
+            diveLine.sharedMaterial = source.sharedMaterial;
+            diveLine.sortingLayerID = source.sortingLayerID;
+            diveLine.sortingOrder = source.sortingOrder - 2;
+            lineColor = source.color;
+            line.SetActive(false);
         }
 
         protected abstract void BuildStates();
+
+        // Its voice as it appears for a move (none by default).
+        protected virtual SoundData Voice => null;
 
         private void Setup()
         {
@@ -125,7 +152,11 @@ namespace Bosses
 
         private void OnEnable() => proxy.Damaged += OnDamaged;
 
-        private void OnDisable() => proxy.Damaged -= OnDamaged;
+        private void OnDisable()
+        {
+            proxy.Damaged -= OnDamaged;
+            HideDiveLine();
+        }
 
         private void Update()
         {
@@ -134,6 +165,14 @@ namespace Bosses
             {
                 shownState = Fsm.Current;
                 currentState = shownState?.GetType().Name;
+            }
+
+            if (fadeInFrom >= 0f)
+            {
+                float k = Stats.AppearFadeTime > 0f ? Mathf.Clamp01((Time.time - fadeInFrom) / Stats.AppearFadeTime) : 1f;
+                SetFade(k);
+                if (k >= 1f)
+                    fadeInFrom = -1f;
             }
         }
 
@@ -155,7 +194,11 @@ namespace Bosses
         public void Hold() => Fsm.SetState(Holding, restart: true);
 
         // Leaves (fades away); it is free for a move once it is away.
-        public void Leave() => Fsm.SetState(Vanishing, restart: true);
+        public void Leave()
+        {
+            fadeInFrom = -1f;
+            Fsm.SetState(Vanishing, restart: true);
+        }
 
         // Appears at the side of the room (side: -1 left, 1 right) after delay seconds and dashes across the floor
         // to the other side, count times (there and back).
@@ -212,14 +255,20 @@ namespace Bosses
             transform.position = point;
             Motor.Face(facing);
             SetPresent(true);
-            if (punch)
-                Punch(Stats.AppearPunch);
+            if (!punch)
+                return;
+            Punch(Stats.AppearPunch);
+            PlaySound(Stats.AppearSound);
+            PlaySound(Voice);
+            fadeInFrom = Time.time;
+            SetFade(0f);
         }
 
         // Hidden and untouchable (away), or back.
         public void SetPresent(bool on)
         {
             IsPresent = on;
+            fadeInFrom = -1f;
             foreach (Collider2D own in colliders)
                 if (own != null)
                     own.enabled = on;
@@ -228,6 +277,38 @@ namespace Bosses
         }
 
         public void SetVelocity(Vector2 velocity) => Body.linearVelocity = velocity;
+
+        public void PlaySound(SoundData sound)
+        {
+            if (sound != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(sound, transform.position);
+        }
+
+        // Draws the dive line from from along direction for length units, alpha (0-1) of Dive Line Alpha visible.
+        public void ShowDiveLine(Vector2 from, Vector2 direction, float length, float alpha)
+        {
+            if (diveLine == null || !Stats.DiveLines || length <= 0f || direction.sqrMagnitude < 0.0001f)
+            {
+                HideDiveLine();
+                return;
+            }
+            direction.Normalize();
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Transform line = diveLine.transform;
+            line.SetPositionAndRotation(from + direction * (length * 0.5f), Quaternion.Euler(0f, 0f, angle));
+            line.localScale = new Vector3(length, Stats.DiveLineWidth, 1f);
+            Color color = lineColor;
+            color.a *= Mathf.Clamp01(alpha) * Stats.DiveLineAlpha;
+            diveLine.color = color;
+            if (!diveLine.gameObject.activeSelf)
+                diveLine.gameObject.SetActive(true);
+        }
+
+        public void HideDiveLine()
+        {
+            if (diveLine != null && diveLine.gameObject.activeSelf)
+                diveLine.gameObject.SetActive(false);
+        }
 
         public void FacePlayer() => Motor.Face(PlayerSide);
 
@@ -291,6 +372,7 @@ namespace Bosses
             SetWarning(false);
             SetCrouch(false);
             SetTrail(false);
+            HideDiveLine();
             Body.linearVelocity = Vector2.zero;
         }
 

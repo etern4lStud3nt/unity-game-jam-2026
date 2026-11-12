@@ -113,6 +113,8 @@ namespace Bosses
                 slipper.Launch();
             held.Clear();
             Actor.Punch(Stats.ThrowPunch);
+            Actor.PlaySound(Stats.ThrowSound);
+            Boss.Shake(Stats.ThrowShake);
             Actor.WavesLaunched++;
             wavesLeft--;
             RestartTimer();

@@ -170,7 +170,7 @@ namespace Bosses
 
         // Where the cross dive aims: ahead of the player by their running speed times the time until the first dive
         // reaches them (the warning plus the flight from the hang point), scaled by Cross Dive Prediction. Only
-        // sideways: a jump does not move the aim. Locked when the move begins.
+        // sideways; locked when the move begins.
         private Vector2 CrossDiveAim()
         {
             Vector2 aim = Boss.PlayerPoint;
@@ -221,6 +221,10 @@ namespace Bosses
 
             fallen = Boss.LastHit != null ? Boss.LastHit : Father;
             other = fallen == Father ? Mother : Father;
+            Boss.Shake(Stats.DeathShake);
+            fallen.PlaySound(Stats.DefeatSound);
+            if (fallen.Flash != null)
+                fallen.Flash.Hit();
             fallen.FallDown();
             other.WalkTo(fallen);
         }

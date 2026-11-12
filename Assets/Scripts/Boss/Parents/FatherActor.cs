@@ -10,6 +10,8 @@ namespace Bosses
 
         protected override void BuildStates() => Diving = new FatherDiveState(this);
 
+        protected override SoundData Voice => Stats.FatherVoice;
+
         // Dives count times in a row, appearing above the player before each.
         public void Dive(int count)
         {

@@ -15,6 +15,7 @@ namespace Bosses
 
         private Step step;
         private int divesLeft;
+        private Vector2 hangPoint;
 
         public FatherDiveState(FatherActor actor) : base(actor) { }
 
@@ -37,6 +38,7 @@ namespace Bosses
                         return;
                     step = Step.Dive;
                     RestartTimer();
+                    Actor.HideDiveLine();
                     Actor.SetWarning(false);
                     Actor.SetTrail(true);
                     return;
@@ -55,6 +57,15 @@ namespace Bosses
 
         protected override void OnFixedTick()
         {
+            if (step == Step.Hang)
+            {
+                // Draws back up while it shakes (eased), with the line showing where it will come down.
+                float k = Stats.DiveTell > 0f ? Mathf.Clamp01(TimeInState / Stats.DiveTell) : 1f;
+                Vector2 at = hangPoint + Vector2.up * (Stats.HangPull * (1f - (1f - k) * (1f - k)));
+                Body.MovePosition(at);
+                Actor.ShowDiveLine(at, Vector2.down, at.y - Boss.FloorY, k);
+                return;
+            }
             if (step != Step.Dive)
                 return;
             float drop = Body.position.y - Actor.StandY;
@@ -71,8 +82,9 @@ namespace Bosses
             float x = Boss.ClampToArena(Boss.PlayerPoint.x);
             float y = Actor.StandY + Stats.DiveHeight;
             if (Boss.Arena != null)
-                y = Mathf.Min(y, Boss.Arena.bounds.max.y - Actor.HalfHeight - CeilingClearance);
-            Actor.Appear(new Vector2(x, y), Actor.PlayerSide);
+                y = Mathf.Min(y, Boss.Arena.bounds.max.y - Actor.HalfHeight - CeilingClearance - Stats.HangPull);
+            hangPoint = new Vector2(x, y);
+            Actor.Appear(hangPoint, Actor.PlayerSide);
             Actor.SetWarning(true);
         }
 
@@ -85,6 +97,7 @@ namespace Bosses
             Body.position = new Vector2(Body.position.x, Actor.StandY);
             Actor.SetTrail(false);
             Actor.Punch(Stats.ImpactPunch);
+            Actor.PlaySound(Stats.ImpactSound);
             Boss.Shake(Stats.ImpactShake);
             if (divesLeft <= 0)
             {
