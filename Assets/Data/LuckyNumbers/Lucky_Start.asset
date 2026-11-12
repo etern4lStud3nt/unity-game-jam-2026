@@ -19,3 +19,4 @@ MonoBehaviour:
   payout: 10
   averagePerChip: +100%
   story: 
+  reward: 1

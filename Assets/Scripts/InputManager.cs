@@ -20,9 +20,17 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
     public Vector2 MoveInput => gameplayBlocked ? Vector2.zero : moveInput;
 
     // While true the gameplay events (Jump, Attack, Interact, Dash) are not raised; presses go to Confirm instead.
-    // Set by DialogueStarted / DialogueEnded, so the player stands still during a conversation.
-    private bool gameplayBlocked;
+    // Set by DialogueStarted / DialogueEnded, so the player stands still during a conversation, and by
+    // BlockGameplay / UnblockGameplay (casino doors and table).
+    private bool gameplayBlocked => dialogueBlocked || codeBlocks > 0;
+    private bool dialogueBlocked;
+    private int codeBlocks;
     private Vector2 moveInput;
+
+    // Freezes the player's input until the matching UnblockGameplay (a door fade, the roulette spin). Calls stack.
+    public void BlockGameplay() => codeBlocks++;
+
+    public void UnblockGameplay() => codeBlocks = Mathf.Max(0, codeBlocks - 1);
 
 
     protected override void Awake()
@@ -41,9 +49,9 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
         EventBus.Subscribe<DialogueEnded>(OnDialogueEnded);
     }
 
-    private void OnDialogueStarted(DialogueStarted evt) => gameplayBlocked = true;
+    private void OnDialogueStarted(DialogueStarted evt) => dialogueBlocked = true;
 
-    private void OnDialogueEnded(DialogueEnded evt) => gameplayBlocked = false;
+    private void OnDialogueEnded(DialogueEnded evt) => dialogueBlocked = false;
 
     // Raises the gameplay event, or Confirm while gameplay is blocked.
     private void Raise(Action gameplayEvent)
@@ -103,7 +111,8 @@ public class InputManager : Singleton<InputManager>, InputSystem_Actions.IPlayer
         inputActionsObj.Disable();
         EventBus.Unsubscribe<DialogueStarted>(OnDialogueStarted);
         EventBus.Unsubscribe<DialogueEnded>(OnDialogueEnded);
-        gameplayBlocked = false;
+        dialogueBlocked = false;
+        codeBlocks = 0;
     }
 
     private void OnDestroy()
