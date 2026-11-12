@@ -1,0 +1,13 @@
+title: Parents_Intro
+---
+// Placeholder: the real intro goes here. The last line must stay: it starts the fight.
+Mother: ...
+Father: ...
+<<signal parents_fight>>
+===
+title: Parents_LastWords
+---
+// Placeholder: their last words, the same whoever fell.
+Mother: ...
+Father: ...
+===
