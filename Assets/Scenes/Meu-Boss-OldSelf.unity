@@ -10234,10 +10234,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2321247696032582934, guid: 531149193b1bd5640b5b79e9d140eb0c, type: 3}
-      propertyPath: luckyNumber
-      value: 
-      objectReference: {fileID: 11400000, guid: 24a7ecfa5aefc8b4cbc9e294741e6798, type: 2}
     - target: {fileID: 2920700865829750726, guid: 531149193b1bd5640b5b79e9d140eb0c, type: 3}
       propertyPath: m_Name
       value: OldSelf

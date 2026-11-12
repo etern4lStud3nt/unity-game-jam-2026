@@ -18,8 +18,10 @@ MonoBehaviour:
   <HopHeight>k__BackingField: 2.5
   <HopTime>k__BackingField: 0.5
   <HopDistance>k__BackingField: {x: 3, y: 7}
+  <HopMaxDrop>k__BackingField: 5.5
   <EdgeMargin>k__BackingField: 1.5
   <RecoverTime>k__BackingField: 0.6
+  <CrouchScale>k__BackingField: 0.8
   <LungeWeight>k__BackingField: 1
   <AirDiveWeight>k__BackingField: 1
   <ThrowWeight>k__BackingField: 1
@@ -35,6 +37,7 @@ MonoBehaviour:
   <DiveAimLockTime>k__BackingField: 0.1
   <DivePrediction>k__BackingField: 0.99
   <DiveSpeed>k__BackingField: 35
+  <DiveMinDownward>k__BackingField: 0.3
   <DiveShake>k__BackingField: 0.6
   <ThrowWindup>k__BackingField: 0.4
   <ThrowDistance>k__BackingField: 16
@@ -43,10 +46,13 @@ MonoBehaviour:
   <ThrowSpin>k__BackingField: 900
   <ThrowScale>k__BackingField: 1
   <CatchShake>k__BackingField: 0.1
+  <ThrowPunch>k__BackingField: {x: 1.2, y: 0.85}
+  <CatchPunch>k__BackingField: {x: 0.85, y: 1.15}
   <SlashWindup>k__BackingField: 0.3
   <SlashTime>k__BackingField: 0.15
   <SlashStep>k__BackingField: 6
   <SlashShake>k__BackingField: 0.1
+  <SlashPunch>k__BackingField: {x: 1.3, y: 0.8}
   <HitsToStagger>k__BackingField: 7
   <StaggerTime>k__BackingField: 1.8
   <Phase2Health>k__BackingField: 0.5
@@ -57,5 +63,6 @@ MonoBehaviour:
   <AirTrapChance>k__BackingField: 0.4
   <AirTrapHeight>k__BackingField: {x: 1.5, y: 3.5}
   <TrapArmTime>k__BackingField: 0.6
+  <TrapBlinkRate>k__BackingField: 6
   <TrapLifetime>k__BackingField: 6
   <DeathFadeTime>k__BackingField: 0.8
