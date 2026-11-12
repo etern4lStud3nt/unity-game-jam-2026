@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e9f8f678787c594391b53fb7bfa2b50, type: 3}
+  m_Name: OldSelf_Stats
+  m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfStats
+  <MinIdleTime>k__BackingField: 0.15
+  <MaxIdleTime>k__BackingField: 0.4
+  <HopChance>k__BackingField: 0.5
+  <HopHeight>k__BackingField: 2.5
+  <HopTime>k__BackingField: 0.5
+  <HopDistance>k__BackingField: {x: 3, y: 7}
+  <EdgeMargin>k__BackingField: 1.5
+  <RecoverTime>k__BackingField: 0.6
+  <LungeWeight>k__BackingField: 1
+  <AirDiveWeight>k__BackingField: 1
+  <ThrowWeight>k__BackingField: 1
+  <SlashWeight>k__BackingField: 2
+  <SlashRange>k__BackingField: 3
+  <LungeWindup>k__BackingField: 0.45
+  <LungeSpeed>k__BackingField: 22
+  <LungeDistance>k__BackingField: 12
+  <LungeShake>k__BackingField: 0.2
+  <DiveJumpHeight>k__BackingField: 5
+  <DiveRiseTime>k__BackingField: 0.35
+  <DiveHangTime>k__BackingField: 0.4
+  <DiveAimLockTime>k__BackingField: 0.1
+  <DiveSpeed>k__BackingField: 28
+  <DiveShake>k__BackingField: 0.6
+  <ThrowWindup>k__BackingField: 0.4
+  <ThrowDistance>k__BackingField: 16
+  <ThrowOutTime>k__BackingField: 0.7
+  <ThrowReturnSpeed>k__BackingField: 18
+  <ThrowSpin>k__BackingField: 900
+  <ThrowScale>k__BackingField: 1
+  <CatchShake>k__BackingField: 0.1
+  <SlashWindup>k__BackingField: 0.3
+  <SlashTime>k__BackingField: 0.15
+  <SlashStep>k__BackingField: 6
+  <SlashShake>k__BackingField: 0.1
+  <HitsToStagger>k__BackingField: 7
+  <StaggerTime>k__BackingField: 1.8
+  <Phase2Health>k__BackingField: 0.5
+  <Phase2TimeScale>k__BackingField: 0.7
+  <Phase2ChainChance>k__BackingField: 0.5
+  <TrapEveryAttacks>k__BackingField: 4
+  <TrapCount>k__BackingField: 3
+  <AirTrapChance>k__BackingField: 0.4
+  <AirTrapHeight>k__BackingField: {x: 1.5, y: 3.5}
+  <TrapArmTime>k__BackingField: 0.6
+  <TrapLifetime>k__BackingField: 6
+  <DeathFadeTime>k__BackingField: 0.8
