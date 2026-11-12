@@ -161,7 +161,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Casino Tileset_0
+      name: Casino Curtain Top
       rect:
         serializedVersion: 2
         x: 0
@@ -183,7 +183,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_1
+      name: Casino Wood Cornice
       rect:
         serializedVersion: 2
         x: 16
@@ -205,7 +205,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_2
+      name: Casino Ladder
       rect:
         serializedVersion: 2
         x: 32
@@ -227,7 +227,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_3
+      name: Casino Chest Closed
       rect:
         serializedVersion: 2
         x: 48
@@ -249,7 +249,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_4
+      name: Casino Key
       rect:
         serializedVersion: 2
         x: 64
@@ -271,7 +271,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_5
+      name: Casino Bar Stool
       rect:
         serializedVersion: 2
         x: 80
@@ -293,7 +293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_6
+      name: Casino Cabinet
       rect:
         serializedVersion: 2
         x: 96
@@ -315,7 +315,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_7
+      name: Casino Desk Left
       rect:
         serializedVersion: 2
         x: 112
@@ -337,7 +337,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_8
+      name: Casino Desk Right
       rect:
         serializedVersion: 2
         x: 128
@@ -359,7 +359,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_9
+      name: Casino Bookshelf
       rect:
         serializedVersion: 2
         x: 144
@@ -381,7 +381,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_10
+      name: Casino Curtain Middle
       rect:
         serializedVersion: 2
         x: 0
@@ -403,7 +403,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_11
+      name: Casino Pillar Top
       rect:
         serializedVersion: 2
         x: 16
@@ -425,7 +425,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_12
+      name: Casino Door Closed
       rect:
         serializedVersion: 2
         x: 32
@@ -447,7 +447,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_13
+      name: Casino Chest Open
       rect:
         serializedVersion: 2
         x: 48
@@ -469,7 +469,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_14
+      name: Casino Potted Tree Grey
       rect:
         serializedVersion: 2
         x: 64
@@ -491,7 +491,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_15
+      name: Casino Slot Machine
       rect:
         serializedVersion: 2
         x: 80
@@ -513,7 +513,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_16
+      name: Casino Window Small
       rect:
         serializedVersion: 2
         x: 96
@@ -535,7 +535,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_17
+      name: Casino Window Large
       rect:
         serializedVersion: 2
         x: 112
@@ -557,7 +557,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_18
+      name: Casino Stone Wall Top Left
       rect:
         serializedVersion: 2
         x: 128
@@ -579,7 +579,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_19
+      name: Casino Stone Wall Top Right
       rect:
         serializedVersion: 2
         x: 144
@@ -601,7 +601,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_20
+      name: Casino Curtain Bottom
       rect:
         serializedVersion: 2
         x: 0
@@ -623,7 +623,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_21
+      name: Casino Pillar Bottom
       rect:
         serializedVersion: 2
         x: 16
@@ -645,7 +645,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_22
+      name: Casino Door Open
       rect:
         serializedVersion: 2
         x: 32
@@ -667,7 +667,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_23
+      name: Casino Coin
       rect:
         serializedVersion: 2
         x: 48
@@ -689,7 +689,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_24
+      name: Casino Potted Tree Blue
       rect:
         serializedVersion: 2
         x: 64
@@ -711,7 +711,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_25
+      name: Casino Roulette Wheel
       rect:
         serializedVersion: 2
         x: 80
@@ -733,7 +733,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_26
+      name: Casino Wall Light
       rect:
         serializedVersion: 2
         x: 96
@@ -755,7 +755,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_27
+      name: Casino Card Table
       rect:
         serializedVersion: 2
         x: 112
@@ -777,7 +777,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_28
+      name: Casino Stone Wall Bottom Left
       rect:
         serializedVersion: 2
         x: 128
@@ -799,7 +799,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Casino Tileset_29
+      name: Casino Stone Wall Bottom Right
       rect:
         serializedVersion: 2
         x: 144
@@ -820,6 +820,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Casino Pillar Middle
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 8
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bec4ab15e8f54e74e88b13c0ff91480d
+      internalID: -660613768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -836,36 +858,37 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":16.0,"y":16.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Casino Tileset_0: -4665202575058176995
-      Casino Tileset_1: -5272361856123888989
-      Casino Tileset_10: -9039765301336862453
-      Casino Tileset_11: -6980800956625515177
-      Casino Tileset_12: 1994712982
-      Casino Tileset_13: -2019438276
-      Casino Tileset_14: 87069124
-      Casino Tileset_15: 610380289
-      Casino Tileset_16: 387522334
-      Casino Tileset_17: -507378610
-      Casino Tileset_18: 1644942463
-      Casino Tileset_19: -556536779
-      Casino Tileset_2: -7809957282887271289
-      Casino Tileset_20: -1674063746
-      Casino Tileset_21: -425013506
-      Casino Tileset_22: -1708643454
-      Casino Tileset_23: -365386512
-      Casino Tileset_24: -1856897991
-      Casino Tileset_25: -522667676
-      Casino Tileset_26: -207812210
-      Casino Tileset_27: -204162944
-      Casino Tileset_28: -1914863827
-      Casino Tileset_29: -1059760197
-      Casino Tileset_3: -4886568443264393298
-      Casino Tileset_4: 4629079457898370718
-      Casino Tileset_5: -8733917095830014132
-      Casino Tileset_6: 7031434029633888859
-      Casino Tileset_7: -4211974440627721157
-      Casino Tileset_8: 3557150487860598144
-      Casino Tileset_9: 389160674721083459
+      Casino Bar Stool: -8733917095830014132
+      Casino Bookshelf: 389160674721083459
+      Casino Cabinet: 7031434029633888859
+      Casino Card Table: -204162944
+      Casino Chest Closed: -4886568443264393298
+      Casino Chest Open: -2019438276
+      Casino Coin: -365386512
+      Casino Curtain Bottom: -1674063746
+      Casino Curtain Middle: -9039765301336862453
+      Casino Curtain Top: -4665202575058176995
+      Casino Desk Left: -4211974440627721157
+      Casino Desk Right: 3557150487860598144
+      Casino Door Closed: 1994712982
+      Casino Door Open: -1708643454
+      Casino Key: 4629079457898370718
+      Casino Ladder: -7809957282887271289
+      Casino Pillar Bottom: -425013506
+      Casino Pillar Middle: -660613768
+      Casino Pillar Top: -6980800956625515177
+      Casino Potted Tree Blue: -1856897991
+      Casino Potted Tree Grey: 87069124
+      Casino Roulette Wheel: -522667676
+      Casino Slot Machine: 610380289
+      Casino Stone Wall Bottom Left: -1914863827
+      Casino Stone Wall Bottom Right: -1059760197
+      Casino Stone Wall Top Left: 1644942463
+      Casino Stone Wall Top Right: -556536779
+      Casino Wall Light: -207812210
+      Casino Window Large: -507378610
+      Casino Window Small: 387522334
+      Casino Wood Cornice: -5272361856123888989
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

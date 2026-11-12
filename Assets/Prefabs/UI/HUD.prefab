@@ -243,8 +243,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ad8c5c18d46b4e74c9023fd1ca417750, type: 2}
+  m_sharedMaterial: {fileID: 7639202540113142427, guid: ad8c5c18d46b4e74c9023fd1ca417750, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -416,8 +416,8 @@ MonoBehaviour:
   healthIconPrefab: {fileID: 3674114109462941174}
   moneyText: {fileID: 1458780202840289589}
   gainText: {fileID: 1052776582289056912}
-  playerHealth: {fileID: 0}
-  playerTag: Player
+  fullSprite: {fileID: 0}
+  emptySprite: {fileID: 0}
   fullColor: {r: 0.93, g: 0.93, b: 0.96, a: 1}
   emptyColor: {r: 0.2, g: 0.2, b: 0.25, a: 0.6}
   lostFlashColor: {r: 1, g: 1, b: 1, a: 1}
@@ -568,8 +568,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: +0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ad8c5c18d46b4e74c9023fd1ca417750, type: 2}
+  m_sharedMaterial: {fileID: 7639202540113142427, guid: ad8c5c18d46b4e74c9023fd1ca417750, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
