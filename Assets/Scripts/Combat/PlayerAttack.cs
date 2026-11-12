@@ -20,7 +20,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField, Min(0.01f)] private float activeTime = 0.1f;
     [SerializeField] private LayerMask targetLayers = ~0;
 
-    [Header("Hit areas (units, relative to the player, facing right)")]
+    [Header("Hit areas (units, relative to the player, facing right; drag them in the Scene view)")]
     [SerializeField] private Vector2 sideSize = new Vector2(1.6f, 1.1f);
     [SerializeField] private Vector2 sideOffset = new Vector2(1.1f, 0f);
     [SerializeField] private Vector2 upSize = new Vector2(1.3f, 1.6f);
