@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ce81dae1b5437c45a557e3a22aa7af7, type: 3}
   m_Name: Lucky_Mother
   m_EditorClassIdentifier: Assembly-CSharp::LuckyNumberData
-  displayName: Mother's Chip
+  displayName: Mother's Lucky Number
   givenBy: Mother
   number: 9
   chance: 0.99
