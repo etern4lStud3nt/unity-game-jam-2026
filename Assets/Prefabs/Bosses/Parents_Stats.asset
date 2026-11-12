@@ -45,19 +45,49 @@ MonoBehaviour:
   <WaveCount>k__BackingField: 3
   <SlipperSpeed>k__BackingField: 13
   <SlipperSpawnAhead>k__BackingField: 0.8
-  <SlipperSpin>k__BackingField: 0
+  <SlipperSpin>k__BackingField: 900
   <ThrowPunch>k__BackingField: {x: 1.2, y: 0.85}
   <ReloadTime>k__BackingField: 0.9
+  <CrossDiveWeight>k__BackingField: 1
+  <Phase2CrossDiveWeight>k__BackingField: 1.5
+  <CrossDiveHeight>k__BackingField: 6
+  <CrossDiveSideOffset>k__BackingField: 6
+  <CrossDiveTell>k__BackingField: 0.6
+  <CrossDiveSpeed>k__BackingField: 30
+  <CrossDivePrediction>k__BackingField: 0.5
+  <CrossDiveMinDownward>k__BackingField: 0.4
+  <CrossDiveStagger>k__BackingField: 0.35
   <ComboDiveDelay>k__BackingField: {x: 0.2, y: 0.9}
   <Phase2Health>k__BackingField: 0.5
   <Phase2IdleBetween>k__BackingField: 0.15
   <Phase2ComboChance>k__BackingField: 0.45
-  <Phase2CrossDashWeight>k__BackingField: 1
-  <CrossDashStagger>k__BackingField: 0.4
   <Phase2DiveChain>k__BackingField: {x: 2, y: 3}
   <ChainPause>k__BackingField: 0.25
   <Phase2WaveCount>k__BackingField: 4
   <PhaseShake>k__BackingField: 0.8
+  <AppearFadeTime>k__BackingField: 0.08
+  <DashWindupPull>k__BackingField: 0.5
+  <DashLaunchPunch>k__BackingField: {x: 1.4, y: 0.7}
+  <DashLaunchShake>k__BackingField: 0.1
+  <DashSkid>k__BackingField: 2
+  <DashStopPunch>k__BackingField: {x: 0.8, y: 1.2}
+  <HangPull>k__BackingField: 0.4
+  <DiveLines>k__BackingField: 1
+  <DiveLineWidth>k__BackingField: 0.08
+  <DiveLineAlpha>k__BackingField: 0.35
+  <ThrowShake>k__BackingField: 0.08
+  <SlipperPopTime>k__BackingField: 0.12
+  <SlipperWiggle>k__BackingField: 12
+  <SlipperWiggleRate>k__BackingField: 4
+  <SlipperLaunchStretch>k__BackingField: {x: 1.5, y: 0.7}
+  <DeathShake>k__BackingField: 1.5
+  <AppearSound>k__BackingField: {fileID: 0}
+  <FatherVoice>k__BackingField: {fileID: 11400000, guid: 0b84ec5f2747a444884247872f608bdb, type: 2}
+  <MotherVoice>k__BackingField: {fileID: 0}
+  <DashSound>k__BackingField: {fileID: 11400000, guid: 77e59e89fed2fbe44a0129407c802a03, type: 2}
+  <ImpactSound>k__BackingField: {fileID: 11400000, guid: 6e4f95dc77786d046b50352c15588858, type: 2}
+  <ThrowSound>k__BackingField: {fileID: 0}
+  <DefeatSound>k__BackingField: {fileID: 11400000, guid: 56b2db0c32126e2499d3d17c53bed601, type: 2}
   <LastWordsNode>k__BackingField: Parents_LastWords
   <EndFallSpeed>k__BackingField: 14
   <WalkSpeed>k__BackingField: 6
