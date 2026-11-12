@@ -1,5 +1,14 @@
 using UnityEngine;
 
+// What spending a lucky number at the casino table gives.
+public enum LuckyNumberReward
+{
+    None,
+    Dash,
+    WallJump,
+    DoubleJump,
+}
+
 // One lucky number the player can earn (a boss's Lucky Chip, a memory item, the starting number...).
 // Create one asset per source and hand it to whatever grants it; nothing about the numbers lives in code.
 [CreateAssetMenu(menuName = "Lucky Number/Lucky Number", fileName = "Lucky_New")]
@@ -21,6 +30,8 @@ public class LuckyNumberData : ScriptableObject
     [SerializeField] private string averagePerChip;
     [Tooltip("A short memory: why this is their lucky number. Empty = no story section on the card.")]
     [SerializeField, TextArea(3, 8)] private string story;
+    [Tooltip("What playing this number at the casino table unlocks. None = the table ignores it.")]
+    [SerializeField] private LuckyNumberReward reward;
 
     public string DisplayName => displayName;
     public string GivenBy => givenBy;
@@ -28,6 +39,7 @@ public class LuckyNumberData : ScriptableObject
     public float Chance => chance;
     public float Payout => payout;
     public string Story => story;
+    public LuckyNumberReward Reward => reward;
 
     // Gives the player this lucky number.
     public void Grant() => LuckyNumbers.Add(this);
