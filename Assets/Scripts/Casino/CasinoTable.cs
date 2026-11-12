@@ -31,18 +31,38 @@ public class CasinoTable : CasinoInteractable
     [SerializeField] private string noNumberTitle = "No lucky number";
     [SerializeField] private string noNumberHint = "Beat a boss to win one";
 
+    [Header("Come-here arrow")]
+    [Tooltip("Arrow above the table. Shown until the player first walks up to the table, and whenever they have a " +
+             "lucky number to play; hidden while they stand at the table or the wheel spins.")]
+    [SerializeField] private GameObject marker;
+
     // Lucky numbers already played at the table, for the whole run.
     private static readonly HashSet<LuckyNumberData> Played = new();
+    // True once the player has walked up to the table this run.
+    private static bool visited;
 
-    // Domain reload is off, so the static must be cleared by hand between Play sessions.
+    // Domain reload is off, so the statics must be cleared by hand between Play sessions.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() => Played.Clear();
+    private static void ResetStatics()
+    {
+        Played.Clear();
+        visited = false;
+    }
 
     protected override void Start()
     {
         base.Start();
         if (spinScreen != null)
             spinScreen.SetActive(false);
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if (Player != null)
+            visited = true;
+        if (marker != null)
+            marker.SetActive(Player == null && !Busy && (!visited || NextToPlay() != null));
     }
 
     protected override void Use(Rigidbody2D player)
