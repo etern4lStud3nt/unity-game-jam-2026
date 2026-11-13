@@ -20,6 +20,10 @@ namespace Bosses
     {
         [Tooltip("Squashed while crouching and laid down in the ending. Usually the Visual child.")]
         [SerializeField] private Transform visual;
+        [Tooltip("The dive line's sprite, stretched along the dive (a plain square). Empty = the body's own sprite.")]
+        [SerializeField] private Sprite diveLineSprite;
+        [Tooltip("The dive line's colour (Dive Line Alpha in the stats fades it).")]
+        [SerializeField] private Color diveLineColor = Color.white;
         [Tooltip("Read only: the state it is in right now.")]
         [SerializeField] private string currentState;
 
@@ -36,9 +40,8 @@ namespace Bosses
         private bool ready;
         // When the fade-in of an appearance began; negative = not fading in.
         private float fadeInFrom = -1f;
-        // The dive line: a stretched copy of its own sprite, outside its object so it stays where it was drawn.
+        // The dive line: a stretched sprite outside its object, so it stays where it was drawn.
         private SpriteRenderer diveLine;
-        private Color lineColor = Color.white;
 
         public ParentsBoss Boss { get; private set; }
         public ParentsStats Stats => Boss.Stats;
@@ -104,11 +107,10 @@ namespace Bosses
             var line = new GameObject(name + " Dive Line");
             line.transform.SetParent(Boss.transform, false);
             diveLine = line.AddComponent<SpriteRenderer>();
-            diveLine.sprite = source.sprite;
+            diveLine.sprite = diveLineSprite != null ? diveLineSprite : source.sprite;
             diveLine.sharedMaterial = source.sharedMaterial;
             diveLine.sortingLayerID = source.sortingLayerID;
             diveLine.sortingOrder = source.sortingOrder - 2;
-            lineColor = source.color;
             line.SetActive(false);
         }
 
@@ -296,7 +298,7 @@ namespace Bosses
             Transform line = diveLine.transform;
             line.SetPositionAndRotation(from + direction * (length * 0.5f), Quaternion.Euler(0f, 0f, angle));
             line.localScale = new Vector3(length, Stats.DiveLineWidth, 1f);
-            Color color = lineColor;
+            Color color = diveLineColor;
             color.a *= Mathf.Clamp01(alpha) * Stats.DiveLineAlpha;
             diveLine.color = color;
             if (!diveLine.gameObject.activeSelf)
