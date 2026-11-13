@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-// A sky that always fills the screen behind the level. Each layer is a sprite (Draw Mode: Tiled, the texture's Wrap
+// A sky that always fills the screen behind the level (orthographic or perspective camera). Each layer is a sprite (Draw Mode: Tiled, the texture's Wrap
 // Mode: Repeat) scaled to the camera's height and repeated sideways forever. When the camera moves, a layer slides
 // by Scroll times as much, so far layers (small Scroll) seem to move less; Drift moves it on its own (wind).
 // Vertically the sky stays with the camera, so it never runs out on a tall map.
@@ -34,15 +34,18 @@ public class ParallaxSky : MonoBehaviour
     {
         if (targetCamera == null)
             targetCamera = Camera.main;
-        if (cam != targetCamera || !cam.orthographic)
+        if (cam != targetCamera)
             return;
 
         Vector3 at = cam.transform.position;
-        float viewHeight = cam.orthographicSize * 2f;
         foreach (Layer layer in layers)
         {
             if (layer.sprite == null || layer.sprite.sprite == null)
                 continue;
+            // The height the camera sees at the layer's depth (the game camera is a perspective one).
+            float viewHeight = cam.orthographic
+                ? cam.orthographicSize * 2f
+                : 2f * Mathf.Abs(layer.sprite.transform.position.z - at.z) * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
             Sprite art = layer.sprite.sprite;
             Vector2 size = art.rect.size / art.pixelsPerUnit;
             float scale = viewHeight / size.y;
