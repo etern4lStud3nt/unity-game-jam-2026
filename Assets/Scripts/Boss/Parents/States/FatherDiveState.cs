@@ -2,16 +2,13 @@ using UnityEngine;
 
 namespace Bosses
 {
-    // The Father's dive, Count times in a row. For each: he appears above the player (Dive Height over the floor,
-    // below the ceiling), hangs there shaking (Dive Tell, the warning; his position is locked), dives straight down
+    // The Father's dive, Count times in a row. For each: he appears Dive Height above the player,
+    // hangs there shaking (Dive Tell, the warning; his position is locked), dives straight down
     // to the floor, through any platform, and stays stuck in it. The last Stuck is the opening (Stuck Time), then he
     // leaves; in a chain he is stuck only briefly (Chain Pause) and appears above the player again.
     public class FatherDiveState : ParentState<FatherActor>
     {
         private enum Step { Hang, Dive, Stuck }
-
-        // How far below the arena's top he stays.
-        private const float CeilingClearance = 0.5f;
 
         private Step step;
         private int divesLeft;
@@ -80,9 +77,8 @@ namespace Bosses
             step = Step.Hang;
             RestartTimer();
             float x = Boss.ClampToArena(Boss.PlayerPoint.x);
-            float y = Actor.StandY + Stats.DiveHeight;
-            if (Boss.Arena != null)
-                y = Mathf.Min(y, Boss.Arena.bounds.max.y - Actor.HalfHeight - CeilingClearance - Stats.HangPull);
+            // Keep the same gap even near the arena's top; a ceiling clamp could put him on the player.
+            float y = Boss.PlayerPoint.y + Stats.DiveHeight;
             hangPoint = new Vector2(x, y);
             Actor.Appear(hangPoint, Actor.PlayerSide);
             Actor.SetWarning(true);

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Bosses
 {
     // One half of the cross dive, for either parent, with its own aim. After Delay seconds (still away) it appears up
-    // and to Side of where the player is then (Cross Dive Height over the floor, Cross Dive Side Offset sideways) and
+    // and to Side of where the player is then (Cross Dive Height above them, Cross Dive Side Offset sideways) and
     // hangs there shaking (Cross Dive Tell, the warning). While it hangs it keeps aiming at the player, ahead of them
     // by Cross Dive Prediction, until Cross Dive Aim Lock seconds before it dives; then it dives diagonally through
     // that spot and on down to the floor, through any platform, and stays stuck there (Stuck Time, the opening)
@@ -12,9 +12,6 @@ namespace Bosses
     public class ParentCrossDiveState : ParentState<ParentActor>
     {
         private enum Step { Wait, Hang, Dive, Stuck }
-
-        // How far below the arena's top it stays.
-        private const float CeilingClearance = 0.5f;
 
         private Step step;
         private Vector2 direction;
@@ -124,9 +121,8 @@ namespace Bosses
         private Vector2 HangPoint()
         {
             float x = Boss.ClampToArena(Boss.PlayerPoint.x + Side * Stats.CrossDiveSideOffset);
-            float y = Actor.StandY + Stats.CrossDiveHeight;
-            if (Boss.Arena != null)
-                y = Mathf.Min(y, Boss.Arena.bounds.max.y - Actor.HalfHeight - CeilingClearance);
+            // Keep the same gap even near the arena's top; a ceiling clamp could put it on the player.
+            float y = Boss.PlayerPoint.y + Stats.CrossDiveHeight;
             return new Vector2(x, y);
         }
 

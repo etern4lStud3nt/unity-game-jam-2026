@@ -37,7 +37,7 @@ namespace Bosses
         [field: SerializeField, Min(0f)] public float DashRecover { get; private set; } = 0.6f;
 
         [field: Header("Father: dive (appears above the player, hangs, dives straight down)")]
-        [field: Tooltip("Units above the floor he appears at.")]
+        [field: Tooltip("Units above the player's center when he appears. His position then stays locked during the warning.")]
         [field: SerializeField, Min(0.5f)] public float DiveHeight { get; private set; } = 7f;
         [field: Tooltip("Seconds he hangs still and shakes before diving (the warning). His position is locked.")]
         [field: SerializeField, Min(0f)] public float DiveTell { get; private set; } = 0.5f;
@@ -81,7 +81,7 @@ namespace Bosses
         [field: SerializeField, Min(0f)] public float CrossDiveWeight { get; private set; } = 1f;
         [field: Tooltip("Weight of the cross dive in the second half (0 = never).")]
         [field: SerializeField, Min(0f)] public float Phase2CrossDiveWeight { get; private set; } = 1.5f;
-        [field: Tooltip("Units above the floor they hang at.")]
+        [field: Tooltip("Units above the player's center when each appears. Their positions then stay locked during the warning.")]
         [field: SerializeField, Min(0.5f)] public float CrossDiveHeight { get; private set; } = 6f;
         [field: Tooltip("Units to the left and right of the player they hang at (with the height, sets the angle).")]
         [field: SerializeField, Min(0.5f)] public float CrossDiveSideOffset { get; private set; } = 6f;
