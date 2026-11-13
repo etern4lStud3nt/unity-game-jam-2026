@@ -17,4 +17,4 @@ MonoBehaviour:
   - Name: Base
     Clip: {fileID: 8300000, guid: 93d37ca1e692acb44949a524d2865964, type: 3}
     StartVolume: 1
-  volume: 1
+  volume: 0.74
