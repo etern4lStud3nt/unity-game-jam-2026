@@ -7,18 +7,18 @@ Made for Unity Game Jam 2026
 
 
 GAME DESIGN
-STVS
+Stavros Kaskouras (etern4lStud3nt)
 
 PROGRAMMING
-Metin Enes Ufuk
-STVS
+Metin Enes Ufuk 
+Stavros Kaskouras (etern4lStud3nt)
 
 ART
 QuizMasterHanzo
-Tselos
+Anastasis Tselos
 
 MUSIC & SOUND
-BoonOfWar
+Samuel J. Robinson
 
 
 
