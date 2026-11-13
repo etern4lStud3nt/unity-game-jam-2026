@@ -59,6 +59,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4218245981303334589}
+    - targetCorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6483077719960318568}
+    - targetCorrespondingSourceObject: {fileID: 639287640591499914, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2340969933737732345}
   m_SourcePrefab: {fileID: 100100000, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
 --- !u!1 &3570890493642793211 stripped
 GameObject:
@@ -79,3 +85,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FacingSprite
   characterController: {fileID: 0}
   artFacesLeft: 0
+--- !u!95 &6483077719960318568
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570890493642793211}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d3d99916433a34f429e3e6afee78e575, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2340969933737732345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570890493642793211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15814187192c0eb40837bd5fa3838bc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimator
+  characterController: {fileID: 0}
+  walkSpeed: 0.1
