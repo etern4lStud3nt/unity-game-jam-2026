@@ -62,7 +62,14 @@ public class PlayerRespawn : MonoBehaviour
 
     private void OnCheckpoint(CheckpointReached evt)
     {
-        checkpoint = evt.Position;
+        SetCheckpoint(evt.Position);
+    }
+
+    // Setting a starting point does not publish CheckpointReached or create a save.
+    public void SetCheckpoint(Vector3 position)
+    {
+        checkpoint = position;
+        safeGround = position;
     }
 
     private void OnDied(PlayerDied evt)

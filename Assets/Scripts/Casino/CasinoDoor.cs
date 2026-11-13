@@ -27,7 +27,8 @@ public class CasinoDoor : CasinoInteractable
         StartCoroutine(Enter(player));
     }
 
-    private IEnumerator Enter(Rigidbody2D player)
+    // Also used by SaveGame to begin a new game inside this casino, with a working return door.
+    public IEnumerator Enter(Rigidbody2D player)
     {
         Busy = true;
         CasinoTravel.ReturnPosition = (returnPoint != null ? returnPoint : transform).position;

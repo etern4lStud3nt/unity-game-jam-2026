@@ -39,13 +39,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField, Min(0f)] private float shakeForce = 0.15f;
 
     [Header("Look")]
-    [Tooltip("The slash, frame by frame, drawn swinging to the right with its pivot on the player. Turned to the " +
-             "swing's direction and played once per swing. Empty = the placeholder sprite below.")]
+    [Tooltip("The slash, frame by frame, drawn swinging to the right. Automatically fitted to the swing's hit " +
+             "area and played once per swing. Empty = the placeholder sprite below.")]
     [SerializeField] private Sprite[] slashFrames;
     [Tooltip("Seconds each slash frame shows.")]
     [SerializeField, Min(0.005f)] private float slashFrameTime = 0.035f;
-    [Tooltip("How far from the player's middle the slash is drawn, towards the swing.")]
-    [SerializeField] private float slashReach = 0.2f;
     [Tooltip("Placeholder: a sprite stretched over the hit area during the swing, used when there are no frames.")]
     [SerializeField] private Sprite slashSprite;
     [SerializeField] private Color slashColor = new Color(1f, 1f, 1f, 0.5f);
@@ -57,6 +55,7 @@ public class PlayerAttack : MonoBehaviour
     private static bool hitStopRunning;
 
     private readonly HashSet<Health> hitThisSwing = new HashSet<Health>();
+    private readonly Dictionary<Sprite, Bounds> slashBoundsCache = new Dictionary<Sprite, Bounds>();
     private CharacterController controller;
     private Rigidbody2D body;
     private Health ownHealth;
@@ -217,24 +216,90 @@ public class PlayerAttack : MonoBehaviour
         if (slash == null)
             return;
         swingStart = Time.time;
+        GetArea(direction, out Vector2 centre, out Vector2 size);
+        Bounds bounds;
         if (HasFrames)
         {
-            // Drawn swinging right: turn it to the swing, with the player's facing flipping it.
-            Transform t = slash.transform;
-            t.position = (Vector2)transform.position + direction * slashReach;
-            t.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-            Vector3 lossy = transform.lossyScale;
-            t.localScale = new Vector3(1f / Mathf.Abs(lossy.x), 1f / Mathf.Abs(lossy.y), 1f);
-            slash.flipY = direction.x < 0f;
             slash.sprite = slashFrames[0];
-            slash.enabled = true;
-            return;
+            // Use the whole animation's bounds so changing frames never changes its scale or position.
+            bounds = GetVisibleBounds(slashFrames[0]);
+            foreach (Sprite frame in slashFrames)
+                if (frame != null)
+                    bounds.Encapsulate(GetVisibleBounds(frame));
         }
-        GetArea(direction, out Vector2 centre, out Vector2 size);
-        slash.transform.position = centre;
-        Vector3 parentScale = transform.lossyScale;
-        slash.transform.localScale = new Vector3(size.x / Mathf.Abs(parentScale.x), size.y / Mathf.Abs(parentScale.y), 1f);
+        else
+        {
+            slash.sprite = slashSprite;
+            bounds = GetVisibleBounds(slashSprite);
+        }
+
+        Transform t = slash.transform;
+        t.rotation = HasFrames
+            ? Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg)
+            : Quaternion.identity;
+        slash.flipY = HasFrames && direction.x < 0f;
+
+        // Up/down rotate the sprite 90 degrees, so width and height exchange roles.
+        Vector2 localSize = HasFrames && direction.y != 0f ? new Vector2(size.y, size.x) : size;
+        t.localScale = Vector3.one;
+        float parentX = Vector3.Dot(t.TransformVector(Vector3.right), t.right);
+        float parentY = Vector3.Dot(t.TransformVector(Vector3.up), t.up);
+        t.localScale = new Vector3(
+            bounds.size.x > 0f && Mathf.Abs(parentX) > 0.0001f ? localSize.x / bounds.size.x / parentX : 0f,
+            bounds.size.y > 0f && Mathf.Abs(parentY) > 0.0001f ? localSize.y / bounds.size.y / parentY : 0f,
+            1f);
+
+        // Centre the art on the hit area even when the sprite uses an off-centre pivot.
+        Vector3 spriteCentre = bounds.center;
+        if (slash.flipY)
+            spriteCentre.y = -spriteCentre.y;
+        t.position = (Vector3)centre - t.TransformVector(spriteCentre);
         slash.enabled = true;
+    }
+
+    private Bounds GetVisibleBounds(Sprite sprite)
+    {
+        if (slashBoundsCache.TryGetValue(sprite, out Bounds bounds))
+            return bounds;
+
+        // Mesh bounds are a fallback for textures that cannot be read (or are atlas-packed).
+        Vector2[] vertices = sprite.vertices;
+        bounds = vertices.Length > 0 ? new Bounds(vertices[0], Vector3.zero) : sprite.bounds;
+        foreach (Vector2 vertex in vertices)
+            bounds.Encapsulate(vertex);
+
+        Texture2D texture = sprite.texture;
+        if (texture.isReadable && !sprite.packed)
+        {
+            Color32[] pixels = texture.GetPixels32();
+            Rect rect = sprite.rect;
+            int xStart = Mathf.RoundToInt(rect.x);
+            int yStart = Mathf.RoundToInt(rect.y);
+            int width = Mathf.RoundToInt(rect.width);
+            int height = Mathf.RoundToInt(rect.height);
+            int minX = width, minY = height, maxX = -1, maxY = -1;
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                {
+                    if (pixels[(yStart + y) * texture.width + xStart + x].a == 0)
+                        continue;
+                    minX = Mathf.Min(minX, x);
+                    minY = Mathf.Min(minY, y);
+                    maxX = Mathf.Max(maxX, x);
+                    maxY = Mathf.Max(maxY, y);
+                }
+
+            if (maxX >= minX && maxY >= minY)
+            {
+                Vector2 min = (new Vector2(minX, minY) - sprite.pivot) / sprite.pixelsPerUnit;
+                Vector2 max = (new Vector2(maxX + 1, maxY + 1) - sprite.pivot) / sprite.pixelsPerUnit;
+                bounds = new Bounds((min + max) * 0.5f, max - min);
+            }
+        }
+
+        // Scan once per sprite, never once per animation frame or subsequent swing.
+        slashBoundsCache.Add(sprite, bounds);
+        return bounds;
     }
 
     private void GetArea(Vector2 dir, out Vector2 centre, out Vector2 size)
