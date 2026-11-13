@@ -79,6 +79,16 @@ public class EndingTable : CasinoInteractable
         StartMusic();
     }
 
+    private void StartMusic()
+    {
+        AudioManager audio = AudioManager.Instance;
+        if (fallMusic == null || audio == null)
+            return;
+        // Nothing (a room, a boss) may take the music away from here on; the hold ends when this table is gone.
+        audio.HoldMusic(this);
+        audio.PlayMusic(fallMusic, musicFadeIn);
+    }
+
     private void OnEnable()
     {
         EventBus.Subscribe<DialogueEnded>(OnDialogueEnded);
@@ -120,7 +130,7 @@ public class EndingTable : CasinoInteractable
             spinWheel.Rebind();
             spinWheel.speed = spinSpeed;
         }
-        yield return Pop(0f, 1f);
+        yield return ScalePop.Run(spinWheel != null ? spinWheel.transform : null, 0f, 1f, popTime);
         yield return new WaitForSeconds(spinBeforeFall);
 
         // No result: the wheel shrinks away still spinning while the floor goes.
@@ -133,25 +143,9 @@ public class EndingTable : CasinoInteractable
 
     private IEnumerator HideWheel()
     {
-        yield return Pop(1f, 0f);
+        yield return ScalePop.Run(spinWheel != null ? spinWheel.transform : null, 1f, 0f, popTime);
         if (spinScreen != null)
             spinScreen.SetActive(false);
-    }
-
-    // Grows (with a small overshoot) or shrinks the big wheel.
-    private IEnumerator Pop(float from, float to)
-    {
-        if (spinWheel == null)
-            yield break;
-        Transform w = spinWheel.transform;
-        for (float t = 0f; t < popTime; t += Time.deltaTime)
-        {
-            float k = t / popTime;
-            float eased = to > from ? 1f + 2.2f * Mathf.Pow(k - 1f, 3f) + 1.2f * Mathf.Pow(k - 1f, 2f) : k * k;
-            w.localScale = Vector3.one * Mathf.LerpUnclamped(from, to, eased);
-            yield return null;
-        }
-        w.localScale = Vector3.one * to;
     }
 
     // Shakes the floor, switches its colliders off so the player drops, and fades it away.
@@ -172,16 +166,6 @@ public class EndingTable : CasinoInteractable
         foreach (Collider2D c in floor.GetComponentsInChildren<Collider2D>())
             c.enabled = false;
         StartCoroutine(Vanish());
-    }
-
-    private void StartMusic()
-    {
-        AudioManager audio = AudioManager.Instance;
-        if (fallMusic == null || audio == null)
-            return;
-        // Nothing (a room, a boss) may take the music away from here on; the hold ends when this table is gone.
-        audio.HoldMusic(this);
-        audio.PlayMusic(fallMusic, musicFadeIn);
     }
 
     private IEnumerator Vanish()
@@ -240,22 +224,26 @@ public class EndingTable : CasinoInteractable
                     debris.Add(number ? MakeNumber(numbers[nextNumber++ % numbers.Length], at) : MakeSprite(at));
                 }
 
-                for (int i = debris.Count - 1; i >= 0; i--)
-                {
-                    if (debris[i] == null)
-                    {
-                        debris.RemoveAt(i);
-                        continue;
-                    }
-                    debris[i].Rotate(0f, 0f, 40f * Time.deltaTime);
-                    if (debris[i].position.y > player.position.y + 10f)
-                    {
-                        Destroy(debris[i].gameObject);
-                        debris.RemoveAt(i);
-                    }
-                }
+                UpdateDebris(debris, player.position.y);
             }
             yield return null;
+        }
+    }
+
+    // Turns the things rushing past and removes the ones that went out of sight above the player.
+    private static void UpdateDebris(List<Transform> debris, float playerY)
+    {
+        for (int i = debris.Count - 1; i >= 0; i--)
+        {
+            Transform d = debris[i];
+            if (d != null && d.position.y <= playerY + 10f)
+            {
+                d.Rotate(0f, 0f, 40f * Time.deltaTime);
+                continue;
+            }
+            if (d != null)
+                Destroy(d.gameObject);
+            debris.RemoveAt(i);
         }
     }
 

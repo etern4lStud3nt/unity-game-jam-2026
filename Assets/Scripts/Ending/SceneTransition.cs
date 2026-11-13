@@ -17,7 +17,7 @@ public static class SceneTransition
 
     // Scene must be in File > Build Profiles > Scene List. fadeIn 0 = the new scene starts black and has to fade
     // itself in.
-    public static void Load(string scene, float delay = 0f, float fadeOut = 0.5f, float fadeIn = 0.5f)
+    public static void Load(string scene, float delay, float fadeOut, float fadeIn)
     {
         if (running)
             return;
@@ -48,8 +48,14 @@ public static class SceneTransition
         {
             while (!loading.isDone)
                 yield return null;
+            // The old scene's InputManager went with it: hold the new one still until the screen is clear.
+            InputManager arrived = InputManager.Instance;
+            if (arrived != null)
+                arrived.BlockGameplay();
             if (fadeIn > 0f)
                 yield return ScreenFade.To(0f, fadeIn);
+            if (arrived != null)
+                arrived.UnblockGameplay();
         }
 
         running = false;

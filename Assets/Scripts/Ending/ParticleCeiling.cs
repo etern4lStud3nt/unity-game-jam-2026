@@ -16,19 +16,17 @@ public class ParticleCeiling : MonoBehaviour
     private void Awake()
     {
         system = GetComponent<ParticleSystem>();
+        particles = new ParticleSystem.Particle[system.main.maxParticles];
     }
 
     private void LateUpdate()
     {
-        int max = system.main.maxParticles;
-        if (particles == null || particles.Length < max)
-            particles = new ParticleSystem.Particle[max];
-
         int count = system.GetParticles(particles);
         for (int i = 0; i < count; i++)
         {
             ParticleSystem.Particle p = particles[i];
-            float top = p.position.y + p.GetCurrentSize(system) * 0.5f;
+            // Sizes stay as spawned (no size over lifetime), so the start size is the current size.
+            float top = p.position.y + p.startSize * 0.5f;
             float room = ceiling - top;
             if (room <= 0f)
             {
