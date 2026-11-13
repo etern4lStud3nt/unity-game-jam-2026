@@ -21,4 +21,9 @@ public class SettingsMenu : MonoBehaviour
         slider.SetValueWithoutNotify(audio.GetVolume(parameter));
         slider.onValueChanged.AddListener(value => audio.SetVolume(parameter, value));
     }
+
+    public void ResetProgress()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }
