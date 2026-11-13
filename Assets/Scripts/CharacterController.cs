@@ -2,11 +2,21 @@ using System.Collections;
 using UnityEngine;
 namespace Assets.Scripts
 {
+    public enum JumpKind
+    {
+        Ground,
+        Wall,
+        Air,
+    }
+
     [RequireComponent(typeof(Rigidbody2D))]
     public class CharacterController : MonoBehaviour
     {
         [SerializeField] private LayerMask groundLayer;
+        [Tooltip("Ray from the centre down to find the ground: half the body's height plus a little.")]
         [SerializeField] private float groundCheckLength = 1f;
+        [Tooltip("Rays from the centre left and right to find walls: half the body's width plus a little.")]
+        [SerializeField] private float wallCheckLength = 0.75f;
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float jumpForce = 10f;
         [SerializeField] private float dropThroughTime = 0.3f;
@@ -55,6 +65,12 @@ namespace Assets.Scripts
         // Direction (+1 right / -1 left). Visual effects such as afterimages listen to these.
         public event System.Action<float> DashStarted;
         public event System.Action DashEnded;
+        // A jump started: from the ground (or coyote time), off a wall, or the air jump.
+        public event System.Action<JumpKind> Jumped;
+        // Bounced up by something else, e.g. a pogo off spikes.
+        public event System.Action Bounced;
+        // Started dropping through a one-way platform.
+        public event System.Action DroppedThrough;
 
         public bool DoubleJumpUnlocked { get => doubleJumpUnlocked; set => doubleJumpUnlocked = value; }
         public bool WallJumpUnlocked { get => wallJumpUnlocked; set => wallJumpUnlocked = value; }
@@ -111,6 +127,7 @@ namespace Assets.Scripts
                 return false;
 
             StartCoroutine(IgnorePlatformFor(hit.collider));
+            DroppedThrough?.Invoke();
             return true;
         }
 
@@ -207,6 +224,7 @@ namespace Assets.Scripts
                 return;
             rigidbody.linearVelocityY = upVelocity;
             jumpCuttable = false;
+            Bounced?.Invoke();
             canAirJump = true;
             canDash = true;
         }
@@ -239,6 +257,7 @@ namespace Assets.Scripts
             {
                 lastGroundedTime = float.NegativeInfinity; // coyote time is used up
                 Launch(0f);
+                Jumped?.Invoke(JumpKind.Ground);
                 return true;
             }
 
@@ -249,6 +268,7 @@ namespace Assets.Scripts
                 Launch(-wall * wallJumpPush);
                 recoilUntil = Time.time + wallJumpControlLock;
                 facing = -wall;
+                Jumped?.Invoke(JumpKind.Wall);
                 return true;
             }
 
@@ -256,6 +276,7 @@ namespace Assets.Scripts
             {
                 Launch(0f);
                 canAirJump = false;
+                Jumped?.Invoke(JumpKind.Air);
                 return true;
             }
             return false;
@@ -355,17 +376,17 @@ namespace Assets.Scripts
         // -1 = wall on the left, +1 = wall on the right, 0 = none.
         public int WallSide()
         {
-            if (Physics2D.Raycast(transform.position, Vector2.right, groundCheckLength, groundLayer).collider != null)
+            if (Physics2D.Raycast(transform.position, Vector2.right, wallCheckLength, groundLayer).collider != null)
                 return 1;
-            if (Physics2D.Raycast(transform.position, Vector2.left, groundCheckLength, groundLayer).collider != null)
+            if (Physics2D.Raycast(transform.position, Vector2.left, wallCheckLength, groundLayer).collider != null)
                 return -1;
             return 0;
         }
 
         public bool IsTouchingWall()
         {
-            RaycastHit2D leftRaycast = Physics2D.Raycast(transform.position, Vector2.left, groundCheckLength, groundLayer);
-            RaycastHit2D rightRaycast = Physics2D.Raycast(transform.position, Vector2.right, groundCheckLength, groundLayer);
+            RaycastHit2D leftRaycast = Physics2D.Raycast(transform.position, Vector2.left, wallCheckLength, groundLayer);
+            RaycastHit2D rightRaycast = Physics2D.Raycast(transform.position, Vector2.right, wallCheckLength, groundLayer);
 
             return leftRaycast.collider != null || rightRaycast.collider != null;
         }
@@ -375,8 +396,8 @@ namespace Assets.Scripts
             // Draw a small line to visualize the ground check
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckLength);
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.left * groundCheckLength);
-            Gizmos.DrawLine(transform.position, transform.position + Vector3.right * groundCheckLength);
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.left * wallCheckLength);
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.right * wallCheckLength);
         }
     }
 }

@@ -20,17 +20,33 @@ PrefabInstance:
       propertyPath: m_Interpolate
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3203590540067005129, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 864400976, guid: e619c20b9d65c2c499dbe6983b3c8532, type: 3}
     - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_Size.x
-      value: 0.9
+      value: 0.8375
       objectReference: {fileID: 0}
     - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_Size.y
-      value: 0.9
+      value: 1.4
       objectReference: {fileID: 0}
     - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_EdgeRadius
       value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_SpriteTilingProperty.pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3549505029648917583, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -88.01
+      value: -87.636
       objectReference: {fileID: 0}
     - target: {fileID: 4829472644669568364, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: m_LocalPosition.z
@@ -87,6 +103,14 @@ PrefabInstance:
     - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
       propertyPath: wallJumpPush
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: wallCheckLength
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}
+      propertyPath: groundCheckLength
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -244,9 +268,14 @@ MonoBehaviour:
   footstep: {fileID: 11400000, guid: 7ebd74ae8cacbc549a3a5c5d590a12f8, type: 2}
   jump: {fileID: 11400000, guid: 46229e0f9153d944286206a5cbee63e6, type: 2}
   airJump: {fileID: 11400000, guid: 3a544d6132d3a2442bde8609880ac087, type: 2}
+  wallJump: {fileID: 11400000, guid: e3624821e26ca84489691d6cfd2a737a, type: 2}
+  pogo: {fileID: 11400000, guid: 0f266bc134d85fa488795a24ab1cecd2, type: 2}
+  land: {fileID: 11400000, guid: 5944967c87379c1489e5ab44e16b39fd, type: 2}
+  dash: {fileID: 11400000, guid: db82467d50e394e43883efaa40cfa48f, type: 2}
+  dropThrough: {fileID: 11400000, guid: 9609c3774faf8584f82d8febdb57cf36, type: 2}
   stepInterval: 0.3
   minWalkSpeed: 0.1
-  jumpSpeedChange: 3
+  minLandSpeed: 6
 --- !u!114 &6728154130941706024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,12 +324,12 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  sideSize: {x: 1.3730845, y: 0.89419293}
-  sideOffset: {x: 1.2134578, y: 0.01846981}
+  sideSize: {x: 1.3730845, y: 1.3412894}
+  sideOffset: {x: 1.1824578, y: 0.01846981}
   upSize: {x: 0.8369894, y: 1.6880833}
-  upOffset: {x: -0.00000047683716, y: 1.3654151}
+  upOffset: {x: -0.00000047683716, y: 1.6154151}
   downSize: {x: 0.91786385, y: 1.4960892}
-  downOffset: {x: 0.016200066, y: -1.279195}
+  downOffset: {x: 0.016200066, y: -1.529195}
   hitStop: 0.05
   recoilSpeed: 6
   recoilTime: 0.1
@@ -321,9 +350,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSounds
   swing: {fileID: 11400000, guid: 794f6492c9ad9ba48a5c2a276e3384af, type: 2}
-  hit: {fileID: 0}
+  hit: {fileID: 11400000, guid: feb5a287e4c51b04880fc1abc73db741, type: 2}
   hurt: {fileID: 11400000, guid: 63478e0d0eccc4d4cbb60b8430334f10, type: 2}
   death: {fileID: 11400000, guid: c3c96be3916879d43a8390fed3a69f7d, type: 2}
+  respawn: {fileID: 11400000, guid: 15f09e93235ae1c458c9690dc302e5f5, type: 2}
 --- !u!114 &5697780646105803072 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8521927649811991345, guid: 9ac1830cae80c814c885cd82d14e1452, type: 3}

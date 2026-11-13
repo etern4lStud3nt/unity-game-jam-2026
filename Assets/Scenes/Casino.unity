@@ -10290,14 +10290,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 581823347253003838, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: m_Size.x
-      value: 0.99
-      objectReference: {fileID: 0}
-    - target: {fileID: 581823347253003838, guid: 66b1015ad153f86479807558f73fb340, type: 3}
-      propertyPath: m_Size.y
-      value: 0.99
-      objectReference: {fileID: 0}
     - target: {fileID: 3570890493642793211, guid: 66b1015ad153f86479807558f73fb340, type: 3}
       propertyPath: m_Name
       value: Meu-Dev Character
