@@ -25,6 +25,9 @@ namespace Enemies
         private Material[] baseMaterials;
         private Vector3 shakeBase;
         private float hitStart = float.NegativeInfinity;
+        // What the renderers show now (0 normal, 1 white, 2 red) and at which fade; -1 = not drawn yet.
+        private int lastLook = -1;
+        private float lastFade = -1f;
         private bool warning;
 
         // 1 = fully visible, 0 = invisible. Used by the death state.
@@ -66,14 +69,21 @@ namespace Enemies
             int step = Mathf.FloorToInt((Time.time - hitStart) / blinkTime);
             bool blinking = step >= 0 && step < blinks * 2;
             bool white = blinking && step % 2 == 0 && flashMaterial != null;
-            for (int i = 0; i < renderers.Length; i++)
+            // Touch the renderers only when the look changes: swapping materials every frame costs batching.
+            int look = blinking ? (white ? 1 : 2) : 0;
+            if (look != lastLook || Fade != lastFade)
             {
-                if (renderers[i] == null)
-                    continue;
-                Color c = white ? Color.white : blinking ? hitColor : baseColors[i];
-                c.a = baseColors[i].a * Fade;
-                renderers[i].color = c;
-                renderers[i].sharedMaterial = white ? flashMaterial : baseMaterials[i];
+                lastLook = look;
+                lastFade = Fade;
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    if (renderers[i] == null)
+                        continue;
+                    Color c = white ? Color.white : blinking ? hitColor : baseColors[i];
+                    c.a = baseColors[i].a * Fade;
+                    renderers[i].color = c;
+                    renderers[i].sharedMaterial = white ? flashMaterial : baseMaterials[i];
+                }
             }
 
             if (warning && shakeTarget != null)

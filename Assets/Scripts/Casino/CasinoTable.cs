@@ -100,9 +100,11 @@ public class CasinoTable : CasinoInteractable
     // The oldest earned lucky number the table can play (an ability or a dud message) that has not been played yet.
     private static LuckyNumberData NextToPlay()
     {
-        foreach (LuckyNumberData data in LuckyNumbers.All)
-            if (data.PlayableAtTable && !Played.Contains(data))
-                return data;
+        // Indexed: the table and the casino door ask every frame, and foreach over the list interface allocates.
+        var all = LuckyNumbers.All;
+        for (int i = 0; i < all.Count; i++)
+            if (all[i].PlayableAtTable && !Played.Contains(all[i]))
+                return all[i];
         return null;
     }
 

@@ -45,8 +45,6 @@ public class EnemySounds : MonoBehaviour
     {
         if (brain != null && brain.Fsm != null)
             brain.Fsm.StateChanged += OnStateChanged;
-        if (idleSource != null && (health == null || !health.IsDead))
-            idleSource.Play();
     }
 
     private void OnEnable()
@@ -56,7 +54,7 @@ public class EnemySounds : MonoBehaviour
             health.Damaged += OnDamaged;
             health.Death += OnDeath;
         }
-        if (idleSource != null && Started && (health == null || !health.IsDead))
+        if (idleSource != null && (health == null || !health.IsDead))
             idleSource.Play();
     }
 
@@ -75,11 +73,9 @@ public class EnemySounds : MonoBehaviour
             brain.Fsm.StateChanged -= OnStateChanged;
     }
 
-    private bool Started => brain == null || brain.Fsm != null;
-
     private void OnDamaged(int amount)
     {
-        if (health == null || !health.IsDead)
+        if (!health.IsDead)
             Play(hurt);
     }
 

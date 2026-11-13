@@ -41,9 +41,15 @@ public class WalkSway : MonoBehaviour
 
         // Half a sine per step: lean left on one step, right on the next.
         phase += moved * stepsPerUnit * Mathf.PI;
+        float before = weight;
         weight = Mathf.MoveTowards(weight, walking ? 1f : 0f, settleSpeed * Time.deltaTime);
         if (weight <= 0f)
+        {
             phase = 0f;
+            // Already upright and in place: nothing to write.
+            if (before <= 0f)
+                return;
+        }
 
         float wave = Mathf.Sin(phase);
         transform.localRotation = Quaternion.Euler(0f, 0f, wave * angle * weight);

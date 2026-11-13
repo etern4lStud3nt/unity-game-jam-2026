@@ -23,6 +23,8 @@ public class RollWhileMoving : MonoBehaviour
     private void LateUpdate()
     {
         float x = Position();
+        if (x == lastX)
+            return;
         // Moving right turns it clockwise (negative z), like a wheel.
         angle -= (x - lastX) / radius * Mathf.Rad2Deg;
         angle = Mathf.Repeat(angle, 360f);

@@ -32,7 +32,19 @@ public class ParallaxSky : MonoBehaviour
     [Tooltip("How many screen widths each layer is wide, so its repeats always cover the screen.")]
     [SerializeField, Min(2)] private int repeats = 3;
 
-    private void OnEnable() => RenderPipelineManager.beginCameraRendering += Place;
+    private void OnEnable()
+    {
+        // The tiling never changes: set it once, so the tiled mesh is not rebuilt every frame.
+        foreach (Layer layer in layers)
+        {
+            if (layer.sprite == null || layer.sprite.sprite == null)
+                continue;
+            Sprite art = layer.sprite.sprite;
+            layer.sprite.drawMode = SpriteDrawMode.Tiled;
+            layer.sprite.size = new Vector2(art.rect.width / art.pixelsPerUnit * repeats, art.rect.height / art.pixelsPerUnit);
+        }
+        RenderPipelineManager.beginCameraRendering += Place;
+    }
 
     private void OnDisable() => RenderPipelineManager.beginCameraRendering -= Place;
 
@@ -65,8 +77,6 @@ public class ParallaxSky : MonoBehaviour
             Transform t = layer.sprite.transform;
             t.position = new Vector3(at.x - slide + width * 0.5f, at.y + layer.offset * viewHeight, t.position.z);
             t.localScale = new Vector3(scale, scale, 1f);
-            layer.sprite.drawMode = SpriteDrawMode.Tiled;
-            layer.sprite.size = new Vector2(size.x * repeats, size.y);
         }
     }
 }
