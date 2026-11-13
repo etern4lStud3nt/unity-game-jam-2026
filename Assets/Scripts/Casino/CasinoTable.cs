@@ -101,10 +101,10 @@ public class CasinoTable : CasinoInteractable
                 spinScreen.SetActive(true);
             if (spinWheel != null)
                 spinWheel.speed = startSpeed;
-            yield return Pop(0f, 1f);
+            yield return ScalePop.Run(spinWheel != null ? spinWheel.transform : null, 0f, 1f, popTime);
             yield return Spin();
             yield return new WaitForSeconds(stopPause);
-            yield return Pop(1f, 0f);
+            yield return ScalePop.Run(spinWheel != null ? spinWheel.transform : null, 1f, 0f, popTime);
             if (number.Reward == LuckyNumberReward.None)
                 ScreenMessage.Show(number.TableMessage, number.TableMessageHint);
             else if (controller != null)
@@ -118,22 +118,6 @@ public class CasinoTable : CasinoInteractable
                 input.UnblockGameplay();
             Busy = false;
         }
-    }
-
-    // Grows (or shrinks) the big wheel with a small overshoot, so it pops onto the screen.
-    private IEnumerator Pop(float from, float to)
-    {
-        if (spinWheel == null)
-            yield break;
-        Transform wheel = spinWheel.transform;
-        for (float t = 0f; t < popTime; t += Time.deltaTime)
-        {
-            float k = t / popTime;
-            float eased = to > from ? 1f + 2.2f * Mathf.Pow(k - 1f, 3f) + 1.2f * Mathf.Pow(k - 1f, 2f) : 1f - k * k;
-            wheel.localScale = Vector3.one * Mathf.LerpUnclamped(from, to, to > from ? eased : 1f - eased);
-            yield return null;
-        }
-        wheel.localScale = Vector3.one * to;
     }
 
     // Plays the wheel's animation from the start, fast at first and slowing to a stop (ease out), then holds it.
