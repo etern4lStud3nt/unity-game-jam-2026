@@ -1,24 +1,14 @@
 using UnityEngine;
 
-// A respawn point (bench). Touching it heals the player and makes it the place PlayerRespawn returns to after death.
-[RequireComponent(typeof(Collider2D))]
-public class Checkpoint : MonoBehaviour
+// A respawn point (bench). Standing at it and pressing Interact heals the player and makes it the place
+// PlayerRespawn returns to after death (and saves the game). The prompt ("E Save") shows while the player is in range.
+public class Checkpoint : CasinoInteractable
 {
     [SerializeField] private bool healOnReach = true;
-    [SerializeField] private string playerTag = "Player";
 
-    private void Reset()
+    protected override void Use(Rigidbody2D player)
     {
-        GetComponent<Collider2D>().isTrigger = true;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Rigidbody2D body = other.attachedRigidbody;
-        if (body == null || !(other.CompareTag(playerTag) || body.CompareTag(playerTag)))
-            return;
-
-        if (healOnReach && body.TryGetComponent(out Health health) && !health.IsDead)
+        if (healOnReach && player.TryGetComponent(out Health health) && !health.IsDead)
             health.ResetHealth();
 
         EventBus.Publish(new CheckpointReached { Position = transform.position });
