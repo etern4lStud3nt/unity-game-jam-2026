@@ -14749,6 +14749,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 32244999}
     m_Modifications:
+    - target: {fileID: 72056262497949768, guid: 1abc9bc2ee735ee46a5ce233a06ed65c, type: 3}
+      propertyPath: phase2Music
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 244676915054016758, guid: 1abc9bc2ee735ee46a5ce233a06ed65c, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.09
@@ -18548,6 +18552,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2527625594306884127, guid: 531149193b1bd5640b5b79e9d140eb0c, type: 3}
+      propertyPath: maxHealth
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2920700865829750726, guid: 531149193b1bd5640b5b79e9d140eb0c, type: 3}
       propertyPath: m_Name
       value: OldSelf
@@ -18588,6 +18596,10 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5280250189435058359, guid: 531149193b1bd5640b5b79e9d140eb0c, type: 3}
+      propertyPath: fightMusic
+      value: 
+      objectReference: {fileID: 11400000, guid: 34bd0692f9a466f428516e4eb2cf914b, type: 2}
     - target: {fileID: 6789084762541414777, guid: 531149193b1bd5640b5b79e9d140eb0c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.16
