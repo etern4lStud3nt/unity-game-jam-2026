@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -12,6 +11,8 @@ using CharacterController = Assets.Scripts.CharacterController;
 // table), money and beaten bosses. Beaten bosses are switched off. Put one in the level scene and list every lucky
 // number asset so saved names can be found again. F9 (editor and development builds) deletes the save and
 // reloads the scene.
+// The save is a JSON string in PlayerPrefs rather than a file: in a web build PlayerPrefs.Save writes it to the
+// browser's storage right away, while a file in persistentDataPath would need a manual sync to survive a reload.
 [DefaultExecutionOrder(-500)]
 public class SaveGame : MonoBehaviour
 {
@@ -37,7 +38,7 @@ public class SaveGame : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
 
     private static readonly HashSet<string> BeatenBosses = new();
-    private static string FilePath => Path.Combine(Application.persistentDataPath, "save.json");
+    private const string SaveKey = "save";
 
     private Data data;
     private CharacterController player;
@@ -161,14 +162,15 @@ public class SaveGame : MonoBehaviour
             data.luckyNumbers.Add(number.name);
         data.playedNumbers = new List<string>(CasinoTable.PlayedNames());
         data.beatenBosses = new List<string>(BeatenBosses);
-        File.WriteAllText(FilePath, JsonUtility.ToJson(data, true));
+        PlayerPrefs.SetString(SaveKey, JsonUtility.ToJson(data));
+        PlayerPrefs.Save();
     }
 
     [ContextMenu("Delete Save")]
     public void Delete()
     {
-        if (File.Exists(FilePath))
-            File.Delete(FilePath);
+        PlayerPrefs.DeleteKey(SaveKey);
+        PlayerPrefs.Save();
         data = new Data { scene = SceneManager.GetActiveScene().name };
         BeatenBosses.Clear();
         // The run's state lives in statics that survive a scene reload: start it over too.
@@ -181,11 +183,11 @@ public class SaveGame : MonoBehaviour
     {
         try
         {
-            return File.Exists(FilePath) ? JsonUtility.FromJson<Data>(File.ReadAllText(FilePath)) : null;
+            return PlayerPrefs.HasKey(SaveKey) ? JsonUtility.FromJson<Data>(PlayerPrefs.GetString(SaveKey)) : null;
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"SaveGame: could not read {FilePath}, starting fresh. {e.Message}");
+            Debug.LogWarning($"SaveGame: could not read the save, starting fresh. {e.Message}");
             return null;
         }
     }
