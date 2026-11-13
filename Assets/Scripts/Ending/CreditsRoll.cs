@@ -14,11 +14,20 @@ public class CreditsRoll : MonoBehaviour
     [SerializeField] private TextAsset credits;
     [Tooltip("Rolling speed, in canvas pixels per second (the canvas is 1080 high).")]
     [SerializeField, Min(1f)] private float speed = 70f;
+    [Tooltip("Roll from the start every time this object is shown (a credits panel in the menu). Off = only when " +
+             "someone calls Play (the ending).")]
+    [SerializeField] private bool playOnEnable;
 
     private void Awake()
     {
-        if (screen != null)
+        if (screen != null && !playOnEnable)
             screen.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        if (playOnEnable)
+            StartCoroutine(Play());
     }
 
     public IEnumerator Play()
