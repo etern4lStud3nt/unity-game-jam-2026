@@ -23,6 +23,9 @@ public class ParallaxSky : MonoBehaviour
         [Tooltip("Where its middle sits, in screen heights from the screen's middle: 0 = centred, -0.25 = a " +
                  "quarter of the screen lower.")]
         public float offset;
+        [Tooltip("Only shown while the camera's x is between these (world units), e.g. a skyline over one region. " +
+                 "Both 0 = shown everywhere.")]
+        public Vector2 cameraX;
     }
 
     [Tooltip("The camera the sky fills. Empty = the main camera.")]
@@ -47,6 +50,10 @@ public class ParallaxSky : MonoBehaviour
         foreach (Layer layer in layers)
         {
             if (layer.sprite == null || layer.sprite.sprite == null)
+                continue;
+            bool shown = layer.cameraX.x >= layer.cameraX.y || (at.x >= layer.cameraX.x && at.x <= layer.cameraX.y);
+            layer.sprite.enabled = shown;
+            if (!shown)
                 continue;
             // The height the camera sees at the layer's depth (the game camera is a perspective one).
             float viewHeight = cam.orthographic
