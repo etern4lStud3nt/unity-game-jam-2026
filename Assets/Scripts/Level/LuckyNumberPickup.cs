@@ -19,6 +19,13 @@ public class LuckyNumberPickup : MonoBehaviour
 
     private bool taken;
 
+    // Already earned (a loaded save): nothing left to pick up.
+    private void Start()
+    {
+        if (luckyNumber != null && LuckyNumbers.Get(luckyNumber.Number) == luckyNumber)
+            gameObject.SetActive(false);
+    }
+
     private void Reset()
     {
         GetComponent<Collider2D>().isTrigger = true;

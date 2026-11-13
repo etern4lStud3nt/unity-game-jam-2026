@@ -50,6 +50,21 @@ public class CasinoTable : CasinoInteractable
         visited = false;
     }
 
+    // For the save game: mark a lucky number as already played, and list the played ones by asset name.
+    public static void MarkPlayed(LuckyNumberData number)
+    {
+        if (number != null)
+            Played.Add(number);
+    }
+
+    public static void ForgetPlayed() => Played.Clear();
+
+    public static IEnumerable<string> PlayedNames()
+    {
+        foreach (LuckyNumberData number in Played)
+            yield return number.name;
+    }
+
     protected override void Start()
     {
         base.Start();
