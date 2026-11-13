@@ -57,7 +57,7 @@ public abstract class CasinoInteractable : MonoBehaviour
             Player = null;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         Player = null;
     }
