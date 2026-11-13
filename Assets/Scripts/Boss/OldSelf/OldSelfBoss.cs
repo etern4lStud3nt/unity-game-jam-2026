@@ -32,7 +32,6 @@ namespace Bosses
         [Tooltip("Squashed while crouching before a lunge. Usually the Visual child.")]
         [SerializeField] private Transform visual;
 
-        private Collider2D[] ownColliders;
         private Collider2D[] playerColliders;
         private CinemachineImpulseSource impulse;
         private AfterimageTrail trail;
@@ -90,7 +89,6 @@ namespace Bosses
             impulse = GetComponent<CinemachineImpulseSource>();
             Juice = GetComponent<SpriteJuice>();
             trail = GetComponent<AfterimageTrail>();
-            ownColliders = GetComponentsInChildren<Collider2D>(true);
             if (visual != null)
                 visualScale = visual.localScale;
 
@@ -128,13 +126,13 @@ namespace Bosses
             if (HasPlayer)
             {
                 playerColliders = Player.GetComponentsInChildren<Collider2D>();
-                PlayerPassThrough.Ignore(ownColliders, playerColliders);
+                PlayerPassThrough.Ignore(OwnColliders, playerColliders);
             }
         }
 
         protected override void FixedUpdate()
         {
-            PlayerPassThrough.Keep(ownColliders, playerColliders);
+            PlayerPassThrough.Keep(OwnColliders, playerColliders);
             Motor.TrackLanding();
             base.FixedUpdate();
         }

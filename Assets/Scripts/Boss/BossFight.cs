@@ -187,6 +187,9 @@ namespace Bosses
                 Flash.Fade = 1f;
         }
 
+        // Every collider on the boss and its children, found in Awake.
+        protected Collider2D[] OwnColliders => ownColliders;
+
         public void SetCollidersEnabled(bool on)
         {
             foreach (Collider2D own in ownColliders)
