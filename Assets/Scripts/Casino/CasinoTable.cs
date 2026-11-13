@@ -42,6 +42,9 @@ public class CasinoTable : CasinoInteractable
     // True once the player has walked up to the table this run.
     private static bool visited;
 
+    // Shared by the table and the level's casino entrance: already played and ending-only numbers do not count.
+    public static bool HasNumberToPlay => NextToPlay() != null;
+
     // Domain reload is off, so the statics must be cleared by hand between Play sessions.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
@@ -78,7 +81,7 @@ public class CasinoTable : CasinoInteractable
         if (Player != null)
             visited = true;
         if (marker != null)
-            marker.SetActive(Player == null && !Busy && (!visited || NextToPlay() != null));
+            marker.SetActive(Player == null && !Busy && (!visited || HasNumberToPlay));
     }
 
     protected override void Use(Rigidbody2D player)

@@ -13,11 +13,14 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private bool once;
     [Tooltip("Shown while the player is in range (a key icon, \"...\" above the NPC). Optional.")]
     [SerializeField] private GameObject prompt;
+    [Tooltip("Arrow above the NPC until their first conversation starts. Hidden in interaction range.")]
+    [SerializeField] private GameObject marker;
     [SerializeField] private string playerTag = "Player";
 
     private bool playerInside;
     private bool used;
     private bool talking;
+    private bool hasTalked;
 
     private void Reset()
     {
@@ -29,6 +32,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (prompt != null)
             prompt.SetActive(false);
+        UpdatePrompt();
         if (!startOnEnter && InputManager.Instance != null)
             InputManager.Instance.Interact += OnInteract;
     }
@@ -95,6 +99,8 @@ public class DialogueTrigger : MonoBehaviour
     private void OnDialogueStarted(DialogueStarted evt)
     {
         talking = true;
+        if (evt.Node == node)
+            hasTalked = true;
         UpdatePrompt();
     }
 
@@ -108,5 +114,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (prompt != null)
             prompt.SetActive(playerInside && !used && !startOnEnter && !talking);
+        if (marker != null)
+            marker.SetActive(!playerInside && !hasTalked && !used && !startOnEnter && !talking);
     }
 }

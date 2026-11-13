@@ -12,6 +12,15 @@ public class CasinoDoor : CasinoInteractable
     [Tooltip("Where the player stands when they come back out. Empty = this door's position.")]
     [SerializeField] private Transform returnPoint;
     [SerializeField, Min(0f)] private float fadeTime = 0.3f;
+    [Tooltip("Arrow above the entrance while the player has an unplayed lucky number. Hidden in interaction range.")]
+    [SerializeField] private GameObject marker;
+
+    protected override void Update()
+    {
+        base.Update();
+        if (marker != null)
+            marker.SetActive(Player == null && !Busy && CasinoTable.HasNumberToPlay);
+    }
 
     protected override void Use(Rigidbody2D player)
     {
