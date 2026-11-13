@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 6540189271189433751}
   - component: {fileID: 8137097036397600714}
   - component: {fileID: 3748625051726918685}
+  - component: {fileID: 463891448028470708}
   m_Layer: 0
   m_Name: Slipper 7
   m_TagString: Untagged
@@ -228,6 +229,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &463891448028470708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530493392092044190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &550010212143173088
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +475,7 @@ GameObject:
   - component: {fileID: 5507078406712951585}
   - component: {fileID: 8346524245872190124}
   - component: {fileID: 6105005330262103869}
+  - component: {fileID: 1148286021812612374}
   m_Layer: 0
   m_Name: Slipper 6
   m_TagString: Untagged
@@ -585,6 +599,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &1148286021812612374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279752489718000362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &1752692565434088880
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,6 +757,8 @@ MonoBehaviour:
   luckyNumber: {fileID: 11400000, guid: 53c907455fa8acf4591875463216f16a, type: 2}
   title: 
   hint: 
+  casinoHint: Go back to the casino and spin the wheel for a new ability
+  messageTime: 5
   playerTag: Player
   popTime: 0.3
   pickedUp:
@@ -777,6 +805,7 @@ GameObject:
   - component: {fileID: 5122178041730600077}
   - component: {fileID: 7256812009786091878}
   - component: {fileID: 8639945878090708586}
+  - component: {fileID: 8771698852983711679}
   m_Layer: 0
   m_Name: Slipper 3
   m_TagString: Untagged
@@ -900,6 +929,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &8771698852983711679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801117876691025406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &2255939969309885588
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +1005,7 @@ GameObject:
   - component: {fileID: 4315682730543414122}
   - component: {fileID: 869788668416371427}
   - component: {fileID: 1942793999703347270}
+  - component: {fileID: 7808311103124371065}
   m_Layer: 0
   m_Name: Slipper 18
   m_TagString: Untagged
@@ -1087,6 +1129,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &7808311103124371065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2306189797943892936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &2341428066485762379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,6 +1338,7 @@ GameObject:
   - component: {fileID: 3016380402264077671}
   - component: {fileID: 8222873600997327290}
   - component: {fileID: 9212906255376731836}
+  - component: {fileID: 8881874064882601320}
   m_Layer: 0
   m_Name: Slipper 10
   m_TagString: Untagged
@@ -1407,6 +1462,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &8881874064882601320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2476471392006079688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &2513394751878379832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,6 +1487,7 @@ GameObject:
   - component: {fileID: 9179226702379490352}
   - component: {fileID: 5804985441965661245}
   - component: {fileID: 4357292182763819012}
+  - component: {fileID: 341290535102976359}
   m_Layer: 0
   m_Name: Slipper 13
   m_TagString: Untagged
@@ -1543,6 +1611,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &341290535102976359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2513394751878379832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &2534926358418856243
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,6 +1636,7 @@ GameObject:
   - component: {fileID: 1155938478524066002}
   - component: {fileID: 6395850484946549718}
   - component: {fileID: 6543697432937326294}
+  - component: {fileID: 7536563152898938215}
   m_Layer: 0
   m_Name: Slipper 19
   m_TagString: Untagged
@@ -1679,6 +1760,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &7536563152898938215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2534926358418856243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &2541476606740203203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1968,6 +2061,7 @@ GameObject:
   - component: {fileID: 6353371048018224987}
   - component: {fileID: 7043443017772367435}
   - component: {fileID: 6557998623733747524}
+  - component: {fileID: 8623497398758336641}
   m_Layer: 0
   m_Name: Slipper 16
   m_TagString: Untagged
@@ -2091,6 +2185,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &8623497398758336641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2854637024061360126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &3134823033399532809
 GameObject:
   m_ObjectHideFlags: 0
@@ -2196,6 +2302,7 @@ GameObject:
   - component: {fileID: 2757153226802163753}
   - component: {fileID: 569366700599051418}
   - component: {fileID: 6726312680285390340}
+  - component: {fileID: 2110041546567898745}
   m_Layer: 0
   m_Name: Slipper 8
   m_TagString: Untagged
@@ -2319,6 +2426,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &2110041546567898745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3291533635399672557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &3322072487202345633
 GameObject:
   m_ObjectHideFlags: 0
@@ -2332,6 +2451,7 @@ GameObject:
   - component: {fileID: 7671883752772618285}
   - component: {fileID: 8629286107069251060}
   - component: {fileID: 4561051271900395283}
+  - component: {fileID: 7646742405557384958}
   m_Layer: 0
   m_Name: Slipper 9
   m_TagString: Untagged
@@ -2455,6 +2575,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &7646742405557384958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3322072487202345633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &3360528323123015505
 GameObject:
   m_ObjectHideFlags: 0
@@ -2560,6 +2692,7 @@ GameObject:
   - component: {fileID: 5415880559937336398}
   - component: {fileID: 3435640259645544353}
   - component: {fileID: 507739047268134162}
+  - component: {fileID: 7417902452984775786}
   m_Layer: 0
   m_Name: Slipper 15
   m_TagString: Untagged
@@ -2683,6 +2816,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &7417902452984775786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3569110823620194098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &3980829236470250776
 GameObject:
   m_ObjectHideFlags: 0
@@ -2696,6 +2841,7 @@ GameObject:
   - component: {fileID: 6510053817367729476}
   - component: {fileID: 4414021403603098404}
   - component: {fileID: 1774615875709030105}
+  - component: {fileID: 8231451132002478741}
   m_Layer: 0
   m_Name: Slipper 2
   m_TagString: Untagged
@@ -2819,6 +2965,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &8231451132002478741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980829236470250776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &4254667461523292299
 GameObject:
   m_ObjectHideFlags: 0
@@ -3294,6 +3452,7 @@ GameObject:
   - component: {fileID: 8299520211373455654}
   - component: {fileID: 7554063276959949383}
   - component: {fileID: 7473807413024736806}
+  - component: {fileID: 942110813024997974}
   m_Layer: 0
   m_Name: Slipper 17
   m_TagString: Untagged
@@ -3417,6 +3576,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &942110813024997974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5280636546224235006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &5345782288343450326
 GameObject:
   m_ObjectHideFlags: 0
@@ -3522,6 +3693,7 @@ GameObject:
   - component: {fileID: 2004920118221365677}
   - component: {fileID: 5643393166091496241}
   - component: {fileID: 5539304605309342479}
+  - component: {fileID: 5494796502937304113}
   m_Layer: 0
   m_Name: Slipper 14
   m_TagString: Untagged
@@ -3645,6 +3817,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &5494796502937304113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6184448529154709567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &6239138602185055263
 GameObject:
   m_ObjectHideFlags: 0
@@ -3658,6 +3842,7 @@ GameObject:
   - component: {fileID: 4575709506694807953}
   - component: {fileID: 5386713094747784624}
   - component: {fileID: 4152809886167388346}
+  - component: {fileID: 6853046703148321705}
   m_Layer: 0
   m_Name: Slipper 5
   m_TagString: Untagged
@@ -3781,6 +3966,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &6853046703148321705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6239138602185055263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &6341304258796177100
 GameObject:
   m_ObjectHideFlags: 0
@@ -4111,7 +4308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214b651bb52f4e94ea8c6a080b7b1840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
-  maxHealth: 22
+  maxHealth: 18
   invincibilityDuration: 0
   destroyOnDeath: 0
   onDamaged:
@@ -4247,6 +4444,7 @@ GameObject:
   - component: {fileID: 7852180773853546743}
   - component: {fileID: 1621908620821018550}
   - component: {fileID: 727430058197470860}
+  - component: {fileID: 9108932603550694084}
   m_Layer: 0
   m_Name: Slipper 11
   m_TagString: Untagged
@@ -4370,6 +4568,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &9108932603550694084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6763383520274079822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &7020606204130687576
 GameObject:
   m_ObjectHideFlags: 0
@@ -4808,6 +5018,7 @@ GameObject:
   - component: {fileID: 1513560351059284483}
   - component: {fileID: 6704229202841854766}
   - component: {fileID: 2077643739587923306}
+  - component: {fileID: 6489465681578120993}
   m_Layer: 0
   m_Name: Slipper 20
   m_TagString: Untagged
@@ -4931,6 +5142,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &6489465681578120993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7370423854928578947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &7647388681102860619
 GameObject:
   m_ObjectHideFlags: 0
@@ -5401,6 +5624,7 @@ GameObject:
   - component: {fileID: 4208366624338846514}
   - component: {fileID: 5020865463711303644}
   - component: {fileID: 2276215016495630220}
+  - component: {fileID: 8662754049643209931}
   m_Layer: 0
   m_Name: Slipper 12
   m_TagString: Untagged
@@ -5524,6 +5748,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &8662754049643209931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8199666309969960494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &8436742229742132791
 GameObject:
   m_ObjectHideFlags: 0
@@ -5842,6 +6078,7 @@ GameObject:
   - component: {fileID: 2259958189552317932}
   - component: {fileID: 6284421184430202425}
   - component: {fileID: 2638358798562245491}
+  - component: {fileID: 1478640436196994221}
   m_Layer: 0
   m_Name: Slipper 1
   m_TagString: Untagged
@@ -5965,6 +6202,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &1478640436196994221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871773998579667553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget
 --- !u!1 &9006167088465294962
 GameObject:
   m_ObjectHideFlags: 0
@@ -6070,6 +6319,7 @@ GameObject:
   - component: {fileID: 181249956978454029}
   - component: {fileID: 8533125473634517655}
   - component: {fileID: 8801035740704978735}
+  - component: {fileID: 5563103198781091283}
   m_Layer: 0
   m_Name: Slipper 4
   m_TagString: Untagged
@@ -6193,3 +6443,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127a5dc4823cc1e4a91c3d88c75ca920, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.ParentSlipper
+--- !u!114 &5563103198781091283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9130837959254432302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ad2bf901a8f4342a857be408ec66de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PogoTarget

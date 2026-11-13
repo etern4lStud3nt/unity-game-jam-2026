@@ -25,6 +25,14 @@ public class AbilityPickup : MonoBehaviour
 
     private bool taken;
 
+    // The player already has it (a loaded save): nothing left to pick up.
+    private void Start()
+    {
+        GameObject player = GameObject.FindWithTag(playerTag);
+        if (player != null && player.TryGetComponent(out CharacterController controller) && controller.IsUnlocked(ability))
+            gameObject.SetActive(false);
+    }
+
     private void Reset()
     {
         GetComponent<Collider2D>().isTrigger = true;
