@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AREA_Casino
   m_EditorClassIdentifier: Assembly-CSharp::AreaData
   music: {fileID: 11400000, guid: e1b1676473fd11440a811296531b8957, type: 2}
-  ambience: {fileID: 11400000, guid: 08ca6528b5229d34080fcc4d9e2f490c, type: 2}
+  ambience: {fileID: 0}
   fadeDuration: 2
