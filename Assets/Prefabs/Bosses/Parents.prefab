@@ -3097,8 +3097,8 @@ Transform:
   m_GameObject: {fileID: 4425122328739364687}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 1.6, z: 1}
+  m_LocalPosition: {x: 0, y: -0.8, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4521444820551453496}
@@ -3152,8 +3152,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.6, b: 0.75, a: 1}
+  m_Sprite: {fileID: 21300000, guid: eabd6a99a8807dc4c9de1776b5373ffd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4004,8 +4004,8 @@ Transform:
   m_GameObject: {fileID: 6341304258796177100}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9, y: 1.7, z: 1}
+  m_LocalPosition: {x: 0, y: -0.100000024, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8275001873734674450}
@@ -4059,8 +4059,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.45, g: 0.55, b: 0.85, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 679cf493f44fea24c836ebd868c92f04, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4166,6 +4166,7 @@ MonoBehaviour:
   startOnEnter: 0
   once: 1
   prompt: {fileID: 8454985095559655730}
+  marker: {fileID: 0}
   playerTag: Player
 --- !u!1 &6583771182216247303
 GameObject:
@@ -4799,6 +4800,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.MotherActor
   visual: {fileID: 4521444820551453496}
+  diveLineSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  diveLineColor: {r: 1, g: 0.6, b: 0.75, a: 1}
   currentState: 
 --- !u!114 &3834722725104651943
 MonoBehaviour:
@@ -5610,6 +5613,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.FatherActor
   visual: {fileID: 8275001873734674450}
+  diveLineSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  diveLineColor: {r: 0.45, g: 0.55, b: 0.85, a: 1}
   currentState: 
 --- !u!1 &8199666309969960494
 GameObject:
