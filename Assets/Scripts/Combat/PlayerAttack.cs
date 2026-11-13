@@ -38,8 +38,15 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField, Min(0f)] private float pogoSpeed = 17f;
     [SerializeField, Min(0f)] private float shakeForce = 0.15f;
 
-    [Header("Look (placeholder)")]
-    [Tooltip("Sprite stretched over the hit area during the swing. Empty = no visual.")]
+    [Header("Look")]
+    [Tooltip("The slash, frame by frame, drawn swinging to the right with its pivot on the player. Turned to the " +
+             "swing's direction and played once per swing. Empty = the placeholder sprite below.")]
+    [SerializeField] private Sprite[] slashFrames;
+    [Tooltip("Seconds each slash frame shows.")]
+    [SerializeField, Min(0.005f)] private float slashFrameTime = 0.035f;
+    [Tooltip("How far from the player's middle the slash is drawn, towards the swing.")]
+    [SerializeField] private float slashReach = 0.2f;
+    [Tooltip("Placeholder: a sprite stretched over the hit area during the swing, used when there are no frames.")]
     [SerializeField] private Sprite slashSprite;
     [SerializeField] private Color slashColor = new Color(1f, 1f, 1f, 0.5f);
 
@@ -58,6 +65,7 @@ public class PlayerAttack : MonoBehaviour
     private Vector2 direction = Vector2.right;
     private float nextSwing;
     private float activeUntil;
+    private float swingStart;
     private bool landed;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -70,13 +78,13 @@ public class PlayerAttack : MonoBehaviour
         ownHealth = GetComponent<Health>();
         impulse = GetComponent<CinemachineImpulseSource>();
 
-        if (slashSprite != null)
+        if (HasFrames || slashSprite != null)
         {
             var go = new GameObject("Slash");
             go.transform.SetParent(transform, false);
             slash = go.AddComponent<SpriteRenderer>();
-            slash.sprite = slashSprite;
-            slash.color = slashColor;
+            slash.sprite = HasFrames ? slashFrames[0] : slashSprite;
+            slash.color = HasFrames ? Color.white : slashColor;
             slash.sortingOrder = 10;
             slash.enabled = false;
         }
@@ -112,9 +120,23 @@ public class PlayerAttack : MonoBehaviour
     {
         if (Time.time < activeUntil)
             Sweep();
-        else if (slash != null && slash.enabled)
+        else if (slash != null && slash.enabled && !HasFrames)
             slash.enabled = false;
     }
+
+    // Steps the slash through its frames, then hides it.
+    private void LateUpdate()
+    {
+        if (slash == null || !slash.enabled || !HasFrames)
+            return;
+        int frame = Mathf.FloorToInt((Time.time - swingStart) / slashFrameTime);
+        if (frame >= slashFrames.Length)
+            slash.enabled = false;
+        else
+            slash.sprite = slashFrames[frame];
+    }
+
+    private bool HasFrames => slashFrames != null && slashFrames.Length > 0;
 
     private void Sweep()
     {
@@ -194,6 +216,20 @@ public class PlayerAttack : MonoBehaviour
     {
         if (slash == null)
             return;
+        swingStart = Time.time;
+        if (HasFrames)
+        {
+            // Drawn swinging right: turn it to the swing, with the player's facing flipping it.
+            Transform t = slash.transform;
+            t.position = (Vector2)transform.position + direction * slashReach;
+            t.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+            Vector3 lossy = transform.lossyScale;
+            t.localScale = new Vector3(1f / Mathf.Abs(lossy.x), 1f / Mathf.Abs(lossy.y), 1f);
+            slash.flipY = direction.x < 0f;
+            slash.sprite = slashFrames[0];
+            slash.enabled = true;
+            return;
+        }
         GetArea(direction, out Vector2 centre, out Vector2 size);
         slash.transform.position = centre;
         Vector3 parentScale = transform.lossyScale;
