@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 822cbd087cc238544ae85ae22548dff0, type: 3}
-  m_Name: SFX_Enemy_Death_Tank
+  m_Name: SFX_Enemy_Death_1
   m_EditorClassIdentifier: Assembly-CSharp::SoundData
   clips:
-  - {fileID: 8300000, guid: e8aa140e1524b2348bb47a897f62be6b, type: 3}
+  - {fileID: 8300000, guid: a60f5fa566755324b81dcde39358cebc, type: 3}
   volume: 0.9
   pitchRange: {x: 1, y: 1}
   cooldown: 0.05

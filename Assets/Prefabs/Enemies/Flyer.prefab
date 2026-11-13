@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySounds
   hurt: {fileID: 11400000, guid: e425bff0f1ca9c246a6c99f6fbc13ca4, type: 2}
-  death: {fileID: 11400000, guid: 03a4ea1458822964fa64481e41394e1e, type: 2}
+  death: {fileID: 11400000, guid: 017eb0f52083d884fa87f72d64011f2f, type: 2}
   alert: {fileID: 11400000, guid: e675c92803be0974b9ee937cf510eb98, type: 2}
   windup: {fileID: 11400000, guid: 5cfecc35b77b1db45acf0e1de8787787, type: 2}
   impact: {fileID: 11400000, guid: cba7ed443539ad3498f4d88a1b51033e, type: 2}
