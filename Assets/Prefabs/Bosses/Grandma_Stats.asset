@@ -45,8 +45,8 @@ MonoBehaviour:
   <JumpTime>k__BackingField: 0.7
   <JumpHeight>k__BackingField: 4
   <JumpCooldown>k__BackingField: 1
-  <Phase2Health>k__BackingField: 0.5
-  <Phase2WaitScale>k__BackingField: 0.6
-  <Phase2MinAttacksBeforeSleep>k__BackingField: 5
-  <Phase2MaxAttacksBeforeSleep>k__BackingField: 8
+  <Phase2Health>k__BackingField: 0.1
+  <Phase2WaitScale>k__BackingField: 0.21
+  <Phase2MinAttacksBeforeSleep>k__BackingField: 4
+  <Phase2MaxAttacksBeforeSleep>k__BackingField: 6
   <DeathFadeTime>k__BackingField: 0.8

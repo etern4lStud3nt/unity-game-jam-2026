@@ -151,8 +151,21 @@ namespace Bosses
 
         protected void PublishPhase(int phase) => EventBus.Publish(new BossPhaseChanged { RoomId = RoomId, Phase = phase });
 
-        public void PublishDefeated() =>
+        // Switches off the intro conversations standing in the arena, so a beaten boss doesn't talk again.
+        public void DisableIntros()
+        {
+            if (arena == null)
+                return;
+            foreach (DialogueTrigger trigger in FindObjectsByType<DialogueTrigger>())
+                if (arena.OverlapPoint(trigger.transform.position))
+                    trigger.gameObject.SetActive(false);
+        }
+
+        public void PublishDefeated()
+        {
+            DisableIntros();
             EventBus.Publish(new BossDefeated { RoomId = RoomId, Position = transform.position });
+        }
 
         // For the defeated state, every frame: fades out over duration, then switches the reward on (once).
         public void FadeOut(float elapsed, float duration)

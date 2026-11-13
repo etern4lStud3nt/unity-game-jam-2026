@@ -351,23 +351,27 @@ namespace Assets.Scripts
             Bounds b = bodyCollider.bounds;
             float reach = b.extents.x + 0.08f;
             float feet = b.min.y;
+            // Just above the soles: the body's bottom corner catches on ledges and seams lower than any higher ray.
+            const float skin = 0.01f;
 
-            // Something blocks at foot height...
-            RaycastHit2D low = Physics2D.Raycast(new Vector2(b.center.x, feet + 0.05f), Vector2.right * dir, reach, groundLayer);
-            if (low.collider == null)
+            // A wall face blocks right at the feet (a ray that starts inside the floor hits at distance 0: not a wall)...
+            RaycastHit2D low = Physics2D.Raycast(new Vector2(b.center.x, feet + skin), Vector2.right * dir, reach, groundLayer);
+            if (low.collider == null || low.distance <= 0f || Mathf.Abs(low.normal.x) < 0.5f)
                 return;
             // ...but not just above the step height.
-            if (Physics2D.Raycast(new Vector2(b.center.x, feet + stepHeight + 0.05f), Vector2.right * dir, reach, groundLayer).collider != null)
+            if (Physics2D.Raycast(new Vector2(b.center.x, feet + stepHeight + skin), Vector2.right * dir, reach, groundLayer).collider != null)
                 return;
 
             // Find the top of the step just past the wall and climb onto it.
-            var probe = new Vector2(low.point.x + dir * 0.05f, feet + stepHeight + 0.05f);
-            RaycastHit2D top = Physics2D.Raycast(probe, Vector2.down, stepHeight + 0.05f, groundLayer);
+            var probe = new Vector2(low.point.x + dir * 0.05f, feet + stepHeight + skin);
+            RaycastHit2D top = Physics2D.Raycast(probe, Vector2.down, stepHeight + skin, groundLayer);
             if (top.collider == null)
                 return;
             float rise = top.point.y - feet;
-            if (rise <= 0.01f || rise > stepHeight)
+            if (rise > stepHeight)
                 return;
+            // A seam between two colliders at the same height (rise about 0) still snags the corner: lift a hair over it.
+            rise = Mathf.Max(rise, 0f);
 
             rigidbody.position += new Vector2(dir * 0.05f, rise + 0.02f);
             rigidbody.linearVelocity = new Vector2(dir * moveSpeed, Mathf.Max(0f, rigidbody.linearVelocityY));

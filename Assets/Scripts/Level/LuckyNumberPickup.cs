@@ -10,14 +10,25 @@ public class LuckyNumberPickup : MonoBehaviour
     [SerializeField] private LuckyNumberData luckyNumber;
     [Tooltip("Shown on screen. Empty = the lucky number's Display Name.")]
     [SerializeField] private string title;
-    [Tooltip("Second line on screen. Optional.")]
+    [Tooltip("Second line on screen. Empty = the casino hint below when the number can be played at the table.")]
     [SerializeField] private string hint;
+    [Tooltip("Shown when Hint is empty and the number opens something at the roulette table.")]
+    [SerializeField] private string casinoHint = "Go back to the casino and spin the wheel for a new ability";
+    [Tooltip("How long the message stays on screen, in seconds.")]
+    [SerializeField, Min(0f)] private float messageTime = 5f;
     [SerializeField] private string playerTag = "Player";
     [SerializeField, Min(0.01f)] private float popTime = 0.3f;
     [Tooltip("Called once when the player takes it (e.g. Mother's 9 starts the ending).")]
     [SerializeField] private UnityEvent pickedUp;
 
     private bool taken;
+
+    // Already earned (a loaded save): nothing left to pick up.
+    private void Start()
+    {
+        if (luckyNumber != null && LuckyNumbers.Get(luckyNumber.Number) == luckyNumber)
+            gameObject.SetActive(false);
+    }
 
     private void Reset()
     {
@@ -39,7 +50,8 @@ public class LuckyNumberPickup : MonoBehaviour
 
         taken = true;
         luckyNumber.Grant();
-        ScreenMessage.Show(string.IsNullOrEmpty(title) ? luckyNumber.DisplayName : title, hint);
+        string second = !string.IsNullOrEmpty(hint) ? hint : luckyNumber.PlayableAtTable ? casinoHint : "";
+        ScreenMessage.Show(string.IsNullOrEmpty(title) ? luckyNumber.DisplayName : title, second, messageTime);
         pickedUp?.Invoke();
         StartCoroutine(Pop());
     }

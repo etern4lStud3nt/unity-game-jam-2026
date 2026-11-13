@@ -2,20 +2,17 @@ using UnityEngine;
 
 namespace Bosses
 {
-    // The Father's dive, Count times in a row. For each: he appears above the player (Dive Height over the floor,
-    // below the ceiling), hangs there shaking (Dive Tell, the warning; his position is locked), dives straight down
+    // The Father's dive, Count times in a row. For each: he appears Dive Height above the player,
+    // follows their height while shaking (Dive Tell, the warning; horizontal position stays locked), then dives down
     // to the floor, through any platform, and stays stuck in it. The last Stuck is the opening (Stuck Time), then he
     // leaves; in a chain he is stuck only briefly (Chain Pause) and appears above the player again.
     public class FatherDiveState : ParentState<FatherActor>
     {
         private enum Step { Hang, Dive, Stuck }
 
-        // How far below the arena's top he stays.
-        private const float CeilingClearance = 0.5f;
-
         private Step step;
         private int divesLeft;
-        private Vector2 hangPoint;
+        private float hangX;
 
         public FatherDiveState(FatherActor actor) : base(actor) { }
 
@@ -59,9 +56,9 @@ namespace Bosses
         {
             if (step == Step.Hang)
             {
-                // Draws back up while it shakes (eased), with the line showing where it will come down.
+                // Tracks only the player's height during the warning, leaving room to dodge sideways.
                 float k = Stats.DiveTell > 0f ? Mathf.Clamp01(TimeInState / Stats.DiveTell) : 1f;
-                Vector2 at = hangPoint + Vector2.up * (Stats.HangPull * (1f - (1f - k) * (1f - k)));
+                Vector2 at = HangPoint() + Vector2.up * (Stats.HangPull * (1f - (1f - k) * (1f - k)));
                 Body.MovePosition(at);
                 Actor.ShowDiveLine(at, Vector2.down, at.y - Boss.FloorY, k);
                 return;
@@ -79,13 +76,16 @@ namespace Bosses
         {
             step = Step.Hang;
             RestartTimer();
-            float x = Boss.ClampToArena(Boss.PlayerPoint.x);
-            float y = Actor.StandY + Stats.DiveHeight;
-            if (Boss.Arena != null)
-                y = Mathf.Min(y, Boss.Arena.bounds.max.y - Actor.HalfHeight - CeilingClearance - Stats.HangPull);
-            hangPoint = new Vector2(x, y);
-            Actor.Appear(hangPoint, Actor.PlayerSide);
+            hangX = Boss.ClampToArena(Boss.PlayerPoint.x);
+            Actor.Appear(HangPoint(), Actor.PlayerSide);
             Actor.SetWarning(true);
+        }
+
+        private Vector2 HangPoint()
+        {
+            // Keep the same gap even near the arena's top; a ceiling clamp could put him on the player.
+            float y = Boss.PlayerPoint.y + Stats.DiveHeight;
+            return new Vector2(hangX, y);
         }
 
         private void Land()
