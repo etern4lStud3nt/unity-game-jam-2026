@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SFX_Player_Jump
   m_EditorClassIdentifier: Assembly-CSharp::SoundData
   clips:
-  - {fileID: 8300000, guid: c302328e73ebf7d499ef18026e4b2464, type: 3}
+  - {fileID: 8300000, guid: 9403672fb6de8b849a18dda6f4bba83f, type: 3}
   volume: 0.8
   pitchRange: {x: 0.97, y: 1.03}
   cooldown: 0.1
