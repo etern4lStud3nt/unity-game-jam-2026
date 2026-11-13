@@ -5,9 +5,12 @@ using UnityEngine;
 public class Checkpoint : CasinoInteractable
 {
     [SerializeField] private bool healOnReach = true;
+    [SerializeField] private SoundData sitSound;
 
     protected override void Use(Rigidbody2D player)
     {
+        if (sitSound != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(sitSound, transform.position);
         if (healOnReach && player.TryGetComponent(out Health health) && !health.IsDead)
             health.ResetHealth();
 

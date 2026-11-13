@@ -13407,6 +13407,7 @@ MonoBehaviour:
   prompt: {fileID: 1086616320}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &665745337
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16257,6 +16258,7 @@ MonoBehaviour:
   prompt: {fileID: 1563062925}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &836048897
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -20025,6 +20027,7 @@ MonoBehaviour:
   prompt: {fileID: 44181954}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &1060785987
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -22779,6 +22782,7 @@ MonoBehaviour:
   prompt: {fileID: 1147862095}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &1257684864
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -25272,6 +25276,7 @@ MonoBehaviour:
   prompt: {fileID: 581240373}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &1309143964
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -197444,6 +197449,7 @@ MonoBehaviour:
   prompt: {fileID: 1316281945}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &1825230521
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -203529,6 +203535,7 @@ MonoBehaviour:
   prompt: {fileID: 1396420323}
   playerTag: Player
   healOnReach: 1
+  sitSound: {fileID: 11400000, guid: dd04a823a797ab04d9ff6030eefbe4be, type: 2}
 --- !u!58 &2031284353
 CircleCollider2D:
   m_ObjectHideFlags: 0
