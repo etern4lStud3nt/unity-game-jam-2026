@@ -390,7 +390,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 1.6, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 692819790516450864}
@@ -444,8 +444,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.75, g: 0.9, b: 1, a: 1}
+  m_Sprite: {fileID: -1470536475, guid: e619c20b9d65c2c499dbe6983b3c8532, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -569,7 +569,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8, y: 1.6}
+  m_Size: {x: 0.9375, y: 1.5}
   m_EdgeRadius: 0
 --- !u!114 &2527625594306884127
 MonoBehaviour:
@@ -1637,8 +1637,13 @@ MonoBehaviour:
   luckyNumber: {fileID: 11400000, guid: 24a7ecfa5aefc8b4cbc9e294741e6798, type: 2}
   title: 
   hint: 
+  casinoHint: Go back to the casino and spin the wheel for a new ability
+  messageTime: 5
   playerTag: Player
   popTime: 0.3
+  pickedUp:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4883977657694062028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,7 +1721,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7, y: 1.5}
+  m_Size: {x: 0.8375, y: 1.4}
   m_EdgeRadius: 0
 --- !u!114 &4069245272161979339
 MonoBehaviour:
@@ -2055,6 +2060,7 @@ MonoBehaviour:
   startOnEnter: 0
   once: 1
   prompt: {fileID: 7618721985928250756}
+  marker: {fileID: 0}
   playerTag: Player
 --- !u!1 &6124182520444529659
 GameObject:
