@@ -1304,6 +1304,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: lamb
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 112
+        width: 8
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 90fef5143cb6b93449a37b7eaad93b69
+      internalID: 666891400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lamb boddy
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 115
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a1e908c8a8088441aa108c9b8e2e285
+      internalID: 1765858833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1372,6 +1416,8 @@ TextureImporter:
       Decorations_7: 869910429
       Decorations_8: -1576472723
       Decorations_9: 122726952
+      lamb: 666891400
+      lamb boddy: 1765858833
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
