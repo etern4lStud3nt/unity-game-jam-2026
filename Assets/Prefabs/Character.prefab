@@ -434,6 +434,12 @@ MonoBehaviour:
   recoilTime: 0.1
   pogoSpeed: 17
   shakeForce: 0.15
+  slashFrames:
+  - {fileID: -4497176794194372510, guid: d85b7bed6bb12c6449faf6a4bf02b5e8, type: 3}
+  - {fileID: -6012282352563511594, guid: d85b7bed6bb12c6449faf6a4bf02b5e8, type: 3}
+  - {fileID: 395673844107492041, guid: d85b7bed6bb12c6449faf6a4bf02b5e8, type: 3}
+  - {fileID: 4390754755563669279, guid: d85b7bed6bb12c6449faf6a4bf02b5e8, type: 3}
+  slashFrameTime: 0.035
   slashSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   slashColor: {r: 1, g: 1, b: 1, a: 0.5}
 --- !u!114 &1918308542848994550

@@ -35,6 +35,8 @@ public class SaveGame : MonoBehaviour
     [SerializeField] private LuckyNumberData[] luckyNumbers;
     [Tooltip("What a new game starts with (no save yet), e.g. the player's own lucky number that opens Dash.")]
     [SerializeField] private LuckyNumberData[] startingLuckyNumbers;
+    [Tooltip("New games enter this casino before gameplay begins. Saved checkpoints keep their normal start position.")]
+    [SerializeField] private CasinoDoor startingCasino;
     [SerializeField] private string playerTag = "Player";
 
     private static readonly HashSet<string> BeatenBosses = new();
@@ -70,6 +72,15 @@ public class SaveGame : MonoBehaviour
 
     private IEnumerator Start()
     {
+        if (!data.hasBench && startingCasino != null && player != null && player.TryGetComponent(out Rigidbody2D body))
+        {
+            // Hide the level immediately: the first visible view should be inside the casino.
+            yield return ScreenFade.To(1f, 0f);
+            yield return startingCasino.Enter(body);
+            if (player.TryGetComponent(out PlayerRespawn respawn))
+                respawn.SetCheckpoint(player.transform.position);
+        }
+
         // A frame later every boss has found its arena (in its own Start); switch off the beaten ones.
         yield return null;
         foreach (Bosses.BossFight boss in FindObjectsByType<Bosses.BossFight>())
