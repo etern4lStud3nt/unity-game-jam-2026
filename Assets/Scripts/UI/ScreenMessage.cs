@@ -23,7 +23,8 @@ public class ScreenMessage : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics() => instance = null;
 
-    public static void Show(string title, string hint = "")
+    // holdOverride > 0 keeps this message up that many seconds instead of the usual hold.
+    public static void Show(string title, string hint = "", float holdOverride = 0f)
     {
         if (instance == null)
             instance = FindAnyObjectByType<ScreenMessage>(FindObjectsInactive.Include);
@@ -32,7 +33,7 @@ public class ScreenMessage : MonoBehaviour
             Debug.LogWarning($"ScreenMessage.Show(\"{title}\"): no ScreenMessage prefab in the scene.");
             return;
         }
-        instance.Play(title, hint);
+        instance.Play(title, hint, holdOverride);
     }
 
     private void Awake()
@@ -43,7 +44,7 @@ public class ScreenMessage : MonoBehaviour
         group.blocksRaycasts = false;
     }
 
-    private void Play(string title, string hint)
+    private void Play(string title, string hint, float holdFor)
     {
         gameObject.SetActive(true);
         if (titleText != null)
@@ -52,11 +53,11 @@ public class ScreenMessage : MonoBehaviour
             hintText.text = hint;
         if (running != null)
             StopCoroutine(running);
-        running = StartCoroutine(Run());
+        running = StartCoroutine(Run(holdFor > 0f ? holdFor : hold));
     }
 
     // Unscaled time, so a hitstop or pause does not freeze the message.
-    private IEnumerator Run()
+    private IEnumerator Run(float holdFor)
     {
         for (float t = 0f; t < fadeIn; t += Time.unscaledDeltaTime)
         {
@@ -64,7 +65,7 @@ public class ScreenMessage : MonoBehaviour
             yield return null;
         }
         group.alpha = 1f;
-        yield return new WaitForSecondsRealtime(hold);
+        yield return new WaitForSecondsRealtime(holdFor);
         for (float t = 0f; t < fadeOut; t += Time.unscaledDeltaTime)
         {
             group.alpha = 1f - t / fadeOut;

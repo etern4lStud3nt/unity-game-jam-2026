@@ -731,6 +731,8 @@ MonoBehaviour:
   luckyNumber: {fileID: 11400000, guid: 53c907455fa8acf4591875463216f16a, type: 2}
   title: 
   hint: 
+  casinoHint: Go back to the casino and spin the wheel for a new ability
+  messageTime: 5
   playerTag: Player
   popTime: 0.3
   pickedUp:
