@@ -7,11 +7,11 @@ Made for Unity Game Jam 2026
 
 
 GAME DESIGN
-Stavros Kaskouras (etern4lStud3nt)
+STVS (etern4lStud3nt)
 
 PROGRAMMING
 Metin Enes Ufuk 
-Stavros Kaskouras (etern4lStud3nt)
+STVS (etern4lStud3nt)
 
 ART
 QuizMasterHanzo
@@ -23,4 +23,4 @@ Samuel J. Robinson
 
 
 
-Thank you for playing
+Thanks for playing!
