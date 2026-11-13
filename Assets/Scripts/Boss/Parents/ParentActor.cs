@@ -36,6 +36,8 @@ namespace Bosses
         private Vector3 visualScale;
         private Vector3 visualPosition;
         private Quaternion visualRotation;
+        // How far the visual drops when it lies down so its side rests on the floor.
+        private float lyingDrop;
         private IState shownState;
         private bool ready;
         // When the fade-in of an appearance began; negative = not fading in.
@@ -149,6 +151,10 @@ namespace Bosses
                 visualScale = visual.localScale;
                 visualPosition = visual.localPosition;
                 visualRotation = visual.localRotation;
+                // Lying on its side, the art is as tall as it was wide.
+                SpriteRenderer art = visual.GetComponentInChildren<SpriteRenderer>(true);
+                float lyingHalfHeight = art != null && art.sprite != null ? art.bounds.extents.x : HalfWidth;
+                lyingDrop = Mathf.Max(0f, HalfHeight - lyingHalfHeight);
             }
         }
 
@@ -361,7 +367,7 @@ namespace Bosses
             if (visual == null)
                 return;
             visual.localRotation = visualRotation * Quaternion.Euler(0f, 0f, 90f);
-            visual.localPosition = visualPosition + Vector3.down * Mathf.Max(0f, HalfHeight - HalfWidth);
+            visual.localPosition = visualPosition + Vector3.down * lyingDrop;
         }
 
         // Puts every move's effects back to rest. Runs after every state's exit (ParentState), so nothing a state
