@@ -4753,8 +4753,10 @@ MonoBehaviour:
   renderers:
   - {fileID: 1440577372417356427}
   shakeTarget: {fileID: 4521444820551453496}
-  hitColor: {r: 1, g: 1, b: 1, a: 1}
-  hitTime: 0.1
+  flashMaterial: {fileID: 2100000, guid: e6be4087378095d4c887441033977148, type: 2}
+  hitColor: {r: 1, g: 0.25, b: 0.25, a: 1}
+  blinks: 2
+  blinkTime: 0.05
   shakeAmount: 0.06
 --- !u!114 &8787286361264558944
 MonoBehaviour:
@@ -5545,8 +5547,10 @@ MonoBehaviour:
   renderers:
   - {fileID: 7334187904393674457}
   shakeTarget: {fileID: 8275001873734674450}
-  hitColor: {r: 1, g: 1, b: 1, a: 1}
-  hitTime: 0.1
+  flashMaterial: {fileID: 2100000, guid: e6be4087378095d4c887441033977148, type: 2}
+  hitColor: {r: 1, g: 0.25, b: 0.25, a: 1}
+  blinks: 2
+  blinkTime: 0.05
   shakeAmount: 0.06
 --- !u!114 &6906435220892287327
 MonoBehaviour:

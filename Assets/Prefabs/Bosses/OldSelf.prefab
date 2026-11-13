@@ -629,8 +629,10 @@ MonoBehaviour:
   renderers:
   - {fileID: 3622538294360909577}
   shakeTarget: {fileID: 692819790516450864}
-  hitColor: {r: 1, g: 1, b: 1, a: 1}
-  hitTime: 0.1
+  flashMaterial: {fileID: 2100000, guid: e6be4087378095d4c887441033977148, type: 2}
+  hitColor: {r: 1, g: 0.25, b: 0.25, a: 1}
+  blinks: 2
+  blinkTime: 0.05
   shakeAmount: 0.06
 --- !u!114 &899511449434322169
 MonoBehaviour:
