@@ -1,30 +1,24 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+// The volume sliders: they show the saved volumes and set them through the AudioManager (which keeps them).
 public class SettingsMenu : MonoBehaviour
 {
     [SerializeField] private Slider sfxSlider;
     [SerializeField] private Slider musicSlider;
 
-    private void Awake()
+    private void Start()
     {
-        sfxSlider.onValueChanged.AddListener(HandleSFXSliderValueChanged);
-        musicSlider.onValueChanged.AddListener(HandleMusicSliderValueChanged);
-
-        // Set those values to the values of the audio manager.
-        //sfxSlider.value = 1;
-        //musicSlider.value = 1;
+        Bind(sfxSlider, AudioManager.SfxVolume);
+        Bind(musicSlider, AudioManager.MusicVolume);
     }
 
-    private void HandleSFXSliderValueChanged(float sliderValue)
+    private static void Bind(Slider slider, string parameter)
     {
-        // Change sfx volume here
+        AudioManager audio = AudioManager.Instance;
+        if (slider == null || audio == null)
+            return;
+        slider.SetValueWithoutNotify(audio.GetVolume(parameter));
+        slider.onValueChanged.AddListener(value => audio.SetVolume(parameter, value));
     }
-
-    private void HandleMusicSliderValueChanged(float sliderValue)
-    {
-        // Change music volume here
-    }
-
 }
