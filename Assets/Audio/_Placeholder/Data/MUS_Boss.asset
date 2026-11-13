@@ -15,12 +15,6 @@ MonoBehaviour:
   intro: {fileID: 0}
   layers:
   - Name: Base
-    Clip: {fileID: 8300000, guid: 6c51b484686632344a9762e46d7bfec6, type: 3}
-    StartVolume: 1
-  - Name: Combat
-    Clip: {fileID: 8300000, guid: a68f8a75496fd894b98693c78db7b658, type: 3}
-    StartVolume: 1
-  - Name: Boss
-    Clip: {fileID: 8300000, guid: 6c34297759e4d6742ad95fba1d3edc94, type: 3}
+    Clip: {fileID: 8300000, guid: 8dff79698bb2f9a4a9d21405ea3f2e58, type: 3}
     StartVolume: 1
   volume: 0.8
