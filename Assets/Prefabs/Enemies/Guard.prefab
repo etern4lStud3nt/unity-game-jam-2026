@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 3096343144927225697}
   - component: {fileID: 1472317536368828816}
   - component: {fileID: 5947782068066746668}
+  - component: {fileID: 1908994715349262788}
   m_Layer: 0
   m_Name: Guard
   m_TagString: Untagged
@@ -342,6 +343,25 @@ MonoBehaviour:
   launchUp: {x: 12, y: 18}
   launchSide: 3
   playerTag: Player
+--- !u!114 &1908994715349262788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3366926791785777675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c392567173ffb4540bbf4c56543beec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySounds
+  hurt: {fileID: 11400000, guid: e425bff0f1ca9c246a6c99f6fbc13ca4, type: 2}
+  death: {fileID: 11400000, guid: 85a19b8d04ad623428ff5fafa026aaa2, type: 2}
+  alert: {fileID: 11400000, guid: e675c92803be0974b9ee937cf510eb98, type: 2}
+  windup: {fileID: 0}
+  impact: {fileID: 0}
+  idle: {fileID: 0}
+  idleRange: {x: 3, y: 12}
 --- !u!1 &3412207683875036713
 GameObject:
   m_ObjectHideFlags: 0

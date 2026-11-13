@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 3989463288238968335}
   - component: {fileID: 1924440276681465016}
   - component: {fileID: 7553811240075262773}
+  - component: {fileID: 7945022596604570720}
   m_Layer: 0
   m_Name: Walker
   m_TagString: Untagged
@@ -428,3 +429,22 @@ MonoBehaviour:
   launchUp: {x: 12, y: 18}
   launchSide: 3
   playerTag: Player
+--- !u!114 &7945022596604570720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2873959921967857004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c392567173ffb4540bbf4c56543beec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySounds
+  hurt: {fileID: 11400000, guid: e425bff0f1ca9c246a6c99f6fbc13ca4, type: 2}
+  death: {fileID: 11400000, guid: 03a4ea1458822964fa64481e41394e1e, type: 2}
+  alert: {fileID: 11400000, guid: e675c92803be0974b9ee937cf510eb98, type: 2}
+  windup: {fileID: 0}
+  impact: {fileID: 0}
+  idle: {fileID: 0}
+  idleRange: {x: 3, y: 12}

@@ -1086,6 +1086,7 @@ GameObject:
   - component: {fileID: 2891361341135211963}
   - component: {fileID: 7061935834312066449}
   - component: {fileID: 3813321280618781412}
+  - component: {fileID: 1248242330126480302}
   m_Layer: 0
   m_Name: Grandma
   m_TagString: Untagged
@@ -1290,6 +1291,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1248242330126480302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4234517728982409044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c392567173ffb4540bbf4c56543beec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySounds
+  hurt: {fileID: 11400000, guid: 3f174eb38bb574340968df3f104017e7, type: 2}
+  death: {fileID: 11400000, guid: ad045e6749abe85409b70b537193e77c, type: 2}
+  alert: {fileID: 0}
+  windup: {fileID: 0}
+  impact: {fileID: 0}
+  idle: {fileID: 0}
+  idleRange: {x: 3, y: 12}
 --- !u!1 &4366279641347587923
 GameObject:
   m_ObjectHideFlags: 0

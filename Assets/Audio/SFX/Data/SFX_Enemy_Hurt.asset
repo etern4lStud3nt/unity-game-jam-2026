@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822cbd087cc238544ae85ae22548dff0, type: 3}
+  m_Name: SFX_Enemy_Hurt
+  m_EditorClassIdentifier: Assembly-CSharp::SoundData
+  clips:
+  - {fileID: 8300000, guid: ccba02661d309f24fb132b8be44443bf, type: 3}
+  - {fileID: 8300000, guid: 70bbff3e215771f4099f5bab2221fb5f, type: 3}
+  volume: 0.8
+  pitchRange: {x: 0.95, y: 1.05}
+  cooldown: 0.05
+  mixerGroup: {fileID: 0}
+  hearingRange: 18
+  priority: 50

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8107692053768044030}
   - component: {fileID: 8319626700905507632}
   - component: {fileID: 431292206575630304}
+  - component: {fileID: 7666089528604474705}
   m_Layer: 0
   m_Name: Flyer
   m_TagString: Untagged
@@ -229,6 +230,25 @@ MonoBehaviour:
   launchUp: {x: 12, y: 18}
   launchSide: 3
   playerTag: Player
+--- !u!114 &7666089528604474705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499830760202940220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c392567173ffb4540bbf4c56543beec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySounds
+  hurt: {fileID: 11400000, guid: e425bff0f1ca9c246a6c99f6fbc13ca4, type: 2}
+  death: {fileID: 11400000, guid: 03a4ea1458822964fa64481e41394e1e, type: 2}
+  alert: {fileID: 11400000, guid: e675c92803be0974b9ee937cf510eb98, type: 2}
+  windup: {fileID: 11400000, guid: 5cfecc35b77b1db45acf0e1de8787787, type: 2}
+  impact: {fileID: 11400000, guid: cba7ed443539ad3498f4d88a1b51033e, type: 2}
+  idle: {fileID: 11400000, guid: 636188a1fe9f15b47bb5535c11bb9077, type: 2}
+  idleRange: {x: 3, y: 12}
 --- !u!1 &4392779783913542102
 GameObject:
   m_ObjectHideFlags: 0
