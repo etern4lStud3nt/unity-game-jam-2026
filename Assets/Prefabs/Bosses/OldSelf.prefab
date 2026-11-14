@@ -494,6 +494,7 @@ GameObject:
   - component: {fileID: 1439586729217557562}
   - component: {fileID: 7185620462589947722}
   - component: {fileID: 2924917888076656883}
+  - component: {fileID: 1467078623258763333}
   m_Layer: 0
   m_Name: Old Self
   m_TagString: Untagged
@@ -803,6 +804,25 @@ MonoBehaviour:
   lifetime: 0.2
   stretch: 0
   backOffset: 0
+--- !u!114 &1467078623258763333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2625503546078658988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c392567173ffb4540bbf4c56543beec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySounds
+  hurt: {fileID: 11400000, guid: debd00d5c4ab4df4c863c80dcd38e33a, type: 2}
+  death: {fileID: 11400000, guid: fd1aaebf0b0b0df43a1a9a1aecec735b, type: 2}
+  alert: {fileID: 0}
+  windup: {fileID: 0}
+  impact: {fileID: 0}
+  idle: {fileID: 0}
+  idleRange: {x: 3, y: 12}
 --- !u!1 &2655931741710621126
 GameObject:
   m_ObjectHideFlags: 0
