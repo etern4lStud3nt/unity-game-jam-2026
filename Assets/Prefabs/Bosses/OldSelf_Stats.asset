@@ -12,44 +12,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e9f8f678787c594391b53fb7bfa2b50, type: 3}
   m_Name: OldSelf_Stats
   m_EditorClassIdentifier: Assembly-CSharp::Bosses.OldSelfStats
-  <MinIdleTime>k__BackingField: 0.15
-  <MaxIdleTime>k__BackingField: 0.4
+  <MinIdleTime>k__BackingField: 0.165
+  <MaxIdleTime>k__BackingField: 0.44
   <HopChance>k__BackingField: 0.5
   <HopHeight>k__BackingField: 2.5
-  <HopTime>k__BackingField: 0.5
+  <HopTime>k__BackingField: 0.55
   <HopDistance>k__BackingField: {x: 3, y: 7}
   <HopMaxDrop>k__BackingField: 5.5
   <EdgeMargin>k__BackingField: 1.5
-  <RecoverTime>k__BackingField: 0.6
+  <RecoverTime>k__BackingField: 0.66
   <CrouchScale>k__BackingField: 0.8
   <LungeWeight>k__BackingField: 1
   <AirDiveWeight>k__BackingField: 1
   <ThrowWeight>k__BackingField: 1
   <SlashWeight>k__BackingField: 3
   <SlashRange>k__BackingField: 3
-  <LungeWindup>k__BackingField: 0.45
-  <LungeSpeed>k__BackingField: 32
+  <LungeWindup>k__BackingField: 0.495
+  <LungeSpeed>k__BackingField: 28.8
   <LungeDistance>k__BackingField: 24
   <LungeShake>k__BackingField: 0.3
   <DiveJumpHeight>k__BackingField: 6
-  <DiveRiseTime>k__BackingField: 0.35
-  <DiveHangTime>k__BackingField: 0.4
+  <DiveRiseTime>k__BackingField: 0.385
+  <DiveHangTime>k__BackingField: 0.44
   <DiveAimLockTime>k__BackingField: 0.1
   <DivePrediction>k__BackingField: 0.99
-  <DiveSpeed>k__BackingField: 35
+  <DiveSpeed>k__BackingField: 31.5
   <DiveMinDownward>k__BackingField: 0.3
   <DiveShake>k__BackingField: 0.6
-  <ThrowWindup>k__BackingField: 0.4
+  <ThrowWindup>k__BackingField: 0.44
   <ThrowDistance>k__BackingField: 16
-  <ThrowOutTime>k__BackingField: 0.7
-  <ThrowReturnSpeed>k__BackingField: 18
+  <ThrowOutTime>k__BackingField: 0.77
+  <ThrowReturnSpeed>k__BackingField: 16.2
   <ThrowSpin>k__BackingField: 900
   <ThrowScale>k__BackingField: 1
   <CatchShake>k__BackingField: 0.1
   <ThrowPunch>k__BackingField: {x: 1.2, y: 0.85}
   <CatchPunch>k__BackingField: {x: 0.85, y: 1.15}
-  <SlashWindup>k__BackingField: 0.3
-  <SlashTime>k__BackingField: 0.15
+  <SlashWindup>k__BackingField: 0.33
+  <SlashTime>k__BackingField: 0.165
   <SlashStep>k__BackingField: 6
   <SlashShake>k__BackingField: 0.1
   <SlashPunch>k__BackingField: {x: 1.3, y: 0.8}
